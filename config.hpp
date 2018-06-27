@@ -26,9 +26,5 @@ public:
 
 	int query_dvc(const QString &profile_name);
 	void set_dvc(const QString &profile_name, int level);
-
-private:
-	bool _enabled;
-	bool _autohide;
 };
 #endif // CONFIG_HPP
