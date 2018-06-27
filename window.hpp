@@ -35,6 +35,7 @@ private slots:
 	void iconActivated(QSystemTrayIcon::ActivationReason reason);
 	void showMessage(const QString &msg, unsigned timeout = 3000);
 	void messageClicked();
+	void toggleAutoHide();
 
 private:
 	Config cfg;
@@ -45,7 +46,7 @@ private:
 	void createTrayIcon();
 
 	QGroupBox *iconGroupBox;
-	QCheckBox *autohideCheckBox;
+	QCheckBox *closeToTrayCheckBox;
 	QCheckBox *enabledCheckBox;
 
 	QAction *minimizeAction;

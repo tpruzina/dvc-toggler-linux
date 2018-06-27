@@ -62,7 +62,7 @@ Config::query_profiles()
 bool
 Config::query_enabled(void)
 {
-	return _enabled;
+	return value("enabled").toBool();
 }
 
 void
@@ -75,7 +75,7 @@ Config::set_enabled(bool val)
 bool
 Config::query_autohide(void)
 {
-	return _autohide;
+	return value("autohide").toBool();
 }
 
 void

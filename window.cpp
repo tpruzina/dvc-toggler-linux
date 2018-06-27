@@ -13,8 +13,7 @@ Window::Window()
 	createTrayIcon();
 
 	connect(enabledCheckBox, SIGNAL(clicked()), this, SLOT(toggleEnabled()));
-	connect(autohideCheckBox, SIGNAL(toggled(bool)),
-		trayIcon, SLOT(setVisible(bool)));
+	connect(closeToTrayCheckBox, SIGNAL(toggled(bool)), this, SLOT(toggleAutoHide()));
 	connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(messageClicked()));
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
 		this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
@@ -27,10 +26,7 @@ Window::Window()
 	mainLayout->addWidget(profileSelector);
 	setLayout(mainLayout);
 
-	if(cfg.query_autohide())
-		trayIcon->hide();
-	else
-		trayIcon->show();
+	trayIcon->show();
 }
 
 void Window::setVisible(bool visible)
@@ -39,11 +35,16 @@ void Window::setVisible(bool visible)
 	maximizeAction->setEnabled(!isMaximized());
 	restoreAction->setEnabled(isMaximized() || !visible);
 	QDialog::setVisible(visible);
+	qDebug() << "setVisibile(" << visible << ") called!";
 }
 
 void Window::closeEvent(QCloseEvent *event)
 {
-	exit(0); // TODO: remove this
+	if(cfg.query_autohide() == false)
+	{
+		cfg.sync();
+		exit(0);
+	}
 	if (trayIcon->isVisible())
 	{
 		trayIcon->showMessage("DVC toggler",
@@ -52,8 +53,7 @@ void Window::closeEvent(QCloseEvent *event)
 					 "choose \"Quit\" in the context menu "
 					 "of the system tray entry."),
 				      icon,
-				      3000
-				      );
+				      3000);
 		hide();
 		event->ignore();
 	}
@@ -77,6 +77,11 @@ void Window::toggleEnabled()
 	trayIcon->setIcon(icon);
 	trayIcon->setToolTip(status);
 	setWindowIcon(icon);
+}
+
+void Window::toggleAutoHide()
+{
+	cfg.toggle_autohide();
 }
 
 void Window::iconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -113,14 +118,12 @@ void Window::createIconGroupBox()
 	enabledCheckBox = new QCheckBox(tr("Enable"));
 	enabledCheckBox->setChecked(cfg.query_enabled());
 
-	autohideCheckBox = new QCheckBox(tr("Autohide"));
-	autohideCheckBox->setChecked(cfg.query_autohide());
-
-
+	closeToTrayCheckBox = new QCheckBox(tr("Close to tray"));
+	closeToTrayCheckBox->setChecked(cfg.query_autohide());
 
 	QVBoxLayout *iconLayout = new QVBoxLayout;
 	iconLayout->addWidget(enabledCheckBox);
-	iconLayout->addWidget(autohideCheckBox);
+	iconLayout->addWidget(closeToTrayCheckBox);
 	iconGroupBox->setLayout(iconLayout);
 }
 
@@ -128,7 +131,6 @@ void Window::createMessageGroupBox()
 {
 
 }
-
 
 void Window::createTrayIcon()
 {
