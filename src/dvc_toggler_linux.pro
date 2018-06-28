@@ -23,7 +23,7 @@ RESOURCES     = dvc_toggler_linux.qrc
 
 QT           += xml svg core gui widgets
 
-release: DESTDIR = build/release
+release: DESTDIR = ../build
 
 QMAKE_LFLAGS += -lX11 -lXext -ldl
 
