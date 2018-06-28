@@ -34,7 +34,8 @@ public slots:
 private:
 	QSlider *dvc_slider;
 	QLineEdit *dvc_le;
-
+	Config &_cfg;
+	QString _name;
 	int dvc;
 };
 

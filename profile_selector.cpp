@@ -18,6 +18,8 @@ ProfileSelectorWidget::ProfileSelectorWidget(Config &cfg) :
 }
 
 AppProfile::AppProfile(Config &cfg, const QString &name) :
+	_cfg(cfg),
+	_name(name),
 	dvc(cfg.query_dvc(name))
 {
 	QGroupBox *dvcgb = new QGroupBox;
@@ -29,7 +31,7 @@ AppProfile::AppProfile(Config &cfg, const QString &name) :
 	dvc_slider->setValue(dvc);
 
 	dvc_le = new QLineEdit();
-	dvc_le->setText(QString::number(0));
+	dvc_le->setText(QString::number(dvc));
 
 	connect(dvc_slider,
 		SIGNAL(valueChanged(int)),
@@ -51,5 +53,5 @@ AppProfile::onDVCSliderChanged(int value)
 {
 	dvc_le->setText(QString::number(dvc_slider->sliderPosition()));
 	dvc = value;
-	// apply stuff if applicable
+	_cfg.set_dvc(_name, value);
 }
