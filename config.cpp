@@ -13,7 +13,7 @@ Config::Config() :
 
 	beginGroup("default");
 	if(!contains("dvc"))		setValue("dvc", 0);
-	if(!contains("icon_path"))	setValue("icon", ":/images/desktop.svg");
+	if(!contains("icon_path"))	setValue("icon", ":/resources/desktop.svg");
 	endGroup();
 
 	qDebug() << QSettings::allKeys();

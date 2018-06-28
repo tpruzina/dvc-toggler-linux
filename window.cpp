@@ -63,13 +63,13 @@ void Window::toggleEnabled()
 	QString status;
 	if(cfg.query_enabled())
 	{
-		icon = QIcon(":/images/enabled.png");
+		icon = QIcon(":/resources/enabled.png");
 		status = "DVC enabled";
 	}
 	else
 	{
 		status = "DVC disabled";
-		icon = QIcon(":/images/disabled.png");
+		icon = QIcon(":/resources/disabled.png");
 	}
 
 	trayIcon->setIcon(icon);
@@ -143,8 +143,8 @@ void Window::createTrayIcon()
 	trayIconMenu->addAction(quitAction);
 
 	icon = (cfg.query_enabled()) ?
-				QIcon(":/images/enabled.png") :
-				QIcon(":/images/disabled.png");
+				QIcon(":/resources/enabled.png") :
+				QIcon(":/resources/disabled.png");
 
 	trayIcon = new QSystemTrayIcon(this);
 	trayIcon->setIcon(icon);

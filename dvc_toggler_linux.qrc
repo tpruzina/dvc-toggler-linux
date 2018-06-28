@@ -1,8 +1,8 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource prefix="/">
-   <file>images/desktop.svg</file>
-   <file>images/xclient.svg</file>
-   <file>images/enabled.png</file>
-   <file>images/disabled.png</file>
+   <file>resources/desktop.svg</file>
+   <file>resources/xclient.svg</file>
+   <file>resources/enabled.png</file>
+   <file>resources/disabled.png</file>
 </qresource>
 </RCC>
