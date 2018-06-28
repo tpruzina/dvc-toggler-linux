@@ -32,8 +32,7 @@ Window::Window()
 void Window::setVisible(bool visible)
 {
 	minimizeAction->setEnabled(visible);
-	maximizeAction->setEnabled(!isMaximized());
-	restoreAction->setEnabled(isMaximized() || !visible);
+	restoreAction->setEnabled(!visible);
 	QDialog::setVisible(visible);
 	qDebug() << "setVisibile(" << visible << ") called!";
 }
@@ -137,9 +136,6 @@ void Window::createTrayIcon()
 	minimizeAction = new QAction(tr("Mi&nimize"), this);
 	connect(minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));
 
-	maximizeAction = new QAction(tr("Ma&ximize"), this);
-	connect(maximizeAction, SIGNAL(triggered()), this, SLOT(showMaximized()));
-
 	restoreAction = new QAction(tr("&Restore"), this);
 	connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
 
@@ -148,7 +144,6 @@ void Window::createTrayIcon()
 
 	trayIconMenu = new QMenu(this);
 	trayIconMenu->addAction(minimizeAction);
-	trayIconMenu->addAction(maximizeAction);
 	trayIconMenu->addAction(restoreAction);
 	trayIconMenu->addSeparator();
 	trayIconMenu->addAction(quitAction);

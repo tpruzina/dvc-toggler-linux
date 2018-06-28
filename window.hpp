@@ -41,7 +41,7 @@ private:
 	QCheckBox *enabledCheckBox;
 
 	QAction *minimizeAction;
-	QAction *maximizeAction;
+//	QAction *maximizeAction;
 	QAction *restoreAction;
 	QAction *quitAction;
 
