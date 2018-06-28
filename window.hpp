@@ -33,7 +33,6 @@ private:
 	friend class ProfileSelectorWidget;
 
 	void createIconGroupBox();
-	void createMessageGroupBox();
 	void createTrayIcon();
 
 	QGroupBox *iconGroupBox;
@@ -41,7 +40,6 @@ private:
 	QCheckBox *enabledCheckBox;
 
 	QAction *minimizeAction;
-//	QAction *maximizeAction;
 	QAction *restoreAction;
 	QAction *quitAction;
 

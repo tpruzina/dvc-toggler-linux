@@ -8,7 +8,6 @@ Window::Window()
 	setWindowTitle(tr("DVC toggler"));
 
 	createIconGroupBox();
-	createMessageGroupBox();
 
 	createTrayIcon();
 
@@ -124,11 +123,6 @@ void Window::createIconGroupBox()
 	iconLayout->addWidget(enabledCheckBox);
 	iconLayout->addWidget(closeToTrayCheckBox);
 	iconGroupBox->setLayout(iconLayout);
-}
-
-void Window::createMessageGroupBox()
-{
-
 }
 
 void Window::createTrayIcon()
