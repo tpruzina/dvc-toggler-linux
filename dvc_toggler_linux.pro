@@ -13,11 +13,11 @@ HEADERS       = pch.hpp   \
 
 SOURCES       = main.cpp \
                 window.cpp \
-                runguard.cpp \
                 config.cpp \
-    xclientpicker.cpp \
     profile_selector.cpp \
-    procwatch.cpp
+    proc_watch.cpp \
+    run_guard.cpp \
+    x_client_picker.cpp
 
 RESOURCES     = dvc_toggler_linux.qrc
 
