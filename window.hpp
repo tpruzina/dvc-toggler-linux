@@ -1,22 +1,12 @@
-#ifndef WINDOW_H
-#define WINDOW_H
+#ifndef WINDOW_HPP
+#define WINDOW_HPP
 
 #include <QSystemTrayIcon>
 #include <QDialog>
 
 #include "config.hpp"
 #include "profile_selector.hpp"
-
-class QAction;
-class QCheckBox;
-class QComboBox;
-class QGroupBox;
-class QLabel;
-class QLineEdit;
-class QMenu;
-class QPushButton;
-class QSpinBox;
-class QTextEdit;
+#include "procwatch.hpp"
 
 class Window : public QDialog
 {
@@ -39,6 +29,7 @@ private slots:
 
 private:
 	Config cfg;
+	ProcWatch pw;
 	friend class ProfileSelectorWidget;
 
 	void createIconGroupBox();

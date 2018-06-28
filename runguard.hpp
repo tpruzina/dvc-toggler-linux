@@ -1,5 +1,5 @@
-#ifndef RUNGUARD_H
-#define RUNGUARD_H
+#ifndef RUNGUARD_HPP
+#define RUNGUARD_HPP
 
 #include <QObject>
 #include <QSharedMemory>
