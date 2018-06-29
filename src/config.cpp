@@ -9,7 +9,7 @@ Config::Config() :
 		QSettings::IniFormat)
 {
 	if(!contains("autohide"))	set_autohide(false);
-	if(!contains("enabled"))		set_enabled(true);
+	if(!contains("enabled"))	set_enabled(true);
 
 	beginGroup("default");
 	if(!contains("dvc"))		setValue("dvc", 0);
