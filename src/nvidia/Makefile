@@ -8,7 +8,7 @@ LDFLAGS=-lX11 -lXext
 
 all: test
 
-test: nv nvidia.cpp ../display.cpp
+test: nv
 	$(CXX)  display.cpp nvidia.cpp $(NVIDIA_INCLUDES) $(LDFLAGS) $(CXXFLAGS) $(NVIDIA_STATIC) -D_DEBUG -o test_nvidia
 
 nv: 

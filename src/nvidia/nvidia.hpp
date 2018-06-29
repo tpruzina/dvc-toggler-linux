@@ -2,9 +2,9 @@
 #define COMMON_NVIDIA_HPP_
 
 #include <inttypes.h>
-#include "NVCtrl.h"
-#include "NVCtrlLib.h"
-#include "nv-control-screen.h"
+#include "libXNVCtrl/NVCtrl.h"
+#include "libXNVCtrl/NVCtrlLib.h"
+#include "libXNVCtrl/nv-control-screen.h"
 #include "display.hpp"
 
 #define NVIDIA_APPLY_TO_ALL -1

@@ -3,12 +3,10 @@
 int
 NVIDIA::set_vibrance(int level, int chosen_dpy)
 {
-    Bool ret;
-    int screen, retval;
+    int screen;
     NVCTRLAttributeValidValuesRec valid_values;
     int *data;
     int len;
-    int i;
 
     // don't segfault if shit goes wrong
     if(!dpy && !(dpy = XOpenDisplay(NULL)))
@@ -37,7 +35,7 @@ NVIDIA::set_vibrance(int level, int chosen_dpy)
         return 1;
     }
 
-    for (i = 1; i <= data[0]; i++)
+    for (int i = 1; i <= data[0]; i++)
     {
     	int dpyId = data[i];
     	int setval = 0;
@@ -95,7 +93,6 @@ NVIDIA::get_vibrance(void)
 	NVCTRLAttributeValidValuesRec valid_values;
 	int *data;
 	int len;
-	int i;
 
 	if(!dpy)
         {
