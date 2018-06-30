@@ -27,6 +27,11 @@
  * libXNVCtrl library properly protects the Display connection.
  */
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #if !defined(XTHREADS)
 #define XTHREADS
 #endif /* XTHREADS */
@@ -1295,3 +1300,6 @@ static Bool wire_to_event (Display *dpy, XEvent *host, xEvent *wire)
     return True;
 }
 
+#ifdef __cplusplus
+} // extern "C"
+#endif

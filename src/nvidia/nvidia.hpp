@@ -9,7 +9,7 @@
 
 #define NVIDIA_APPLY_TO_ALL -1
 
-class NVIDIA : public DISPLAY
+class NVIDIA : public XDisplay
 {
 public:
 	int get_vibrance();

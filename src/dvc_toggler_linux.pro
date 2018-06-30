@@ -1,12 +1,10 @@
-CONFIG += precompile_header c++17
+CONFIG += c++17
 QMAKE_CXXFLAGS += -std=c++17 -Wall -Wextra
+QMAKE_LFLAGS += -lX11 -lXext -ldl -lXmu
 
-PRECOMPILED_HEADER = pch.hpp
-
-LIBS += -Lnvidia/libXNVCtrl nvidia/libXNVCtrl/libXNVCtrl.a
+TARGET = dvc-toggler
 
 HEADERS = \
-    pch.hpp \
     window.hpp \
     runguard.hpp \
     config.hpp \
@@ -26,15 +24,13 @@ SOURCES = \
     run_guard.cpp \
     x_client_picker.cpp \
     nvidia/display.cpp \
-    nvidia/nvidia.cpp
+    nvidia/nvidia.cpp \
+    nvidia/libXNVCtrl/NVCtrl.c
 
 RESOURCES     = dvc_toggler_linux.qrc
 
 QT           += xml svg core gui widgets
 
-release: DESTDIR = ../build
-
-QMAKE_LFLAGS += -lX11 -lXext -ldl
 
 
 

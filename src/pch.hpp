@@ -1,6 +1,8 @@
 #ifndef PCH_HPP
 #define PCH_HPP
 
+#ifdef __cplusplus
+
 #include <algorithm>
 #include <chrono>
 #include <cstring>
@@ -34,5 +36,7 @@
 #include <time.h>
 #include <unordered_set>
 #include <vector>
+
+#endif // __plusplus
 
 #endif // PCH_HPP

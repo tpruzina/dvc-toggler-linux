@@ -1,9 +1,15 @@
 #ifndef PROFILESELECTORWIDGET_HPP
 #define PROFILESELECTORWIDGET_HPP
 
-#include <QWidget>
+//#include <QWidget>
 #include <QTabWidget>
 #include <QPushButton>
+#include <QGroupBox>
+#include <QSlider>
+#include <QLineEdit>
+#include <QDebug>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 #include "config.hpp"
 

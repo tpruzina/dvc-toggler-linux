@@ -24,6 +24,11 @@
 #ifndef __NVCTRL_H
 #define __NVCTRL_H
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #include <stdint.h>
 
 /**************************************************************************/
@@ -5102,5 +5107,9 @@ typedef struct _NVCTRLAttributePermissions {
 #define NV_CTRL_WARP_DATA_TYPE_BLEND_OR_OFFSET_TEXTURE     0
 #define NV_CTRL_WARP_DATA_TYPE_MESH_TRIANGLESTRIP_XYUVRQ   1
 #define NV_CTRL_WARP_DATA_TYPE_MESH_TRIANGLES_XYUVRQ       2
+
+#ifdef __cplusplus
+}; /* extern "C" */
+#endif
 
 #endif /* __NVCTRL_H */

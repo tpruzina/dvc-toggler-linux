@@ -165,6 +165,10 @@ NVIDIA::get_vibrance(void)
 int main(int argc, char **argv)
 {
     NVIDIA *nv = new NVIDIA;
+    
+    cout << nv->query_active_window_name() << "[" <<
+        nv->query_active_window_pid() << "]\n";
+    
     if(argc == 2)
     {
         int level = atoi(argv[1]);

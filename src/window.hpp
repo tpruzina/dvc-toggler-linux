@@ -3,6 +3,7 @@
 
 #include <QSystemTrayIcon>
 #include <QDialog>
+#include <QCheckBox>
 
 #include "config.hpp"
 #include "profile_selector.hpp"
