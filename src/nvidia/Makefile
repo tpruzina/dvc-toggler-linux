@@ -4,16 +4,21 @@ NVIDIA_STATIC=$(NVIDIA_DIR)/libXNVCtrl.a
 CXX=clang++
 CXXFLAGS=-std=c++03
 
-LDFLAGS=-lX11 -lXext
+LDFLAGS=-lX11 -lXmu -lXext
 
-all: test
+all: nvidia xdisplay
 
-test: nv
-	$(CXX)  display.cpp nvidia.cpp $(NVIDIA_INCLUDES) $(LDFLAGS) $(CXXFLAGS) $(NVIDIA_STATIC) -D_DEBUG -o test_nvidia
+nvidia: nv
+	$(CXX)  nvidia.cpp $(NVIDIA_INCLUDES) $(LDFLAGS) $(CXXFLAGS) $(NVIDIA_STATIC) -D_DEBUG -o nvidia_test
+
+xdisplay: nv
+	$(CXX)  display.cpp $(NVIDIA_INCLUDES) $(LDFLAGS) $(CXXFLAGS) $(NVIDIA_STATIC) -DDEBUG_XDISPLAY -o xdisplay_test
 
 nv: 
 	make -C $(NVIDIA_DIR)
 
+
+
 clean:
 	make -C $(NVIDIA_DIR) clean
-	rm -f test_nvidia
+	rm -f *_test

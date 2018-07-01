@@ -4,5 +4,7 @@
    <file>resources/xclient.svg</file>
    <file>resources/enabled.png</file>
    <file>resources/disabled.png</file>
+   <file>resources/plus.svg</file>
+   <file>resources/minus.svg</file>
 </qresource>
 </RCC>

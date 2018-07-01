@@ -1,5 +1,41 @@
 #include "nvidia.hpp"
 
+NVIDIA::NVIDIA() :
+	dpy(XOpenDisplay(NULL))
+{
+	int *data;
+	int len;
+
+	// Query monitors (CRTCs on screen)
+	XNVCTRLQueryTargetBinaryData(dpy,
+				     NV_CTRL_TARGET_TYPE_X_SCREEN,
+				     GetNvXScreen(dpy),
+				     0,
+				     NV_CTRL_BINARY_DATA_DISPLAYS_ENABLED_ON_XSCREEN,
+				     (unsigned char**) &data,
+				     &len);
+
+	// Query each CRTC to see if we can set DVC
+	for (int crtc = 1; crtc <= data[0]; crtc++)
+	{
+		int crtc_id = data[crtc];
+		NVCTRLAttributeValidValuesRec valid_values;
+		if(XNVCTRLQueryValidTargetAttributeValues(dpy,
+						       NV_CTRL_TARGET_TYPE_DISPLAY,
+						       crtc_id,
+						       0,
+						       NV_CTRL_DIGITAL_VIBRANCE,
+						       &valid_values))
+		{
+			enabled_dpys.push_back(crtc_id);
+		}
+	}
+
+
+
+
+}
+
 int
 NVIDIA::set_vibrance(int level, int chosen_dpy)
 {
@@ -86,7 +122,7 @@ NVIDIA::set_vibrance(int level, int chosen_dpy)
 }
 
 int
-NVIDIA::get_vibrance(void)
+NVIDIA::get_vibrance(int chosen_dpy = -1)
 {
 	Bool ret;
         int screen, value;
@@ -117,7 +153,11 @@ NVIDIA::get_vibrance(void)
 		return 0;
 	}
 
-	int dpyId = data[1];
+	// todo clean this up
+	int dpyId = chosen_dpy;
+	if(!dpyId)
+		dpyId = data[1];
+
 	ret = XNVCTRLQueryValidTargetAttributeValues(dpy,
 			NV_CTRL_TARGET_TYPE_DISPLAY,
 			dpyId,
@@ -150,10 +190,6 @@ NVIDIA::get_vibrance(void)
 			NV_CTRL_DIGITAL_VIBRANCE,
             &value);
 
-#ifdef _DEBUG
-        cout << "The current value of NV_CTRL_DIGITAL_VIBRANCE is " << level << " on display device " <<
-        		"DPY-" << dpyId << " of screen " << screen << " of " << XDisplayName(NULL) << endl;
-#endif
 
     return value > 0 ?
             value / ((double)valid_values.u.range.max / 100) :
@@ -165,9 +201,6 @@ NVIDIA::get_vibrance(void)
 int main(int argc, char **argv)
 {
     NVIDIA *nv = new NVIDIA;
-    
-    cout << nv->query_active_window_name() << "[" <<
-        nv->query_active_window_pid() << "]\n";
     
     if(argc == 2)
     {
@@ -182,9 +215,30 @@ int main(int argc, char **argv)
     }
     else
     {
-        cout << "Usage" << endl;
         cout << "./test_nvidia <level> [dpyId]" << endl;
     }
+
+//    setlocale(LC_ALL, "");
+
+/*
+    cout << "active window name: " << nv->query_active_window_name() << endl;
+    cout << "active window pid: " << nv->query_active_window_pid() << endl;
+    cout << "default screen: " << nv->query_default_screen() << endl;
+
+    Window focused, top, name;
+
+    focused = nv->query_focused_window();
+    cout << "focused window class: " << nv->query_window_class(focused) << endl;
+    cout << "focused PID: " << nv->query_window_pid(focused) << endl;
+
+    top = nv->query_top_window(focused);
+    cout << "focused->top class: " << nv->query_window_class(top) << endl;
+    cout << "focused->top PID: " << nv->query_window_pid(top) << endl;
+
+    name = nv->query_name_window(top);
+    cout << "focused->top->name class: " << nv->query_window_class(name) << endl;
+    cout << "focused->top->name PID: " << nv->query_window_pid(name) << endl;
+*/
     return 0;
 }
 #endif

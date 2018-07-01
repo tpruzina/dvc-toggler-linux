@@ -26,6 +26,7 @@ public:
 
 	string	query_window_class(Window w);
 	string	query_window_name(Window w);
+	pid_t	query_window_pid(Window w);
 
 
 private:
@@ -34,6 +35,8 @@ private:
 	friend class MOUSE;
 	friend class NVIDIA;
 	friend class APP;
+
+	int32_t get_prop_card32(Window w, Atom p);
 };
 
 

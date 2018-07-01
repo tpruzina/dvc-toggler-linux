@@ -37,7 +37,7 @@ Config::set_icon_path(const QString &profile_name, const QString &path)
 }
 
 int
-Config::query_dvc(const QString &profile_name)
+Config::query_dvc(const QString &profile_name, int monitor_id)
 {
 	beginGroup(profile_name);
 	int res = value("dvc").toInt();
@@ -46,10 +46,10 @@ Config::query_dvc(const QString &profile_name)
 }
 
 void
-Config::set_dvc(const QString &profile_name, int level)
+Config::set_dvc(const QString &profile_name, int monitor_id, int level)
 {
 	beginGroup(profile_name);
-	setValue("dvc", level);
+	setValue("dvc"+QString(monitor_id), level);
 	endGroup();
 }
 

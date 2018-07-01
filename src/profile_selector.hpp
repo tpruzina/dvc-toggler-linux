@@ -10,6 +10,9 @@
 #include <QDebug>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QVector>
+#include <QComboBox>
+#include <QMessageBox>
 
 #include "config.hpp"
 
@@ -23,7 +26,20 @@ signals:
 
 public slots:
 
+private slots:
+	void new_profile_clicked();
+	void del_curr_profile_clicked();
+
 private:
+	QGroupBox	*profileSelectorBox;
+	QPushButton	*addProfileButton;
+	QPushButton	*delCurrentProfileButton;
+
+	void	createProfileSelectorButtonBox();
+
+	QTabWidget tabs;
+	QVector<QString> profiles;
+	QString	active_profile;
 	const Config &cfg;
 };
 
@@ -42,7 +58,7 @@ private:
 	QLineEdit *dvc_le;
 	Config &_cfg;
 	QString _name;
-	int dvc;
+	QVector<int> dvc_enabled_dpys;
 };
 
 #endif // PROFILESELECTORWIDGET_HPP

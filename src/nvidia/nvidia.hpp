@@ -7,19 +7,23 @@
 #include "libXNVCtrl/nv-control-screen.h"
 #include "display.hpp"
 
+#include <vector>
+
 #define NVIDIA_APPLY_TO_ALL -1
 
-class NVIDIA : public XDisplay
+class NVIDIA
 {
 public:
-	int get_vibrance();
+	NVIDIA();
+	int get_vibrance(int chosen_dpy);
 	int set_vibrance(int level, int chosen_dpy);
         int set_vibrance(int level) { return set_vibrance(level, NVIDIA_APPLY_TO_ALL); }
 
 	int get_core_freq_offset();
 	int set_core_freq_offset(int offset);
 private:
-        int level;
+	Display *dpy;
+	vector<int> enabled_dpys;
 };
 
 #endif /* COMMON_NVIDIA_HPP_ */
