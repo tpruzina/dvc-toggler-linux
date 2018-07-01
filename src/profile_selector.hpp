@@ -13,6 +13,7 @@
 #include <QVector>
 #include <QComboBox>
 #include <QMessageBox>
+#include <QLabel>
 
 #include "config.hpp"
 #include "nvidia/nvidia.hpp"
@@ -50,9 +51,7 @@ class AppProfile : public QGroupBox
 public:
 	explicit AppProfile(Config &cfg, const QString &name);
 signals:
-
 public slots:
-//	void onDVCSliderChanged(int value);
 
 private:
 	Config &_cfg;
@@ -63,18 +62,16 @@ class DVCEntry : public QGroupBox
 {
 	Q_OBJECT
 public:
-	explicit DVCEntry(Config &cfg, NVIDIA &nv, const int dpyId);
+	explicit DVCEntry(int dpyId, int &dvc_level);
 
 public slots:
 	void onDVCSliderChanged(int value);
 
 private:
 	const int dpyId;
-	int dvc;
+	int &dvc;
 	QSlider *dvc_slider;
 	QLineEdit *dvc_le;
-	Config & _cfg;
-	NVIDIA & _nv;
 };
 
 #endif // PROFILESELECTORWIDGET_HPP

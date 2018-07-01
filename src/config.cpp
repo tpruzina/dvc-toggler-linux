@@ -12,7 +12,6 @@ Config::Config() :
 	if(!contains("enabled"))	set_enabled(true);
 
 	beginGroup("default");
-	if(!contains("dvc"))		setValue("dvc", 0);
 	if(!contains("icon_path"))	setValue("icon", ":/resources/desktop.svg");
 	endGroup();
 

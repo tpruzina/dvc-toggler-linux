@@ -71,60 +71,45 @@ AppProfile::AppProfile(Config &cfg, const QString &name) :
 	_cfg(cfg),
 	_name(name)
 {
+	int test = 0;
+	DVCEntry *e1 = new DVCEntry(0, test);
+	DVCEntry *e2 = new DVCEntry(1, test);
 
-//	 QGroupBox *dvcgb = new QGroupBox;
-//	QHBoxLayout *hlayout = new QHBoxLayout;
-
-//	dvc_slider = new QSlider(Qt::Horizontal);
-//	dvc_slider->setMinimum(-100);
-//	dvc_slider->setMaximum(100);
-//	dvc_slider->setValue(0);
-
-//	dvc_le = new QLineEdit();
-//	dvc_le->setText(QString::number(0));
-//	dvc_le->setReadOnly(true);
-
-//	connect(dvc_slider,
-//		SIGNAL(valueChanged(int)),
-//		this,
-//		SLOT(onDVCSliderChanged(int))
-//	);
-
-//	hlayout->addWidget(dvc_slider);
-//	hlayout->addWidget(dvc_le);
-//	dvcgb->setLayout(hlayout);
 
 	QVBoxLayout *vlayout = new QVBoxLayout;
-//	vlayout->addWidget(dvcgb);
+	vlayout->addWidget(e1);
+	vlayout->addWidget(e2);
 	this->setLayout(vlayout);
 	this->setStyleSheet("border:none");
 }
 
-DVCEntry::DVCEntry(Config &cfg, NVIDIA &nv, const int dpyId) :
-	dpyId(dpyId),
-	_cfg(cfg),
-	_nv(nv)
+DVCEntry::DVCEntry(int dpyId, int &dvc_level) :
+	dpyId(dpyId),	// monitor id
+	dvc(dvc_level)	// reference to NVIDIA std::map
 {
-		QHBoxLayout *hlayout = new QHBoxLayout;
+	QHBoxLayout *hlayout = new QHBoxLayout;
 
-		dvc_slider = new QSlider(Qt::Horizontal);
-		dvc_slider->setMinimum(-100);
-		dvc_slider->setMaximum(100);
-		dvc_slider->setValue(0);
+	QLabel *dpy_name = new QLabel("DPY-" + QString::number(dpyId));
 
-		dvc_le = new QLineEdit();
-		dvc_le->setText(QString::number(0));
-		dvc_le->setReadOnly(true);
+	dvc_slider = new QSlider(Qt::Horizontal);
+	dvc_slider->setMinimum(-100);
+	dvc_slider->setMaximum(100);
+	dvc_slider->setValue(0);
 
-		connect(dvc_slider,
-			SIGNAL(valueChanged(int)),
-			this,
-			SLOT(onDVCSliderChanged(int))
-		);
+	dvc_le = new QLineEdit();
+	dvc_le->setText(QString::number(0));
+	dvc_le->setReadOnly(true);
+	dvc_le->setMaximumWidth(30);
 
-		hlayout->addWidget(dvc_slider);
-		hlayout->addWidget(dvc_le);
-		this->setLayout(hlayout);
+	connect(dvc_slider,
+		SIGNAL(valueChanged(int)),
+		this,
+		SLOT(onDVCSliderChanged(int)));
+
+	hlayout->addWidget(dpy_name);
+	hlayout->addWidget(dvc_slider);
+	hlayout->addWidget(dvc_le);
+	this->setLayout(hlayout);
 }
 
 void
@@ -132,5 +117,4 @@ DVCEntry::onDVCSliderChanged(int value)
 {
 	dvc_le->setText(QString::number(dvc_slider->sliderPosition()));
 	dvc = value;
-//	_cfg.set_dvc(_name, value);
 }
