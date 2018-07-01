@@ -2,7 +2,7 @@ NVIDIA_DIR=./libXNVCtrl
 NVIDIA_INCLUDES=-I$(NVIDIA_DIR) 
 NVIDIA_STATIC=$(NVIDIA_DIR)/libXNVCtrl.a
 CXX=clang++
-CXXFLAGS=-std=c++03
+CXXFLAGS=-std=c++17
 
 LDFLAGS=-lX11 -lXmu -lXext
 

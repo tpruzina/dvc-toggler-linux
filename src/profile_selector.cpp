@@ -69,8 +69,7 @@ ProfileSelectorWidget::del_curr_profile_clicked()
 
 AppProfile::AppProfile(Config &cfg, const QString &name) :
 	_cfg(cfg),
-	_name(name),
-	dvc_enabled_dpys(nvidia)
+	_name(name)
 {
 
 	 QGroupBox *dvcgb = new QGroupBox;

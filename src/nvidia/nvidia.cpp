@@ -7,238 +7,168 @@ NVIDIA::NVIDIA() :
 	int len;
 
 	// Query monitors (CRTCs on screen)
-	XNVCTRLQueryTargetBinaryData(dpy,
-				     NV_CTRL_TARGET_TYPE_X_SCREEN,
-				     GetNvXScreen(dpy),
-				     0,
-				     NV_CTRL_BINARY_DATA_DISPLAYS_ENABLED_ON_XSCREEN,
-				     (unsigned char**) &data,
-				     &len);
-
-	// Query each CRTC to see if we can set DVC
-	for (int crtc = 1; crtc <= data[0]; crtc++)
-	{
-		int crtc_id = data[crtc];
-		NVCTRLAttributeValidValuesRec valid_values;
-		if(XNVCTRLQueryValidTargetAttributeValues(dpy,
-						       NV_CTRL_TARGET_TYPE_DISPLAY,
-						       crtc_id,
-						       0,
-						       NV_CTRL_DIGITAL_VIBRANCE,
-						       &valid_values))
-		{
-			enabled_dpys.push_back(crtc_id);
-		}
-	}
-
-
-
-
-}
-
-int
-NVIDIA::set_vibrance(int level, int chosen_dpy)
-{
-    int screen;
-    NVCTRLAttributeValidValuesRec valid_values;
-    int *data;
-    int len;
-
-    // don't segfault if shit goes wrong
-    if(!dpy && !(dpy = XOpenDisplay(NULL)))
-        return 0;
-    
-    // normalize percentages to <-100,100>
-    if(level > 100)
-    	level = 100;
-    else if(level < -100)
-    	level = -100;
-
-    // get active nvidia screen
-    screen = GetNvXScreen(dpy);
-
-    // query nvidia NV_CTRL feature
-    if(!XNVCTRLQueryTargetBinaryData(dpy,
-        		NV_CTRL_TARGET_TYPE_X_SCREEN,
-			screen,
-			0,
-			NV_CTRL_BINARY_DATA_DISPLAYS_ENABLED_ON_XSCREEN,
-			(unsigned char **)&data,
-			&len)
-    ){
-        cerr <<  "Unable to determine enabled display devices for" << endl;
-        cerr << "screen " << screen << "of " << XDisplayName(NULL) << endl;
-        return 1;
-    }
-
-    for (int i = 1; i <= data[0]; i++)
-    {
-    	int dpyId = data[i];
-    	int setval = 0;
-
-        // skip if we were given specific dpyId and this one doesn't match it)
-        if(chosen_dpy != NVIDIA_APPLY_TO_ALL && chosen_dpy != dpyId)
-            continue;
-
-        if(!XNVCTRLQueryValidTargetAttributeValues( dpy,
-                                                    NV_CTRL_TARGET_TYPE_DISPLAY,
-                                                    dpyId,
-                                                    0,
-                                                    NV_CTRL_DIGITAL_VIBRANCE,
-						    &valid_values)
-        ) {
-            cerr << "Unable to query the valid vibrance ranges on DPY-" << dpyId << " " << screen << " " << XDisplayName(NULL) << endl;
-            return 0;
-        }
-
-        if (valid_values.type != ATTRIBUTE_TYPE_RANGE)
+	if(!XNVCTRLQueryTargetBinaryData(dpy,
+					 NV_CTRL_TARGET_TYPE_X_SCREEN,
+					 GetNvXScreen(dpy),
+					 0,
+					 NV_CTRL_BINARY_DATA_DISPLAYS_ENABLED_ON_XSCREEN,
+					 (unsigned char**) &data,
+					 &len))
         {
-            cerr << "NV_CTRL_DIGITAL_VIBRANCE is not of type RANGE" << endl;
-            return 1;
+            throw "No DVC enabeld monitors found\n";
         }
-
-        // recalculate value depending on range and percentage value
-        if(level > 0)
-        	setval = level * ((double)valid_values.u.range.max / 100);
-        else if (level < 0)
-        	setval = level * (((double)valid_values.u.range.min / 100)*-1);
-
-        // set DVC
-        XNVCTRLSetTargetAttribute(dpy,
-        		NV_CTRL_TARGET_TYPE_DISPLAY,
-				dpyId,
-				0,
-				NV_CTRL_DIGITAL_VIBRANCE,
-				setval);
-        XFlush(dpy);
-
-#ifdef _DEBUG
-        cout << "Set NV_CTRL_DIGITAL_VIBRANCE to " << setval << " on display device " <<
-        		"DPY-" << dpyId << " of screen " << screen << " of " << XDisplayName(NULL) << endl;
-#endif
-    }
-
-	return level;
 }
 
 int
-NVIDIA::get_vibrance(int chosen_dpy = -1)
+NVIDIA::set_vibrance(std::map<int,int> values)
 {
-	Bool ret;
-        int screen, value;
-	NVCTRLAttributeValidValuesRec valid_values;
+	int *data;  // buffer for XNVCTRLQuery response
+	int len;    // length of a respons
+
+	if(!dpy && !(dpy = XOpenDisplay(NULL)))
+		return -1;
+
+	// get active nvidia screen
+	int screen = GetNvXScreen(dpy);
+
+	// query all dpys
+	XNVCTRLQueryTargetBinaryData(dpy,
+					 NV_CTRL_TARGET_TYPE_X_SCREEN,
+					 screen,
+					 0,
+					 NV_CTRL_BINARY_DATA_DISPLAYS_ENABLED_ON_XSCREEN,
+					 (unsigned char **)&data,
+					 &len);
+        
+        // query each dpy
+	for (int i = 1; i <= data[0]; i++)
+	{
+	        NVCTRLAttributeValidValuesRec valid_values;
+		int dpyId = data[i];        // id of queried monitor
+                int setval = 0;
+                
+                // get DVC range values
+		if(!XNVCTRLQueryValidTargetAttributeValues( dpy,
+							    NV_CTRL_TARGET_TYPE_DISPLAY,
+							    dpyId,
+							    0,
+							    NV_CTRL_DIGITAL_VIBRANCE,
+							    &valid_values))
+                {
+			cerr << "Unable to query the valid vibrance ranges on DPY-" << dpyId << " " << screen << " " << XDisplayName(NULL) << endl;
+		        continue;
+                }
+                
+                // check if response has right type
+		if (valid_values.type != ATTRIBUTE_TYPE_RANGE)
+		{
+			cerr << "NV_CTRL_DIGITAL_VIBRANCE is not of type RANGE" << endl;
+		        continue;
+                }
+                
+                // normalize input values to <-100,100> and map them to true range (typically <-1024,1023>)
+		int level = values[dpyId];  // get desired level from input vector
+		if(level > 0)
+                {
+                        if(level > 100)
+                            level = 100;
+			setval = level * ((double)valid_values.u.range.max / 100);
+                }
+                else if (level < 0)
+                {
+                    if(level < -100)
+                        level = -100;
+                    setval = level * (((double)valid_values.u.range.min / 100)*-1);
+                }
+
+		// set DVC
+		XNVCTRLSetTargetAttribute(dpy,
+					  NV_CTRL_TARGET_TYPE_DISPLAY,
+					  dpyId,
+					  0,
+					  NV_CTRL_DIGITAL_VIBRANCE,
+					  setval);
+		// Flush display
+                XFlush(dpy);
+	}
+        return 0;
+}
+
+std::map<int, int>
+NVIDIA::get_vibrance()
+{
 	int *data;
 	int len;
 
-	if(!dpy)
+        std::map<int,int> map;
+
+	if(!dpy && !(dpy = XOpenDisplay(NULL)))
+			return map;
+	
+        
+        int screen = GetNvXScreen(dpy);
+
+	if(!XNVCTRLQueryTargetBinaryData(dpy,
+					   NV_CTRL_TARGET_TYPE_X_SCREEN,
+					   screen,
+					   0,
+					   NV_CTRL_BINARY_DATA_DISPLAYS_ENABLED_ON_XSCREEN,
+					   (unsigned char **)&data,
+					   &len))
         {
-            dpy = XOpenDisplay(NULL);
-            if(!dpy)
-                return 0;
-        }
-	screen = GetNvXScreen(dpy);
-
-	ret = XNVCTRLQueryTargetBinaryData(dpy,
-			NV_CTRL_TARGET_TYPE_X_SCREEN,
-			screen,
-			0,
-			NV_CTRL_BINARY_DATA_DISPLAYS_ENABLED_ON_XSCREEN,
-			(unsigned char **)&data,
-			&len);
-
-
-	if (!ret) {
 		cerr <<  "Unable to determine enabled display devices for" << endl;
 		cerr << "screen " << screen << "of " << XDisplayName(NULL) << endl;
-		return 0;
-	}
+	        return map;
+        }
 
-	// todo clean this up
-	int dpyId = chosen_dpy;
-	if(!dpyId)
-		dpyId = data[1];
+        cout << "num screens " << data[0] << "\n";
 
-	ret = XNVCTRLQueryValidTargetAttributeValues(dpy,
-			NV_CTRL_TARGET_TYPE_DISPLAY,
-			dpyId,
-			0,
-			NV_CTRL_DIGITAL_VIBRANCE,
-			&valid_values);
+        for (int i = 1; i <= data[0]; i++)
+        {
+	    cout << "dpyId[" <<  data[i];
+            int dpyId = data[i];
+	    int value;
 
-	if(!ret)
-	{
-		fprintf(stderr, "Unable to query the valid values for "
-				"NV_CTRL_DIGITAL_VIBRANCE on display device DPY-%d of "
-				"screen %d of '%s'.\n",
-				dpyId,
-				screen, XDisplayName(NULL));
-		return 0;
-	}
+            // query valid ranges
+            NVCTRLAttributeValidValuesRec valid_values;
+	    if(!XNVCTRLQueryValidTargetAttributeValues(dpy,
+						     NV_CTRL_TARGET_TYPE_DISPLAY,
+						     dpyId,
+						     0,
+						     NV_CTRL_DIGITAL_VIBRANCE,
+						     &valid_values))
+            {
+                // zero on failure
+                map[dpyId] = 0;
+                continue;
+            }
+            
+            XNVCTRLQueryTargetAttribute(dpy,
+					  NV_CTRL_TARGET_TYPE_DISPLAY,
+					  dpyId,
+					  0,
+					  NV_CTRL_DIGITAL_VIBRANCE,
+					  &value);
 
-	/* we assume that NV_CTRL_DIGITAL_VIBRANCE is a range type */
-
-	if (valid_values.type != ATTRIBUTE_TYPE_RANGE) {
-		fprintf(stderr, "NV_CTRL_DIGITAL_VIBRANCE is not of "
-				"type RANGE.\n");
-		return 0;
-	}
-
-	ret = XNVCTRLQueryTargetAttribute(dpy,
-			NV_CTRL_TARGET_TYPE_DISPLAY,
-			dpyId,
-			0,
-			NV_CTRL_DIGITAL_VIBRANCE,
-            &value);
-
-
-    return value > 0 ?
-            value / ((double)valid_values.u.range.max / 100) :
-            value / ((double)valid_values.u.range.min / 100);
-
+            cout << "]=" << value << endl;
+	    map[dpyId] = value > 0 ?
+				value / ((double)valid_values.u.range.max / 100) :
+				value / ((double)valid_values.u.range.min / 100);
+        }
+        return map;
 }
 
 #ifdef _DEBUG
 int main(int argc, char **argv)
 {
-    NVIDIA *nv = new NVIDIA;
-    
-    if(argc == 2)
-    {
-        int level = atoi(argv[1]);
-        nv->set_vibrance(atoi(argv[1]));
-    }
-    else if(argc == 3)
-    {
-        int level = atoi(argv[1]);
-        int dpyId = atoi(argv[2]);
-        nv->set_vibrance(level, dpyId);
-    }
-    else
-    {
-        cout << "./test_nvidia <level> [dpyId]" << endl;
-    }
-
-//    setlocale(LC_ALL, "");
-
-/*
-    cout << "active window name: " << nv->query_active_window_name() << endl;
-    cout << "active window pid: " << nv->query_active_window_pid() << endl;
-    cout << "default screen: " << nv->query_default_screen() << endl;
-
-    Window focused, top, name;
-
-    focused = nv->query_focused_window();
-    cout << "focused window class: " << nv->query_window_class(focused) << endl;
-    cout << "focused PID: " << nv->query_window_pid(focused) << endl;
-
-    top = nv->query_top_window(focused);
-    cout << "focused->top class: " << nv->query_window_class(top) << endl;
-    cout << "focused->top PID: " << nv->query_window_pid(top) << endl;
-
-    name = nv->query_name_window(top);
-    cout << "focused->top->name class: " << nv->query_window_class(name) << endl;
-    cout << "focused->top->name PID: " << nv->query_window_pid(name) << endl;
-*/
-    return 0;
+	NVIDIA *nv = new NVIDIA;
+        
+        std::map<int,int> res = nv->get_vibrance();
+        
+        for (const auto &val : res)
+            res[val.first] = val.second + 10;
+        
+        nv->set_vibrance(res);           
+	return 0;
 }
 #endif

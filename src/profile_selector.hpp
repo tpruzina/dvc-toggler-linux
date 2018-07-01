@@ -58,7 +58,6 @@ private:
 	QLineEdit *dvc_le;
 	Config &_cfg;
 	QString _name;
-	QVector<int> dvc_enabled_dpys;
 };
 
 #endif // PROFILESELECTORWIDGET_HPP
