@@ -3,7 +3,7 @@
 #include "window.hpp"
 #include "profile_selector.hpp"
 
-Window::Window()
+mainWindow::mainWindow()
 {
 	setWindowTitle(tr("DVC toggler"));
 
@@ -28,7 +28,7 @@ Window::Window()
 	trayIcon->show();
 }
 
-void Window::setVisible(bool visible)
+void mainWindow::setVisible(bool visible)
 {
 	minimizeAction->setEnabled(visible);
 	restoreAction->setEnabled(!visible);
@@ -36,7 +36,7 @@ void Window::setVisible(bool visible)
 	qDebug() << "setVisibile(" << visible << ") called!";
 }
 
-void Window::closeEvent(QCloseEvent *event)
+void mainWindow::closeEvent(QCloseEvent *event)
 {
 	if(cfg.query_autohide() == false)
 	{
@@ -57,7 +57,7 @@ void Window::closeEvent(QCloseEvent *event)
 	}
 }
 
-void Window::toggleEnabled()
+void mainWindow::toggleEnabled()
 {
 	cfg.toggle_enabled();
 	QString status;
@@ -77,12 +77,12 @@ void Window::toggleEnabled()
 	setWindowIcon(icon);
 }
 
-void Window::toggleAutoHide()
+void mainWindow::toggleAutoHide()
 {
 	cfg.toggle_autohide();
 }
 
-void Window::iconActivated(QSystemTrayIcon::ActivationReason reason)
+void mainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
 	switch (reason) {
 	case QSystemTrayIcon::Trigger:
@@ -97,19 +97,19 @@ void Window::iconActivated(QSystemTrayIcon::ActivationReason reason)
 	}
 }
 
-void Window::showMessage(const QString &msg, unsigned timeout)
+void mainWindow::showMessage(const QString &msg, unsigned timeout)
 {
 	trayIcon->showMessage("DVC toggler", msg, icon, timeout);
 }
 
-void Window::messageClicked()
+void mainWindow::messageClicked()
 {
 	QMessageBox::information(0, tr("Systray"),
 				 tr("Sorry, I already gave what help I could.\n"
 				    "Maybe you should try asking a human?"));
 }
 
-void Window::createIconGroupBox()
+void mainWindow::createIconGroupBox()
 {
 	iconGroupBox = new QGroupBox(tr("Settings"));
 
@@ -125,7 +125,7 @@ void Window::createIconGroupBox()
 	iconGroupBox->setLayout(iconLayout);
 }
 
-void Window::createTrayIcon()
+void mainWindow::createTrayIcon()
 {
 	minimizeAction = new QAction(tr("Mi&nimize"), this);
 	connect(minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));

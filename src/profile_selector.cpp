@@ -72,38 +72,65 @@ AppProfile::AppProfile(Config &cfg, const QString &name) :
 	_name(name)
 {
 
-	 QGroupBox *dvcgb = new QGroupBox;
-	QHBoxLayout *hlayout = new QHBoxLayout;
+//	 QGroupBox *dvcgb = new QGroupBox;
+//	QHBoxLayout *hlayout = new QHBoxLayout;
 
-	dvc_slider = new QSlider(Qt::Horizontal);
-	dvc_slider->setMinimum(-100);
-	dvc_slider->setMaximum(100);
-	dvc_slider->setValue(dvc);
+//	dvc_slider = new QSlider(Qt::Horizontal);
+//	dvc_slider->setMinimum(-100);
+//	dvc_slider->setMaximum(100);
+//	dvc_slider->setValue(0);
 
-	dvc_le = new QLineEdit();
-	dvc_le->setText(QString::number(dvc));
-	dvc_le->setReadOnly(true);
+//	dvc_le = new QLineEdit();
+//	dvc_le->setText(QString::number(0));
+//	dvc_le->setReadOnly(true);
 
-	connect(dvc_slider,
-		SIGNAL(valueChanged(int)),
-		this,
-		SLOT(onDVCSliderChanged(int))
-	);
+//	connect(dvc_slider,
+//		SIGNAL(valueChanged(int)),
+//		this,
+//		SLOT(onDVCSliderChanged(int))
+//	);
 
-	hlayout->addWidget(dvc_slider);
-	hlayout->addWidget(dvc_le);
-	dvcgb->setLayout(hlayout);
+//	hlayout->addWidget(dvc_slider);
+//	hlayout->addWidget(dvc_le);
+//	dvcgb->setLayout(hlayout);
 
 	QVBoxLayout *vlayout = new QVBoxLayout;
-	vlayout->addWidget(dvcgb);
+//	vlayout->addWidget(dvcgb);
 	this->setLayout(vlayout);
 	this->setStyleSheet("border:none");
 }
 
+DVCEntry::DVCEntry(Config &cfg, NVIDIA &nv, const int dpyId) :
+	dpyId(dpyId),
+	_cfg(cfg),
+	_nv(nv)
+{
+		QHBoxLayout *hlayout = new QHBoxLayout;
+
+		dvc_slider = new QSlider(Qt::Horizontal);
+		dvc_slider->setMinimum(-100);
+		dvc_slider->setMaximum(100);
+		dvc_slider->setValue(0);
+
+		dvc_le = new QLineEdit();
+		dvc_le->setText(QString::number(0));
+		dvc_le->setReadOnly(true);
+
+		connect(dvc_slider,
+			SIGNAL(valueChanged(int)),
+			this,
+			SLOT(onDVCSliderChanged(int))
+		);
+
+		hlayout->addWidget(dvc_slider);
+		hlayout->addWidget(dvc_le);
+		this->setLayout(hlayout);
+}
+
 void
-AppProfile::onDVCSliderChanged(int value)
+DVCEntry::onDVCSliderChanged(int value)
 {
 	dvc_le->setText(QString::number(dvc_slider->sliderPosition()));
 	dvc = value;
-	_cfg.set_dvc(_name, value);
+//	_cfg.set_dvc(_name, value);
 }

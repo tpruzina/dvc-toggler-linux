@@ -55,14 +55,14 @@ NVIDIA::set_vibrance(std::map<int,int> values)
 							    NV_CTRL_DIGITAL_VIBRANCE,
 							    &valid_values))
                 {
-			cerr << "Unable to query the valid vibrance ranges on DPY-" << dpyId << " " << screen << " " << XDisplayName(NULL) << endl;
+			std::cerr << "Unable to query the valid vibrance ranges on DPY-" << dpyId << " " << screen << " " << XDisplayName(NULL) << std::endl;
 		        continue;
                 }
                 
                 // check if response has right type
 		if (valid_values.type != ATTRIBUTE_TYPE_RANGE)
 		{
-			cerr << "NV_CTRL_DIGITAL_VIBRANCE is not of type RANGE" << endl;
+			std::cerr << "NV_CTRL_DIGITAL_VIBRANCE is not of type RANGE" << std::endl;
 		        continue;
                 }
                 
@@ -116,16 +116,16 @@ NVIDIA::get_vibrance()
 					   (unsigned char **)&data,
 					   &len))
         {
-		cerr <<  "Unable to determine enabled display devices for" << endl;
-		cerr << "screen " << screen << "of " << XDisplayName(NULL) << endl;
+		std::cerr <<  "Unable to determine enabled display devices for" << std::endl;
+		std::cerr << "screen " << screen << "of " << XDisplayName(NULL) << std::endl;
 	        return map;
         }
 
-        cout << "num screens " << data[0] << "\n";
+	std::cout << "num screens " << data[0] << std::endl;
 
         for (int i = 1; i <= data[0]; i++)
         {
-	    cout << "dpyId[" <<  data[i];
+	    std::cout << "dpyId[" <<  data[i];
             int dpyId = data[i];
 	    int value;
 
@@ -150,7 +150,7 @@ NVIDIA::get_vibrance()
 					  NV_CTRL_DIGITAL_VIBRANCE,
 					  &value);
 
-            cout << "]=" << value << endl;
+	    std::cout << "]=" << value << std::endl;
 	    map[dpyId] = value > 0 ?
 				value / ((double)valid_values.u.range.max / 100) :
 				value / ((double)valid_values.u.range.min / 100);

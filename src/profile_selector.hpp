@@ -15,6 +15,7 @@
 #include <QMessageBox>
 
 #include "config.hpp"
+#include "nvidia/nvidia.hpp"
 
 class ProfileSelectorWidget : public QGroupBox
 {
@@ -51,13 +52,29 @@ public:
 signals:
 
 public slots:
+//	void onDVCSliderChanged(int value);
+
+private:
+	Config &_cfg;
+	QString _name;
+};
+
+class DVCEntry : public QGroupBox
+{
+	Q_OBJECT
+public:
+	explicit DVCEntry(Config &cfg, NVIDIA &nv, const int dpyId);
+
+public slots:
 	void onDVCSliderChanged(int value);
 
 private:
+	const int dpyId;
+	int dvc;
 	QSlider *dvc_slider;
 	QLineEdit *dvc_le;
-	Config &_cfg;
-	QString _name;
+	Config & _cfg;
+	NVIDIA & _nv;
 };
 
 #endif // PROFILESELECTORWIDGET_HPP

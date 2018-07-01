@@ -9,12 +9,12 @@
 #include "profile_selector.hpp"
 #include "procwatch.hpp"
 
-class Window : public QDialog
+class mainWindow : public QDialog
 {
 	Q_OBJECT
 
 public:
-	Window();
+	mainWindow();
 
 	void setVisible(bool visible);
 

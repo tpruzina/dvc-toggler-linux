@@ -5,11 +5,11 @@
 #include "libXNVCtrl/NVCtrl.h"
 #include "libXNVCtrl/NVCtrlLib.h"
 #include "libXNVCtrl/nv-control-screen.h"
-#include "display.hpp"
 
 #include <map>
 #include <vector>
 #include <algorithm> // std::transform
+#include <iostream>
 
 #define NVIDIA_APPLY_TO_ALL -1
 
