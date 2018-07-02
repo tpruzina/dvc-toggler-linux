@@ -8,7 +8,22 @@
 #include <X11/Xmu/WinUtil.h>
 #include <locale.h>
 
-using namespace std;
+#undef Bool
+#undef CursorShape
+#undef Expose
+#undef KeyPress
+#undef KeyRelease
+#undef FocusIn
+#undef FocusOut
+#undef FontChange
+#undef None
+#undef Status
+#undef Unsorted
+
+using std::string;
+using std::cout;
+using std::cerr;
+using std::endl;
 
 class XDisplay
 {
@@ -38,8 +53,5 @@ private:
 
 	int32_t get_prop_card32(Window w, Atom p);
 };
-
-
-
 
 #endif /* COMMON_DISPLAY_HPP_ */

@@ -30,6 +30,8 @@
 
 #if defined __cplusplus
 extern "C" {
+#undef Bool
+typedef bool Bool;
 #endif 
 
 /*

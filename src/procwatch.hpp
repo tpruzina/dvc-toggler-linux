@@ -18,17 +18,19 @@
 #include <sstream>
 #include <cstring>
 
+#include "nvidia/display.hpp"
+
 typedef int pid_t;
 using std::unordered_set;
 using std::string;
 using std::vector;
 
-class ProcWatch {
+class ProcWatch : public XDisplay{
  public:
 	ProcWatch();
 	~ProcWatch();
 
-	vector < string > list_running_procs();
+	vector<string> list_running_procs();
 	bool is_proc_running(string proc_comm);
 	void debug_dump();
 

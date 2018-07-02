@@ -51,5 +51,7 @@ private:
 	QSystemTrayIcon *trayIcon;
 	QIcon icon;
 	QMenu *trayIconMenu;
+
+	friend class ProfileSelectorWidget;
 };
 #endif

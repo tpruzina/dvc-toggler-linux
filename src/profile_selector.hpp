@@ -30,11 +30,11 @@ signals:
 
 public slots:
 	void apply_dvc();
-	void updateComboBox();
+	void updateComboBox(int);
 
 private slots:
-	void new_profile_clicked();
-	void del_curr_profile_clicked();
+//	void new_profile_clicked();
+//	void del_curr_profile_clicked();
 
 private:
 	void	createProfileTabsBox();
@@ -45,8 +45,9 @@ private:
 	QComboBox profileList;
 
 	QGroupBox	profileSelectorBox;
-	QPushButton	addProfileButton;
-	QPushButton	delCurrentProfileButton;
+//	QLabel		addProfileLabel;
+//	QPushButton	addProfileButton;
+//	QPushButton	delCurrentProfileButton;
 
 	QTabWidget tabs;
 	QVector<QString> profiles;

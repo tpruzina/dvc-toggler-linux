@@ -161,14 +161,14 @@ NVIDIA::get_vibrance()
 #ifdef _DEBUG
 int main(int argc, char **argv)
 {
-	NVIDIA *nv = new NVIDIA;
+	NVIDIA nv;
         
-        std::map<int,int> res = nv->get_vibrance();
+        std::map<int,int> res = nv.get_vibrance();
         
         for (const auto &val : res)
             res[val.first] = 100;
         
-        nv->set_vibrance(res);           
+        nv.set_vibrance(&res);           
 	return 0;
 }
 #endif

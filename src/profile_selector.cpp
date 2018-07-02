@@ -1,6 +1,7 @@
 #include "profile_selector.hpp"
 
 ProfileSelectorWidget::ProfileSelectorWidget(mainWindow *p, Config &cfg) :
+//	addProfileLabel("Add new profile:"),
 	W(p),
 	cfg(cfg)
 {
@@ -20,7 +21,12 @@ ProfileSelectorWidget::ProfileSelectorWidget(mainWindow *p, Config &cfg) :
 void
 ProfileSelectorWidget::createProfileTabsBox()
 {
-	for(const auto &app : cfg.query_profiles())
+	QStringList config = cfg.query_profiles();
+	// make sure that "default" is on top of the list
+	config.swap(0,config.indexOf("default"));
+
+
+	for(const auto &app : config)
 	{
 		QIcon icon(cfg.query_icon_path(app));			
 		tabs.addTab(new AppProfile(app, this), icon, app);
@@ -31,7 +37,6 @@ ProfileSelectorWidget::createProfileTabsBox()
 	//	tabs.setTabsClosable(true);
 	//	tabs.tabBar()->tabButton(0,QTabBar::RightSide)->hide();
 	tabs.setUsesScrollButtons(true);
-
 }
 
 void
@@ -39,40 +44,68 @@ ProfileSelectorWidget::createProfileSelectorButtonBox()
 {
 	profileSelectorBox.setStyleSheet("border:none");
 
-	updateComboBox();
+	updateComboBox(0);
+	connect(&profileList, SIGNAL(activated(int)), this, SLOT(updateComboBox(int)));
 
-	addProfileButton.setIcon(QIcon(":/resources/plus.svg"));
-	addProfileButton.setMaximumWidth(30);
-	connect(&addProfileButton, SIGNAL(clicked()), this, SLOT(new_profile_clicked()));
+//	addProfileButton.setIcon(QIcon(":/resources/plus.svg"));
+//	addProfileButton.setMaximumWidth(30);
+//	connect(&addProfileButton, SIGNAL(clicked()), this, SLOT(new_profile_clicked()));
 
-	delCurrentProfileButton.setIcon(QIcon(":/resources/minus.svg"));
-	delCurrentProfileButton.setMaximumWidth(30);
-	connect(&delCurrentProfileButton, SIGNAL(clicked()), this, SLOT(del_curr_profile_clicked()));
+//	delCurrentProfileButton.setIcon(QIcon(":/resources/minus.svg"));
+//	delCurrentProfileButton.setMaximumWidth(30);
+//	connect(&delCurrentProfileButton, SIGNAL(clicked()), this, SLOT(del_curr_profile_clicked()));
 
+//	profileSelectorLayout.addWidget(&addProfileLabel);
 	profileSelectorLayout.addWidget(&profileList);
-	profileSelectorLayout.addWidget(&addProfileButton);
-	profileSelectorLayout.addWidget(&delCurrentProfileButton);
+//	profileSelectorLayout.addWidget(&addProfileButton);
+//	profileSelectorLayout.addWidget(&delCurrentProfileButton);
 	profileSelectorBox.setLayout(&profileSelectorLayout);
 }
 
+// adds new profile from create profile list widget, afterwards fils it with {current processes } - {profile list}
 void
-ProfileSelectorWidget::updateComboBox()
+ProfileSelectorWidget::updateComboBox(int index)
 {
-	QStringList list=(QStringList()<<"red"<<"yello"<<"blue");
-	profileList.addItems(list);
+	QStringList qlist;
+	qlist << "Add new profile";
+	for(auto &e : W->pw.list_running_procs())
+		qlist << QString(e.c_str());
+
+	// if we selected some new profile name from list
+	if(index)
+	{
+		QString name(profileList.itemText(index));
+		// TODO: dynamically add icon instead of using this default
+		QIcon icon(":/resources/xclient.svg");
+		QMap<int,int> dvc_map = QMap(nv.get_vibrance());
+		cfg.set_dvc(name, dvc_map);
+		cfg.set_icon_path(name, ":/resources/xclient.svg");
+		tabs.addTab(new AppProfile(name, this), icon, name);
+		profiles.push_back(name);
+		active_profile = name;
+	}
+
+	// remove items that are already in cfg from the list of potential new app profiles
+	for(auto &e : cfg.query_profiles())
+	{
+		qlist.removeOne(QString(e));
+	}
+
+	profileList.clear();
+	profileList.addItems(qlist);
 }
 
-void
-ProfileSelectorWidget::new_profile_clicked()
-{
-	QMessageBox::information( this, "Clicked!", "The button was clicked!" );
-}
+//void
+//ProfileSelectorWidget::new_profile_clicked()
+//{
+//	QMessageBox::information( this, "Clicked!", "The button was clicked!" );
+//}
 
-void
-ProfileSelectorWidget::del_curr_profile_clicked()
-{
-	QMessageBox::information( this, "Clicked!", "The button was clicked!" );
-}
+//void
+//ProfileSelectorWidget::del_curr_profile_clicked()
+//{
+//	QMessageBox::information( this, "Clicked!", "The button was clicked!" );
+//}
 
 void
 ProfileSelectorWidget::apply_dvc()

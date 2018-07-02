@@ -55,10 +55,10 @@ XDisplay::query_top_window(Window start)
 {
 	Window w = start;
 	Window parent = start;
-	Window root = None;
+	Window root; // = None;
 	Window *children;
 	unsigned int nchildren;
-	Status s;
+	int s;
 
 	while (parent != root)
 	{
@@ -136,7 +136,7 @@ XDisplay::query_window_class(Window w)
 	XClassHint *clh = XAllocClassHint();
 	if(!clh)
 		return ret;
-	Status s = XGetClassHint(dpy, w, clh);
+	int s = XGetClassHint(dpy, w, clh);
 	if(s)
 		ret = clh->res_class;
 	XFree(clh);
@@ -185,7 +185,7 @@ XDisplay::query_window_name(Window w)
 {
 	string ret;
 	XTextProperty prop;
-	Status s = XGetWMName(dpy, w, &prop);
+	int s = XGetWMName(dpy, w, &prop);
 	if(s)
 	{
 		int count;
