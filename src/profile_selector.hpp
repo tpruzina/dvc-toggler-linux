@@ -64,7 +64,7 @@ class AppProfile : public QGroupBox
 {
 	Q_OBJECT
 public:
-	AppProfile(Config &cfg,  NVIDIA &nv, const QString name, ProfileSelectorWidget *p);
+	AppProfile(const QString name, ProfileSelectorWidget *p);
 
 
 	ProfileSelectorWidget *PSW;
@@ -75,7 +75,6 @@ public slots:
 
 private:
 	QVBoxLayout vlayout;
-	Config &cfg;
 	friend class DVCEntry;
 };
 

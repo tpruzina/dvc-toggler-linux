@@ -23,7 +23,7 @@ ProfileSelectorWidget::createProfileTabsBox()
 	for(const auto &app : cfg.query_profiles())
 	{
 		QIcon icon(cfg.query_icon_path(app));			
-		tabs.addTab(new AppProfile(cfg, nv, app, this), icon, app);
+		tabs.addTab(new AppProfile(app, this), icon, app);
 		profiles.push_back(app);
 		active_profile = app;
 		qDebug() << "iconpath for" << app << "is " << cfg.query_icon_path(app);
@@ -84,18 +84,17 @@ ProfileSelectorWidget::apply_dvc()
 		qDebug() << memb.first << "=" << memb.second;
 }
 
-AppProfile::AppProfile(Config &cfg, NVIDIA &nv, const QString name, ProfileSelectorWidget *p) :
+AppProfile::AppProfile(const QString name, ProfileSelectorWidget *p) :
 	PSW(p),	// pointer to master PSW (has NV object)
-	name(name), // profile name (or "default")
-	cfg(cfg) // config file object ptr
+	name(name) // profile name (or "default")
 {
-	QMap<int,int> dvc_map = cfg.query_dvc(name);
+	QMap<int,int> dvc_map = PSW->cfg.query_dvc(name);
 	if(dvc_map.empty())
 	{
 		qDebug() << dvc_map;
-		dvc_map = QMap(nv.get_vibrance());
+		dvc_map = QMap(PSW->nv.get_vibrance());
 		qDebug() << dvc_map;
-		cfg.set_dvc(name, dvc_map);
+		PSW->cfg.set_dvc(name, dvc_map);
 	}
 
 	QMap<int,int>::const_iterator i = dvc_map.constBegin();
@@ -149,7 +148,7 @@ DVCEntry::onDVCSliderChanged(int value)
 	}
 
 	// update config
-	QMap<int,int> cfg_dvc_map = AP->cfg.query_dvc(AP->name);
+	QMap<int,int> cfg_dvc_map = AP->PSW->cfg.query_dvc(AP->name);
 	cfg_dvc_map[dpyId] = value;
 	AP->PSW->cfg.set_dvc(AP->name, cfg_dvc_map);
 }
