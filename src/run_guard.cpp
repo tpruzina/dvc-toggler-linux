@@ -1,7 +1,6 @@
 #include "runguard.hpp"
 #include <QCryptographicHash>
 
-
 QString generateKeyHash( const QString& key, const QString& salt )
 {
 	QByteArray data;

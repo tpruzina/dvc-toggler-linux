@@ -1,5 +1,3 @@
-#include <QtWidgets>
-
 #include "window.hpp"
 #include "profile_selector.hpp"
 
@@ -17,7 +15,7 @@ mainWindow::mainWindow()
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
 		this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
-	QGroupBox *profileSelector = new ProfileSelectorWidget(cfg);
+	QGroupBox *profileSelector = new ProfileSelectorWidget(this, cfg);
 	profileSelector->setTitle("Profiles");
 
 	QVBoxLayout *mainLayout = new QVBoxLayout;

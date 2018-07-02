@@ -24,7 +24,6 @@
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #include <QtDebug>
-#include <QtWidgets>
 #include <QWidget>
 #include <shared_mutex>
 #include <sstream>

@@ -2,6 +2,7 @@
 #define CONFIG_HPP
 
 #include <QSettings>
+#include <QMap>
 
 class Config : public QSettings
 {
@@ -24,7 +25,7 @@ public:
 	QString query_icon_path(const QString &profile_name);
 	void set_icon_path(const QString &profile_name, const QString &path);
 
-	int query_dvc(const QString &profile_name, int monitor_id);
-	void set_dvc(const QString &profile_name, int monitor_id, int level);
+	QMap<int,int> query_dvc(const QString &profile_name);
+	void set_dvc(const QString &profile_name, QMap<int,int> &map);
 };
 #endif // CONFIG_HPP

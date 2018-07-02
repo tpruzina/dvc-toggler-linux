@@ -1,4 +1,4 @@
-#include <QtWidgets>
+#include <QMessageBox>
 
 #include "window.hpp"
 #include "runguard.hpp"

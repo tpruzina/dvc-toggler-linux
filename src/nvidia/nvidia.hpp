@@ -18,7 +18,7 @@ class NVIDIA
 public:
 	NVIDIA();
         std::map<int, int> get_vibrance();
-	int set_vibrance(std::map<int, int> values);
+	int set_vibrance(std::map<int, int> *values);
 private:
         Display *dpy;
 };

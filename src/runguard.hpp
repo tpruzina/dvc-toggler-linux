@@ -1,7 +1,6 @@
 #ifndef RUNGUARD_HPP
 #define RUNGUARD_HPP
 
-#include <QObject>
 #include <QSharedMemory>
 #include <QSystemSemaphore>
 

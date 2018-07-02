@@ -15,6 +15,7 @@
 #include <QMessageBox>
 #include <QLabel>
 
+#include "window.hpp"
 #include "config.hpp"
 #include "nvidia/nvidia.hpp"
 
@@ -22,56 +23,79 @@ class ProfileSelectorWidget : public QGroupBox
 {
 	Q_OBJECT
 public:
-	explicit ProfileSelectorWidget(Config &parent);
+	ProfileSelectorWidget(mainWindow *W, Config &cfg);
 
+	QMap<int,int> dvc_map;
 signals:
 
 public slots:
+	void apply_dvc();
+	void updateComboBox();
 
 private slots:
 	void new_profile_clicked();
 	void del_curr_profile_clicked();
 
 private:
-	QGroupBox	*profileSelectorBox;
-	QPushButton	*addProfileButton;
-	QPushButton	*delCurrentProfileButton;
-
+	void	createProfileTabsBox();
 	void	createProfileSelectorButtonBox();
+
+	QVBoxLayout profileSelectorWidgetLayout;
+	QHBoxLayout profileSelectorLayout;
+	QComboBox profileList;
+
+	QGroupBox	profileSelectorBox;
+	QPushButton	addProfileButton;
+	QPushButton	delCurrentProfileButton;
 
 	QTabWidget tabs;
 	QVector<QString> profiles;
 	QString	active_profile;
-	const Config &cfg;
+
+	mainWindow *W;
+	Config &cfg;
+	NVIDIA nv;
+
+	friend class AppProfile;
+	friend class DVCEntry;
 };
 
 class AppProfile : public QGroupBox
 {
 	Q_OBJECT
 public:
-	explicit AppProfile(Config &cfg, const QString &name);
+	AppProfile(Config &cfg,  NVIDIA &nv, const QString name, ProfileSelectorWidget *p);
+
+
+	ProfileSelectorWidget *PSW;
+	const QString name;
+
 signals:
 public slots:
 
 private:
-	Config &_cfg;
-	QString _name;
+	QVBoxLayout vlayout;
+	Config &cfg;
+	friend class DVCEntry;
 };
 
 class DVCEntry : public QGroupBox
 {
 	Q_OBJECT
 public:
-	explicit DVCEntry(int dpyId, int &dvc_level);
+	explicit DVCEntry(const int dpyId, int dvc_level, AppProfile *p);
 
 public slots:
 	void onDVCSliderChanged(int value);
 
 private:
 	const int dpyId;
-	int &dvc;
-	QSlider *dvc_slider;
-	QLineEdit *dvc_le;
+	int dvc;
+	QHBoxLayout hlayout;
+	QSlider dvc_slider;
+	QLineEdit dvc_le;
+	QLabel dpy_name;
+	AppProfile *AP;
 };
 
 #endif // PROFILESELECTORWIDGET_HPP

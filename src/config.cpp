@@ -35,20 +35,35 @@ Config::set_icon_path(const QString &profile_name, const QString &path)
 	endGroup();
 }
 
-int
-Config::query_dvc(const QString &profile_name, int monitor_id)
+QMap<int,int>
+Config::query_dvc(const QString &profile_name)
 {
+	QMap<int,int> map;
 	beginGroup(profile_name);
-	int res = value("dvc").toInt();
+	QStringList keys = childKeys();
+	foreach(QString key, keys)
+	{
+		if(key.startsWith("DPY-"))
+		{
+			QString dpyId_s = key;
+			dpyId_s.remove(0,4); // remove "DPY-"
+			int dpyId = dpyId_s.toInt(); // str -> int
+			map[dpyId] = value(key).toInt();
+		}
+	}
 	endGroup();
-	return res;
+	return map;
 }
-
 void
-Config::set_dvc(const QString &profile_name, int monitor_id, int level)
+Config::set_dvc(const QString &profile_name, QMap<int,int> &map)
 {
 	beginGroup(profile_name);
-	setValue("dvc"+QString(monitor_id), level);
+	QMap<int,int>::const_iterator it = map.constBegin();
+	while(it != map.constEnd())
+	{
+		setValue("DPY-"+QString::number(it.key()), it.value());
+		it++;
+	}
 	endGroup();
 }
 

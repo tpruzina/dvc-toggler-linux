@@ -1,12 +1,16 @@
 #ifndef WINDOW_HPP
 #define WINDOW_HPP
 
-#include <QSystemTrayIcon>
-#include <QDialog>
+#include <QAction>
+#include <QApplication>
 #include <QCheckBox>
+#include <QCloseEvent>
+#include <QDialog>
+#include <QGroupBox>
+#include <QMenu>
+#include <QSystemTrayIcon>
 
 #include "config.hpp"
-#include "profile_selector.hpp"
 #include "procwatch.hpp"
 
 class mainWindow : public QDialog
@@ -48,5 +52,4 @@ private:
 	QIcon icon;
 	QMenu *trayIconMenu;
 };
-
 #endif

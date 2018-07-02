@@ -5,27 +5,29 @@ QMAKE_LFLAGS += -lX11 -lXext -ldl -lXmu
 TARGET = dvc-toggler
 
 HEADERS = \
-    window.hpp \
-    runguard.hpp \
     config.hpp \
-    xclientpicker.hpp \
-    profile_selector.hpp \
-    procwatch.hpp \
     nvidia/display.hpp \
-    nvidia/nvidia.hpp \
     nvidia/libXNVCtrl/NVCtrl.h \
+    nvidia/nvidia.hpp \
+    procwatch.hpp \
+    profile_selector.hpp \
+    runguard.hpp \
+    window.hpp \
+    xclientpicker.hpp \
+
 
 SOURCES = \
-    main.cpp \
-    window.cpp \
     config.cpp \
-    profile_selector.cpp \
-    proc_watch.cpp \
-    run_guard.cpp \
-    x_client_picker.cpp \
+    main.cpp \
     nvidia/display.cpp \
+    nvidia/libXNVCtrl/NVCtrl.c \
     nvidia/nvidia.cpp \
-    nvidia/libXNVCtrl/NVCtrl.c
+    proc_watch.cpp \
+    profile_selector.cpp \
+    run_guard.cpp \
+    window.cpp \
+    x_client_picker.cpp \
+
 
 RESOURCES     = dvc_toggler_linux.qrc
 

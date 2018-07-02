@@ -20,7 +20,7 @@ NVIDIA::NVIDIA() :
 }
 
 int
-NVIDIA::set_vibrance(std::map<int,int> values)
+NVIDIA::set_vibrance(std::map<int,int> *values)
 {
 	int *data;  // buffer for XNVCTRLQuery response
 	int len;    // length of a respons
@@ -67,7 +67,7 @@ NVIDIA::set_vibrance(std::map<int,int> values)
                 }
                 
                 // normalize input values to <-100,100> and map them to true range (typically <-1024,1023>)
-		int level = values[dpyId];  // get desired level from input vector
+		int level = (*values)[dpyId];  // get desired level from input vector
 		if(level > 0)
                 {
                         if(level > 100)
@@ -166,7 +166,7 @@ int main(int argc, char **argv)
         std::map<int,int> res = nv->get_vibrance();
         
         for (const auto &val : res)
-            res[val.first] = val.second + 10;
+            res[val.first] = 100;
         
         nv->set_vibrance(res);           
 	return 0;
