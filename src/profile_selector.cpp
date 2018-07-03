@@ -31,12 +31,22 @@ ProfileSelectorWidget::createProfileTabsBox()
 	{
 		QIcon icon(cfg.query_icon_path(app));
 		tabs.addTab(new AppProfile(app, this), icon, app);
-		active_profile = app;
-		qDebug() << "iconpath for" << app << "is " << cfg.query_icon_path(app);
 	}
-	//	tabs.setTabsClosable(true);
-	//	tabs.tabBar()->tabButton(0,QTabBar::RightSide)->hide();
+	tabs.setTabsClosable(true);
+	tabs.tabBar()->tabButton(0,QTabBar::RightSide)->hide();
 	tabs.setUsesScrollButtons(true);
+
+	connect(&tabs, SIGNAL(tabCloseRequested(int)), this, SLOT(removeProfile(int)));
+}
+
+void
+ProfileSelectorWidget::removeProfile(int index)
+{
+	QString name = tabs.tabText(index);
+
+	cfg.remove(name);
+	W->pw.remove_rule(name.toStdString());
+	tabs.removeTab(index);
 }
 
 void
@@ -47,18 +57,7 @@ ProfileSelectorWidget::createProfileSelectorButtonBox()
 	updateComboBox(0);
 	connect(&profileList, SIGNAL(activated(int)), this, SLOT(updateComboBox(int)));
 
-	//	addProfileButton.setIcon(QIcon(":/resources/plus.svg"));
-	//	addProfileButton.setMaximumWidth(30);
-	//	connect(&addProfileButton, SIGNAL(clicked()), this, SLOT(new_profile_clicked()));
-
-	//	delCurrentProfileButton.setIcon(QIcon(":/resources/minus.svg"));
-	//	delCurrentProfileButton.setMaximumWidth(30);
-	//	connect(&delCurrentProfileButton, SIGNAL(clicked()), this, SLOT(del_curr_profile_clicked()));
-
-	//	profileSelectorLayout.addWidget(&addProfileLabel);
 	profileSelectorLayout.addWidget(&profileList);
-	//	profileSelectorLayout.addWidget(&addProfileButton);
-	//	profileSelectorLayout.addWidget(&delCurrentProfileButton);
 	profileSelectorBox.setLayout(&profileSelectorLayout);
 }
 
@@ -81,7 +80,6 @@ ProfileSelectorWidget::updateComboBox(int index)
 		cfg.set_dvc(name, dvc_map);
 		cfg.set_icon_path(name, ":/resources/xclient.svg");
 		tabs.addTab(new AppProfile(name, this), icon, name);
-		active_profile = name;
 	}
 
 	// remove items that are already in cfg from the list of potential new app profiles
@@ -93,18 +91,6 @@ ProfileSelectorWidget::updateComboBox(int index)
 	profileList.clear();
 	profileList.addItems(qlist);
 }
-
-//void
-//ProfileSelectorWidget::new_profile_clicked()
-//{
-//	QMessageBox::information( this, "Clicked!", "The button was clicked!" );
-//}
-
-//void
-//ProfileSelectorWidget::del_curr_profile_clicked()
-//{
-//	QMessageBox::information( this, "Clicked!", "The button was clicked!" );
-//}
 
 void
 ProfileSelectorWidget::apply_dvc()

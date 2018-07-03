@@ -39,6 +39,7 @@ public:
 
 	void update_rule(string name, std::map<int,int> dvc_map);
 	void apply_rule(string &name);
+	void remove_rule(string name);
 
 	void set_enabled(bool state = true);
 	void set_polling_rate(unsigned ms);

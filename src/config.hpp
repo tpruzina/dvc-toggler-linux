@@ -27,5 +27,7 @@ public:
 
 	QMap<int,int> query_dvc(const QString &profile_name);
 	void set_dvc(const QString &profile_name, QMap<int,int> &map);
+
+	void remove_profile(const QString &key);
 };
 #endif // CONFIG_HPP

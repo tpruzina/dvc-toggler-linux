@@ -80,6 +80,14 @@ ProcWatch::apply_rule(string &name)
 	dirty = false;
 }
 
+void
+ProcWatch::remove_rule(string name)
+{
+	std::lock_guard<std::shared_mutex> lock(write);
+	rules.erase(name);
+	dirty = true;
+}
+
 // general update function, watcher thread runs this every sleep.ms
 void ProcWatch::update()
 {

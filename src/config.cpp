@@ -110,3 +110,12 @@ Config::setValue(const QString &key, const QVariant &value)
 	qDebug() << "setValue(" << key << ") = " << value;
 	return QSettings::setValue(key, value);
 }
+
+void
+Config::remove_profile(const QString &key)
+{
+	beginGroup(key);
+	 //removes the group, and all it keys
+	remove("");
+	endGroup();
+}
