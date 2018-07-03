@@ -1,7 +1,8 @@
 #include "window.hpp"
 #include "profile_selector.hpp"
 
-mainWindow::mainWindow()
+mainWindow::mainWindow() :
+	pw(nv)
 {
 	setWindowTitle(tr("DVC toggler"));
 
@@ -14,7 +15,7 @@ mainWindow::mainWindow()
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
 		this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
-	QGroupBox *profileSelector = new ProfileSelectorWidget(this, cfg);
+	QGroupBox *profileSelector = new ProfileSelectorWidget(this);
 	profileSelector->setTitle("Profiles");
 
 	QVBoxLayout *mainLayout = new QVBoxLayout;

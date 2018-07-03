@@ -33,7 +33,7 @@ public:
 
 	string	query_active_window_name();
 	int     query_active_window_pid();
-        int	query_default_screen();
+	int	query_default_screen();
 
 	Window	query_focused_window();
 	Window	query_top_window(Window start);
@@ -42,7 +42,7 @@ public:
 	string	query_window_class(Window w);
 	string	query_window_name(Window w);
 	pid_t	query_window_pid(Window w);
-        pid_t   query_focused_window_pid();
+	pid_t   query_focused_window_pid();
 
 private:
 	Display *dpy;

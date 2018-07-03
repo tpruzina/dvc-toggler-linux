@@ -1,33 +1,28 @@
 #include "proc_watch.hpp"
 
-ProcWatch::ProcWatch(bool active, unsigned sleep_ms) :
-	active(active),
-	terminate(false),
-	sleep_ms(sleep_ms)
+// Process watcher
+// Scans /proc/$PID/{comms, maps} and queries X server for running processes
+// Applies DVC rules according to rules
+// TODO: Get rid of STL & use C primitives, performance actually matters here
+ProcWatch::ProcWatch(NVIDIA &nv, bool active, unsigned sleep_ms) :
+	nv(nv),	// Nvidia DVC setting
+	dirty(false),	// signals watcher that rules need to be reapplied
+	active(active),	// do stuff?
+	terminate(false),	// tells watcher thread that it should shut down
+	sleep_ms(sleep_ms)	// sleep timer for watcher thread
 {
 	watcher = std::thread(&ProcWatch::update, this);
 }
 
 ProcWatch::~ProcWatch()
 {
-   terminate = true;
-   watcher.join();
-}
-
-bool
-ProcWatch::is_proc_running(string proc_comm)
-{
-    // RAII lock for reads
-    std::shared_lock < std::shared_mutex > lock(write);
-    auto got = comms.find(proc_comm);
-    if(got == comms.end())
-	return false;
-    else
-	return true;
+	terminate = true;
+	watcher.join();
 }
 
 // return sorted, unique list of comms from /proc
-vector < string > ProcWatch::list_running_procs()
+vector <string>
+ProcWatch::list_running_procs()
 {
 	// scan /proc/PID/comms for list of viable targets
 	comms = scan_proc();
@@ -42,6 +37,46 @@ vector < string > ProcWatch::list_running_procs()
 	return res;
 }
 
+// query whether proc is still running
+// FIXME: is this still necessary?
+bool
+ProcWatch::is_proc_running(string proc_comm)
+{
+	// RAII lock for reads
+	std::shared_lock < std::shared_mutex > lock(write);
+	auto got = comms.find(proc_comm);
+	if(got == comms.end())
+		return false;
+	else
+		return true;
+}
+
+void
+ProcWatch::update_rule(string &name, std::map<int,int> dvc_map)
+{
+	// {comm}x{{dpyId}x{dvc}}
+
+	// if rule exists force refresh
+	// FIXME: might cause _harmless?_ race with update()
+	if(rules.find(name) != rules.end())
+		dirty = true;
+
+	// update/add the rule
+	rules[name] = dvc_map;
+}
+
+void
+ProcWatch::apply_rule(string &name)
+{
+	// find rule
+	const auto &rule = rules.find(name);
+
+	// if rule for comm does'nt exist, exit silently
+	if(rule == rules.end())
+		return;
+}
+
+// general update function, watcher thread runs this every sleep.ms
 void ProcWatch::update()
 {
 	while (true)
@@ -56,12 +91,19 @@ void ProcWatch::update()
 			// query currently focused window PID
 			pid_t focused_window_pid = query_focused_window_pid();
 
-			// update comm this has changed since the last update
+			// if focus has changed
 			if(focused_window_pid != previous_active_window_pid)
+			{
+				// update comm this has changed since the last update
 				active_window_comm = pid_to_comm(focused_window_pid);
+				dirty = true;
+			}
+
+			if(dirty)
+				apply_rule(active_window_comm);
 		}
 
-		// sleep for sleep_ms
+		// go back to sleep for sleep_ms
 		std::this_thread::sleep_for(std::chrono::
 					    milliseconds(sleep_ms));
 	}
@@ -70,18 +112,23 @@ void ProcWatch::update()
 void
 ProcWatch::set_enabled(bool state)
 {
+	// tells watcher thread whether to do anything
 	active = state;
 }
 
 void
 ProcWatch::set_polling_rate(unsigned ms)
 {
-    std::chrono::milliseconds cast_ms(ms);
-    this->sleep_ms = cast_ms;
-    if(ms > 500)
-	std::cout << __FUNCTION__ << ": setting sleep time to " << ms << "ms will slow down object destructor" << std::endl;
+	// sets polling rate for watcher process
+	// TODO: add UI element/Config setting in mainWindow to control this
+	std::chrono::milliseconds cast_ms(ms);
+	this->sleep_ms = cast_ms;
+	if(ms > 500)
+		std::cout << __FUNCTION__ << ": setting sleep time to " << ms << "ms will slow down object destructor" << std::endl;
 }
 
+// dumps contents of comms set onto stdout
+// TODO: remove this or _use_ this
 void ProcWatch::debug_dump()
 {
 	std::shared_lock<std::shared_mutex> lock(write);
@@ -89,6 +136,7 @@ void ProcWatch::debug_dump()
 		std::cout << p << std::endl;
 }
 
+// read /proc/$PID/comm name given $PID$
 string
 ProcWatch::pid_to_comm(pid_t pid)
 {
@@ -98,13 +146,13 @@ ProcWatch::pid_to_comm(pid_t pid)
 
 	return [] (const char *filename)
 	{
-	  std::ifstream in(filename, std::ios::in | std::ios::binary);
-	  std::ostringstream contents;
-	  contents << in.rdbuf();
-	  in.close();
-	  string str = contents.str();
-	  str.pop_back(); // remove trailing \n
-	  return (str);
+		std::ifstream in(filename, std::ios::in | std::ios::binary);
+		std::ostringstream contents;
+		contents << in.rdbuf();
+		in.close();
+		string str = contents.str();
+		str.pop_back(); // remove trailing \n
+		return (str);
 	} (path);
 }
 
@@ -135,17 +183,17 @@ ProcWatch::scan_proc()
 
 		auto read_file_to_str = [] (const char *filename)
 		{
-		  std::ifstream in(filename, std::ios::in | std::ios::binary);
-		  std::ostringstream contents;
-		  contents << in.rdbuf();
-		  in.close();
-		  string str = contents.str();
-		  str.pop_back(); // remove trailing \n
-		  return (str);
+			std::ifstream in(filename, std::ios::in | std::ios::binary);
+			std::ostringstream contents;
+			contents << in.rdbuf();
+			in.close();
+			string str = contents.str();
+			str.pop_back(); // remove trailing \n
+			return (str);
 		};
 
-//		// check maps and skip adding to set if there is no libX11.so present
-//		// TODO: cache results instead of parsing the whole thing on every refresh
+		//		// check maps and skip adding to set if there is no libX11.so present
+		//		// TODO: cache results instead of parsing the whole thing on every refresh
 		strcpy((char *)(path + offset + strlen(pid_s)), "/maps");
 		string maps = read_file_to_str(path);
 		size_t found = maps.find("libX11.so");

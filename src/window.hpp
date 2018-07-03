@@ -33,9 +33,9 @@ private slots:
 	void toggleAutoHide();
 
 private:
-	Config cfg;
-	ProcWatch pw;
-	friend class ProfileSelectorWidget;
+	Config cfg;	// Persistent configuration object
+	NVIDIA nv;	// DVC related nvidia object
+	ProcWatch pw;	// Window watcher
 
 	void createIconGroupBox();
 	void createTrayIcon();

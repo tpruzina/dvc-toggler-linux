@@ -55,7 +55,7 @@ XDisplay::query_top_window(Window start)
 {
 	Window w = start;
 	Window parent = start;
-	Window root; // = None;
+	Window root = 0; // = None (None from Xlib)
 	Window *children;
 	unsigned int nchildren;
 	int s;
@@ -63,7 +63,7 @@ XDisplay::query_top_window(Window start)
 	while (parent != root)
 	{
 		w = parent;
-		s = XQueryTree(dpy, w, &root, &parent, &children, &nchildren);    // see man
+		s = XQueryTree(dpy, w, &root, &parent, &children, &nchildren);
 		if (s)
 			XFree(children);
 
@@ -75,51 +75,48 @@ XDisplay::query_top_window(Window start)
 Window
 XDisplay::query_name_window(Window start)
 {
-    Window w;
-    w = XmuClientWindow(dpy, start);
-    return w;
+	Window w;
+	w = XmuClientWindow(dpy, start);
+	return w;
 }
 
 int
 XDisplay::query_active_window_pid()
 {
-    uint32_t pid(0);
-    Window w;
-    int tmp;
-    Atom am_wm_pid;
+	uint32_t pid(0);
+	Window w;
+	int tmp;
+	Atom am_wm_pid;
 
-    if(!dpy)
-        return 0;
+	if(!dpy)
+		return 0;
 
-    XGetInputFocus(dpy, &w, &tmp);
-    am_wm_pid = XInternAtom(dpy, "_NET_WM_PID", False);
-    Atom type;
-    int format;
-    unsigned long nitems, bytes;
-    unsigned char *prop;
-    int status;
+	XGetInputFocus(dpy, &w, &tmp);
+	am_wm_pid = XInternAtom(dpy, "_NET_WM_PID", False);
+	Atom type;
+	int format;
+	unsigned long nitems, bytes;
+	unsigned char *prop;
+	int status;
 
-    status = XGetWindowProperty(dpy,
-                                w,
-                                am_wm_pid,
-                                0,
-                                1024,
-                                false,
-                                XA_CARDINAL,
-                                &type,
-                                &format,
-                                &nitems,
-                                &bytes,
-                                &prop
-    );
+	status = XGetWindowProperty(dpy,w,am_wm_pid,
+				    /* long_offset */ 0L,
+				    /* long_length */ 1024L,
+				    /* delete */ False,
+				    /* req_type */ XA_CARDINAL,
+				    /* actual_type_return */ &type,
+				    /* actual_format_return */ &format,
+				    /* nitems_return */ &nitems,
+				    /* bytes_after_return */ &bytes,
+				    /* prop_return */ &prop);
 
-    if(status == 0 && nitems != 0)
-    {
-        pid = prop[0] | prop[1] << 8 | prop[2] << 16 | prop[3] << 24;
-        XFree(prop);
-    }
+	if(status == 0 && nitems != 0)
+	{
+		pid = prop[0] | prop[1] << 8 | prop[2] << 16 | prop[3] << 24;
+		XFree(prop);
+	}
 
-    return pid;
+	return pid;
 }
 
 int
@@ -127,7 +124,6 @@ XDisplay::query_default_screen()
 {
 	return DefaultScreen(dpy);
 }
-
 
 string
 XDisplay::query_window_class(Window w)
@@ -164,6 +160,7 @@ XDisplay::get_prop_card32(Window w, Atom p)
 				    /* nitems_return */ &nitems,
 				    /* bytes_after_return */ &bytes,
 				    /* prop_return */ &prop);
+
 	if (status != 0 || nitems < 1)
 		return -1;
 
@@ -199,38 +196,38 @@ XDisplay::query_window_name(Window w)
 pid_t
 XDisplay::query_focused_window_pid()
 {
-    return query_window_pid(
-            query_name_window(
-                query_top_window(
-                    query_focused_window()))
-            );
+	return query_window_pid(
+				query_name_window(
+					query_top_window(
+						query_focused_window()))
+				);
 }
 
 #ifdef DEBUG_XDISPLAY
 int main()
 {
-    XDisplay *nv = new XDisplay;
-    cout << "active window name: " << nv->query_active_window_name() << endl;
-    cout << "active window pid: " << nv->query_active_window_pid() << endl;
-    cout << "default screen: " << nv->query_default_screen() << endl;
+	XDisplay *nv = new XDisplay;
+	cout << "active window name: " << nv->query_active_window_name() << endl;
+	cout << "active window pid: " << nv->query_active_window_pid() << endl;
+	cout << "default screen: " << nv->query_default_screen() << endl;
 
-    Window focused, top, name;
+	Window focused, top, name;
 
-    focused = nv->query_focused_window();
-    cout << "focused window class: " << nv->query_window_class(focused) << endl;
-    cout << "focused PID: " << nv->query_window_pid(focused) << endl;
+	focused = nv->query_focused_window();
+	cout << "focused window class: " << nv->query_window_class(focused) << endl;
+	cout << "focused PID: " << nv->query_window_pid(focused) << endl;
 
-    top = nv->query_top_window(focused);
-    cout << "focused->top class: " << nv->query_window_class(top) << endl;
-    cout << "focused->top PID: " << nv->query_window_pid(top) << endl;
+	top = nv->query_top_window(focused);
+	cout << "focused->top class: " << nv->query_window_class(top) << endl;
+	cout << "focused->top PID: " << nv->query_window_pid(top) << endl;
 
-    name = nv->query_name_window(top);
-    cout << "focused->top->name class: " << nv->query_window_class(name) << endl;
-    cout << "focused->top->name PID: " << nv->query_window_pid(name) << endl;
- 
-    cout << "query_focused_window_pid(): " << nv->query_focused_window_pid() << endl;
+	name = nv->query_name_window(top);
+	cout << "focused->top->name class: " << nv->query_window_class(name) << endl;
+	cout << "focused->top->name PID: " << nv->query_window_pid(name) << endl;
 
-    free(nv);
-    return 0;
+	cout << "query_focused_window_pid(): " << nv->query_focused_window_pid() << endl;
+
+	free(nv);
+	return 0;
 }
 #endif // DEBUG_XDISPLAY

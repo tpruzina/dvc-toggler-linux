@@ -4,7 +4,6 @@
 #include <QSharedMemory>
 #include <QSystemSemaphore>
 
-
 class RunGuard
 {
 
@@ -26,6 +25,5 @@ private:
 
 	Q_DISABLE_COPY( RunGuard )
 };
-
 
 #endif // RUNGUARD_H

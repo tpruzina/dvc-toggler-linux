@@ -1,9 +1,10 @@
 #include "profile_selector.hpp"
 
-ProfileSelectorWidget::ProfileSelectorWidget(mainWindow *p, Config &cfg) :
-//	addProfileLabel("Add new profile:"),
+ProfileSelectorWidget::ProfileSelectorWidget(mainWindow *p) :
+	//	addProfileLabel("Add new profile:"),
 	W(p),
-	cfg(cfg)
+	cfg(W->cfg),
+	nv(W->nv)
 {
 	dvc_map = QMap<int,int>(nv.get_vibrance());
 	// build profile tabs from Config
@@ -28,7 +29,7 @@ ProfileSelectorWidget::createProfileTabsBox()
 
 	for(const auto &app : config)
 	{
-		QIcon icon(cfg.query_icon_path(app));			
+		QIcon icon(cfg.query_icon_path(app));
 		tabs.addTab(new AppProfile(app, this), icon, app);
 		profiles.push_back(app);
 		active_profile = app;
@@ -47,18 +48,18 @@ ProfileSelectorWidget::createProfileSelectorButtonBox()
 	updateComboBox(0);
 	connect(&profileList, SIGNAL(activated(int)), this, SLOT(updateComboBox(int)));
 
-//	addProfileButton.setIcon(QIcon(":/resources/plus.svg"));
-//	addProfileButton.setMaximumWidth(30);
-//	connect(&addProfileButton, SIGNAL(clicked()), this, SLOT(new_profile_clicked()));
+	//	addProfileButton.setIcon(QIcon(":/resources/plus.svg"));
+	//	addProfileButton.setMaximumWidth(30);
+	//	connect(&addProfileButton, SIGNAL(clicked()), this, SLOT(new_profile_clicked()));
 
-//	delCurrentProfileButton.setIcon(QIcon(":/resources/minus.svg"));
-//	delCurrentProfileButton.setMaximumWidth(30);
-//	connect(&delCurrentProfileButton, SIGNAL(clicked()), this, SLOT(del_curr_profile_clicked()));
+	//	delCurrentProfileButton.setIcon(QIcon(":/resources/minus.svg"));
+	//	delCurrentProfileButton.setMaximumWidth(30);
+	//	connect(&delCurrentProfileButton, SIGNAL(clicked()), this, SLOT(del_curr_profile_clicked()));
 
-//	profileSelectorLayout.addWidget(&addProfileLabel);
+	//	profileSelectorLayout.addWidget(&addProfileLabel);
 	profileSelectorLayout.addWidget(&profileList);
-//	profileSelectorLayout.addWidget(&addProfileButton);
-//	profileSelectorLayout.addWidget(&delCurrentProfileButton);
+	//	profileSelectorLayout.addWidget(&addProfileButton);
+	//	profileSelectorLayout.addWidget(&delCurrentProfileButton);
 	profileSelectorBox.setLayout(&profileSelectorLayout);
 }
 

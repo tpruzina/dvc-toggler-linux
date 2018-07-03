@@ -23,7 +23,7 @@ class ProfileSelectorWidget : public QGroupBox
 {
 	Q_OBJECT
 public:
-	ProfileSelectorWidget(mainWindow *W, Config &cfg);
+	ProfileSelectorWidget(mainWindow *W);
 
 	QMap<int,int> dvc_map;
 signals:
@@ -33,8 +33,8 @@ public slots:
 	void updateComboBox(int);
 
 private slots:
-//	void new_profile_clicked();
-//	void del_curr_profile_clicked();
+	//	void new_profile_clicked();
+	//	void del_curr_profile_clicked();
 
 private:
 	void	createProfileTabsBox();
@@ -45,9 +45,9 @@ private:
 	QComboBox profileList;
 
 	QGroupBox	profileSelectorBox;
-//	QLabel		addProfileLabel;
-//	QPushButton	addProfileButton;
-//	QPushButton	delCurrentProfileButton;
+	//	QLabel		addProfileLabel;
+	//	QPushButton	addProfileButton;
+	//	QPushButton	delCurrentProfileButton;
 
 	QTabWidget tabs;
 	QVector<QString> profiles;
@@ -55,7 +55,7 @@ private:
 
 	mainWindow *W;
 	Config &cfg;
-	NVIDIA nv;
+	NVIDIA &nv;
 
 	friend class AppProfile;
 	friend class DVCEntry;

@@ -12,7 +12,6 @@ HEADERS = \
     profile_selector.hpp \
     runguard.hpp \
     window.hpp \
-    xclientpicker.hpp \
     proc_watch.hpp
 
 
@@ -26,7 +25,6 @@ SOURCES = \
     profile_selector.cpp \
     run_guard.cpp \
     window.cpp \
-    x_client_picker.cpp \
 
 
 RESOURCES     = dvc_toggler_linux.qrc
