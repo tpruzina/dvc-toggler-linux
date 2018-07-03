@@ -1,0 +1,27 @@
+[FEATURE] Add autostart functionality
+    [?] find out how people autostart applications in common desktop environments nowadays
+    [ ] toggler checkbox in @mainWindow
+    [ ] setting in @Config
+
+[FEATURE] Add start minimized functionality
+    [ ] toggler checkbox in @mainWindow
+    [ ] setting in @Config
+
+[FEATURE] Send ->show() to main window if we run toggler instance on top of already running instance (atm fails silently)
+
+[STYLE] Move non-UI related logic out of QT classes
+
+[FEATURE] Figure out how to do DVC toggling on non-Nvidia cards
+
+[FEATURE] Make sure that Wine apps are selectable and work as expected (they probably don't)
+
+[FEATURE] Figure out how this works with bumblebee (probably needs DVC functionality on _displaying_ XServer)
+
+[PERF] Replace STL maps/sets in performanec critical code @ProcWatch
+
+[PERF] const _everything_
+
+[FEATURE] Fail verbosely
+    [ ] Throw critical exceptions, catch them in mainWindow and display via MessageBoxA (or whatever the fuck QT uses)
+
+[FEATURE] Breakpad ??
