@@ -1,7 +1,6 @@
 #ifndef PROFILESELECTORWIDGET_HPP
 #define PROFILESELECTORWIDGET_HPP
 
-//#include <QWidget>
 #include <QTabWidget>
 #include <QPushButton>
 #include <QGroupBox>
@@ -18,6 +17,7 @@
 #include "window.hpp"
 #include "config.hpp"
 #include "nvidia/nvidia.hpp"
+#include "config.hpp"
 
 class ProfileSelectorWidget : public QGroupBox
 {

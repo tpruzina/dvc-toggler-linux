@@ -2,7 +2,7 @@
 #include "profile_selector.hpp"
 
 mainWindow::mainWindow() :
-	pw(nv, cfg.query_polling_rate())
+	pw(nv, cfg.query_sleep_time_ms())
 {
 	setWindowTitle(tr("DVC toggler"));
 

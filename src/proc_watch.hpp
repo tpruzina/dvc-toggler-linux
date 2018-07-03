@@ -22,6 +22,7 @@
 
 #include "nvidia/display.hpp"
 #include "nvidia/nvidia.hpp"
+#include "config.hpp"
 
 typedef int pid_t;
 using std::unordered_set;
@@ -31,7 +32,7 @@ using std::vector;
 class ProcWatch : public XDisplay
 {
 public:
-	ProcWatch(NVIDIA &nv, bool active = true, unsigned sleep_ms=100);
+	ProcWatch(NVIDIA &nv, unsigned sleep_ms=100);
 	~ProcWatch();
 
 	vector<string>	list_running_procs();

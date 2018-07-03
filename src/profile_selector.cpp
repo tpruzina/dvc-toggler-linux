@@ -23,8 +23,8 @@ void
 ProfileSelectorWidget::createProfileTabsBox()
 {
 	QStringList config = cfg.query_profiles();
-	// make sure that "default" is on top of the list
-	config.swap(0,config.indexOf("default"));
+	// make sure that CONFIG_DEFAULT_PROFILE_STR is on top of the list
+	config.swap(0,config.indexOf(CONFIG_DEFAULT_PROFILE_STR));
 
 
 	for(const auto &app : config)
@@ -105,7 +105,7 @@ ProfileSelectorWidget::apply_dvc()
 
 AppProfile::AppProfile(const QString name, ProfileSelectorWidget *p) :
 	PSW(p),	// pointer to master PSW (has NV object)
-	name(name) // profile name (or "default")
+	name(name) // profile name (or CONFIG_DEFAULT_PROFILE_STR)
 {
 	// get DVC map from Config file
 	QMap<int,int> dvc_map = PSW->cfg.query_dvc(name);
@@ -166,7 +166,7 @@ DVCEntry::onDVCSliderChanged(int value)
 	dvc = value;
 
 	// if we have default tab, apply values immediatelly
-	if(AP->name.compare("default") == 0)
+	if(AP->name.compare(CONFIG_DEFAULT_PROFILE_STR) == 0)
 	{
 		AP->PSW->dvc_map[dpyId] = value;
 		AP->PSW->apply_dvc();

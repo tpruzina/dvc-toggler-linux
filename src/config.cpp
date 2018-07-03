@@ -8,12 +8,12 @@ Config::Config() :
 		QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + "/settings.ini",
 		QSettings::IniFormat)
 {
-	if(!contains("autohide"))	set_autohide(false);
-	if(!contains("enabled"))	set_enabled(true);
-	if(!contains("start_minimized"))	set_start_minimized(false);
-	if(!contains("polling_rate"))	set_polling_rate(100);
+	if(!contains(CONFIG_AUTOHIDE_STR))	set_autohide(false);
+	if(!contains(CONFIG_ENABLED_STR))	set_enabled(true);
+	if(!contains(CONFIG_START_MIN_STR))	set_start_minimized(false);
+	if(!contains(CONFIG_SLEEP_STR))	set_sleep_time_ms(100);
 
-	beginGroup("default");
+	beginGroup(CONFIG_DEFAULT_PROFILE_STR);
 	if(!contains("icon_path"))	setValue("icon", ":/resources/desktop.svg");
 	endGroup();
 
@@ -79,37 +79,37 @@ Config::query_profiles()
 bool
 Config::query_enabled(void)
 {
-	return value("enabled").toBool();
+	return value(CONFIG_ENABLED_STR).toBool();
 }
 
 void
 Config::set_enabled(bool val)
 {
-	setValue("enabled", val);
+	setValue(CONFIG_ENABLED_STR, val);
 }
 
 bool
 Config::query_autohide(void)
 {
-	return value("autohide").toBool();
+	return value(CONFIG_AUTOHIDE_STR).toBool();
 }
 
 void
 Config::set_start_minimized(bool val)
 {
-	setValue("start_minimized", val);
+	setValue(CONFIG_START_MIN_STR, val);
 }
 
 bool
 Config::query_start_minimized(void)
 {
-	return value("start_minimized").toBool();
+	return value(CONFIG_START_MIN_STR).toBool();
 }
 
 void
 Config::set_autohide(bool val)
 {
-	setValue("autohide", val);
+	setValue(CONFIG_AUTOHIDE_STR, val);
 }
 
 QVariant
@@ -136,13 +136,13 @@ Config::remove_profile(const QString &key)
 }
 
 unsigned
-Config::query_polling_rate(void)
+Config::query_sleep_time_ms(void)
 {
-	return QSettings::value("polling_rate").toUInt();
+	return value(CONFIG_SLEEP_STR).toInt();
 }
 
 void
-Config::set_polling_rate(unsigned ms)
+Config::set_sleep_time_ms(unsigned ms)
 {
-	setValue("polling_rate", ms);
+	setValue(CONFIG_SLEEP_STR, ms);
 }

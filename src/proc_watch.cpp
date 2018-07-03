@@ -4,10 +4,10 @@
 // Scans /proc/$PID/{comms, maps} and queries X server for running processes
 // Applies DVC rules according to rules
 // TODO: Get rid of STL & use C primitives, performance actually matters here
-ProcWatch::ProcWatch(NVIDIA &nv, bool active, unsigned sleep_ms) :
+ProcWatch::ProcWatch(NVIDIA &nv, unsigned sleep_ms) :
 	nv(nv),	// Nvidia DVC setting
 	dirty(false),	// signals watcher that rules need to be reapplied
-	active(active),	// do stuff?
+	active(true),	// do stuff?
 	terminate(false),	// tells watcher thread that it should shut down
 	sleep_ms(sleep_ms)	// sleep timer for watcher thread
 {
@@ -72,7 +72,7 @@ ProcWatch::apply_rule(string &name)
 
 	// if rule for app doesn't exist, apply "default"
 	if(rule == rules.end())
-		nv.set_vibrance(&rules["default"]);
+		nv.set_vibrance(&rules[CONFIG_DEFAULT_PROFILE_STR]);
 	else	// else apply selected rule
 		nv.set_vibrance(&rules[name]);
 
@@ -118,7 +118,6 @@ void ProcWatch::update()
 			if(dirty)
 				apply_rule(active_window_comm);
 		}
-
 		// go back to sleep for sleep_ms
 		std::this_thread::sleep_for(std::chrono::
 					    milliseconds(sleep_ms));

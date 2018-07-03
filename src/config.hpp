@@ -4,6 +4,12 @@
 #include <QSettings>
 #include <QMap>
 
+#define CONFIG_SLEEP_STR	"watcher_sleep_ms"
+#define CONFIG_START_MIN_STR	"start_minimized"
+#define CONFIG_ENABLED_STR	"enabled"
+#define CONFIG_AUTOHIDE_STR	"autohide"
+#define CONFIG_DEFAULT_PROFILE_STR "default"
+
 class Config : public QSettings
 {
 public:
@@ -32,8 +38,8 @@ public:
 	QMap<int,int> query_dvc(const QString &profile_name);
 	void set_dvc(const QString &profile_name, QMap<int,int> &map);
 
-	unsigned query_polling_rate(void);
-	void set_polling_rate(unsigned ms);
+	unsigned query_sleep_time_ms(void);
+	void set_sleep_time_ms(unsigned ms);
 
 	void remove_profile(const QString &key);
 };
