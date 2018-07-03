@@ -4,10 +4,10 @@
 // Scans /proc/$PID/{comms, maps} and queries X server for running processes
 // Applies DVC rules according to rules
 // TODO: Get rid of STL & use C primitives, performance actually matters here
-ProcWatch::ProcWatch(NVIDIA &nv, unsigned sleep_ms) :
+ProcWatch::ProcWatch(NVIDIA &nv, bool enabled, unsigned sleep_ms) :
 	nv(nv),	// Nvidia DVC setting
 	dirty(false),	// signals watcher that rules need to be reapplied
-	active(true),	// do stuff?
+	active(enabled),	// do stuff?
 	terminate(false),	// tells watcher thread that it should shut down
 	sleep_ms(sleep_ms)	// sleep timer for watcher thread
 {

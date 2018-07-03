@@ -32,7 +32,7 @@ using std::vector;
 class ProcWatch : public XDisplay
 {
 public:
-	ProcWatch(NVIDIA &nv, unsigned sleep_ms=100);
+	ProcWatch(NVIDIA &nv, bool enabled=true, unsigned sleep_ms=100);
 	~ProcWatch();
 
 	vector<string>	list_running_procs();

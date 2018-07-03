@@ -2,7 +2,7 @@
 #include "profile_selector.hpp"
 
 mainWindow::mainWindow() :
-	pw(nv, cfg.query_sleep_time_ms())
+	pw(nv, cfg.query_enabled(), cfg.query_sleep_time_ms())
 {
 	setWindowTitle(tr("DVC toggler"));
 
@@ -70,7 +70,7 @@ void mainWindow::toggleEnabled()
 	{
 		status = "DVC disabled";
 		icon = QIcon(":/resources/disabled.png");
-		pw.set_enabled(true);
+		pw.set_enabled(false);
 	}
 
 	trayIcon->setIcon(icon);
