@@ -13,6 +13,7 @@
 #include "config.hpp"
 #include "proc_watch.hpp"
 
+
 class mainWindow : public QDialog
 {
 	Q_OBJECT

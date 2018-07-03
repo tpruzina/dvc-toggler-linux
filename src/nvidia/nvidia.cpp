@@ -1,8 +1,15 @@
+#include <inttypes.h>
+#include "libXNVCtrl/NVCtrl.h"
+#include "libXNVCtrl/NVCtrlLib.h"
+#include "libXNVCtrl/nv-control-screen.h"
+
 #include "nvidia.hpp"
 
-NVIDIA::NVIDIA() :
-	dpy(XOpenDisplay(NULL))
+Display *dpy;
+
+NVIDIA::NVIDIA()
 {
+	dpy = XOpenDisplay(NULL);
 	int *data;
 	int len;
 

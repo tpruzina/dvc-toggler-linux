@@ -1,7 +1,6 @@
 #include "profile_selector.hpp"
 
 ProfileSelectorWidget::ProfileSelectorWidget(mainWindow *p) :
-	//	addProfileLabel("Add new profile:"),
 	W(p),
 	cfg(W->cfg),
 	nv(W->nv)

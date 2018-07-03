@@ -1,5 +1,12 @@
 #include "display.hpp"
 
+#include <iostream>
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+#include <X11/Xutil.h>
+#include <X11/Xmu/WinUtil.h>
+#include <locale.h>
+
 XDisplay::XDisplay()
 {
 	setlocale(LC_ALL, "");
@@ -10,12 +17,13 @@ XDisplay::XDisplay()
 
 XDisplay::~XDisplay()
 {
-	if(this->dpy)
-		XCloseDisplay(this->dpy);
+	if(dpy)
+		XCloseDisplay((Display*)dpy);
 }
 
+static inline
 Window
-XDisplay::query_focused_window()
+query_focused_window(Display *dpy)
 {
 	Window focused_window;
 	int tmp;
@@ -23,32 +31,9 @@ XDisplay::query_focused_window()
 	return focused_window;
 }
 
-string
-XDisplay::query_active_window_name()
-{
-	string name;
-	Window active_window;
-	int tmp;
-
-	if(dpy)
-	{
-		XGetInputFocus(dpy, &active_window, &tmp);
-		XClassHint wm_class;
-		if(!XGetClassHint(dpy, active_window, &wm_class))
-			return name;
-
-		name.assign(wm_class.res_name);
-
-		// cleanup Xlib strings
-		XFree(wm_class.res_name);
-		XFree(wm_class.res_class);
-	}
-
-	return name;
-}
-
+static inline
 Window
-XDisplay::query_top_window(Window start)
+query_top_window(Display *dpy, Window start)
 {
 	Window w = start;
 	Window parent = start;
@@ -68,78 +53,21 @@ XDisplay::query_top_window(Window start)
 	return w;
 }
 
-// finds a window, at or below the specified window, which has a WM_STATE property
+//// finds a window, at or below the specified window, which has a WM_STATE property
+static inline
 Window
-XDisplay::query_name_window(Window start)
+query_name_window(Display *dpy, Window start)
 {
 	Window w;
 	w = XmuClientWindow(dpy, start);
 	return w;
 }
 
-int
-XDisplay::query_active_window_pid()
-{
-	uint32_t pid(0);
-	Window w;
-	int tmp;
-	Atom am_wm_pid;
-
-	if(!dpy)
-		return 0;
-
-	XGetInputFocus(dpy, &w, &tmp);
-	am_wm_pid = XInternAtom(dpy, "_NET_WM_PID", False);
-	Atom type;
-	int format;
-	unsigned long nitems, bytes;
-	unsigned char *prop;
-	int status;
-
-	status = XGetWindowProperty(dpy,w,am_wm_pid,
-				    /* long_offset */ 0L,
-				    /* long_length */ 1024L,
-				    /* delete */ False,
-				    /* req_type */ XA_CARDINAL,
-				    /* actual_type_return */ &type,
-				    /* actual_format_return */ &format,
-				    /* nitems_return */ &nitems,
-				    /* bytes_after_return */ &bytes,
-				    /* prop_return */ &prop);
-
-	if(status == 0 && nitems != 0)
-	{
-		pid = prop[0] | prop[1] << 8 | prop[2] << 16 | prop[3] << 24;
-		XFree(prop);
-	}
-
-	return pid;
-}
-
-int
-XDisplay::query_default_screen()
-{
-	return DefaultScreen(dpy);
-}
-
-string
-XDisplay::query_window_class(Window w)
-{
-	string ret;
-	XClassHint *clh = XAllocClassHint();
-	if(!clh)
-		return ret;
-	int s = XGetClassHint(dpy, w, clh);
-	if(s)
-		ret = clh->res_class;
-	XFree(clh);
-	return ret;
-}
-
 // @private:
 // get 32bit sized window property using atom ("_NET_WM_PID", ...)
+static inline
 int32_t
-XDisplay::get_prop_card32(Window w, Atom p)
+get_prop_card32(Display *dpy, Window w, Atom p)
 {
 	Atom actual_type;
 	int actual_format;
@@ -166,41 +94,22 @@ XDisplay::get_prop_card32(Window w, Atom p)
 	return value;
 }
 
-
+static inline
 pid_t
-XDisplay::query_window_pid(Window w)
+query_window_pid(Display *dpy, Window w)
 {
 	Atom am_wm_pid = XInternAtom(dpy, "_NET_WM_PID", False);
-	return get_prop_card32(w, am_wm_pid);
-}
-
-string
-XDisplay::query_window_name(Window w)
-{
-	string ret;
-	XTextProperty prop;
-	int s = XGetWMName(dpy, w, &prop);
-	if(s)
-	{
-		int count;
-		char **list = NULL;
-		if(Success == XmbTextPropertyToTextList(dpy, &prop, &list, &count))
-			ret = list[0];
-	}
-	return ret;
+	return get_prop_card32(dpy, w, am_wm_pid);
 }
 
 // Query main PID of currently focused window
-pid_t
+unsigned
 XDisplay::query_focused_window_pid()
 {
-	// FIXME: Are 3 recursive queries still necessary?
-	// [02/06/2018]	<sigh> Don't ask me what this does,
-	//		I have long since forgotten
-	return query_window_pid(
-				query_name_window(
-					query_top_window(
-						query_focused_window()))
+	return query_window_pid((Display*)dpy,
+				query_name_window((Display*)dpy,
+					query_top_window((Display*)dpy,
+						query_focused_window((Display*)dpy)))
 				);
 }
 
@@ -208,26 +117,7 @@ XDisplay::query_focused_window_pid()
 int main()
 {
 	XDisplay *nv = new XDisplay;
-	cout << "active window name: " << nv->query_active_window_name() << endl;
-	cout << "active window pid: " << nv->query_active_window_pid() << endl;
-	cout << "default screen: " << nv->query_default_screen() << endl;
-
-	Window focused, top, name;
-
-	focused = nv->query_focused_window();
-	cout << "focused window class: " << nv->query_window_class(focused) << endl;
-	cout << "focused PID: " << nv->query_window_pid(focused) << endl;
-
-	top = nv->query_top_window(focused);
-	cout << "focused->top class: " << nv->query_window_class(top) << endl;
-	cout << "focused->top PID: " << nv->query_window_pid(top) << endl;
-
-	name = nv->query_name_window(top);
-	cout << "focused->top->name class: " << nv->query_window_class(name) << endl;
-	cout << "focused->top->name PID: " << nv->query_window_pid(name) << endl;
-
 	cout << "query_focused_window_pid(): " << nv->query_focused_window_pid() << endl;
-
 	free(nv);
 	return 0;
 }
