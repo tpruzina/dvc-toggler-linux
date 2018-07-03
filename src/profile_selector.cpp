@@ -36,11 +36,12 @@ ProfileSelectorWidget::createProfileTabsBox()
 	tabs.setTabsClosable(true);
 	// hide close icon for default profile
 	tabs.tabBar()->tabButton(0,QTabBar::RightSide)->hide();
-	tabs.setUsesScrollButtons(true);
+	tabs.setUsesScrollButtons(false);
+//	tabs.setTabsClosable(false);
 
-	//tabs.setIconSize(QSize(0,0));
+	tabs.setIconSize(QSize(0,0));
 	tabs.setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-	tabs.setStyleSheet("QTabBar::tab{width: 80px; }");
+//	tabs.setStyleSheet("QTabBar::tab{width: 80px; }");
 
 	connect(&tabs, SIGNAL(tabCloseRequested(int)), this, SLOT(removeProfile(int)));
 }
