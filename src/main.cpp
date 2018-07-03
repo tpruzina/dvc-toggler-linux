@@ -1,6 +1,6 @@
 #include <QMessageBox>
 
-#include "window.hpp"
+#include "main_window.hpp"
 #include "runguard.hpp"
 
 int main(int argc, char *argv[])

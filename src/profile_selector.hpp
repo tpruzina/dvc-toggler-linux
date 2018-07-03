@@ -14,7 +14,7 @@
 #include <QMessageBox>
 #include <QLabel>
 
-#include "window.hpp"
+#include "main_window.hpp"
 #include "config.hpp"
 #include "nvidia/nvidia.hpp"
 #include "config.hpp"

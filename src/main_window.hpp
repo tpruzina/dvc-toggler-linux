@@ -1,7 +1,6 @@
-#ifndef WINDOW_HPP
-#define WINDOW_HPP
+#ifndef MAIN_WINDOW_HPP
+#define MAIN_WINDOW_HPP
 
-#include <QAction>
 #include <QApplication>
 #include <QCheckBox>
 #include <QCloseEvent>
@@ -9,6 +8,7 @@
 #include <QGroupBox>
 #include <QMenu>
 #include <QSystemTrayIcon>
+#include <QVBoxLayout>
 
 #include "config.hpp"
 #include "proc_watch.hpp"
@@ -29,7 +29,6 @@ private slots:
 	void toggleEnabled();
 	void iconActivated(QSystemTrayIcon::ActivationReason reason);
 	void showMessage(const QString &msg, unsigned timeout = 3000);
-	void messageClicked();
 	void toggleAutoHide();
 
 private:
@@ -40,17 +39,18 @@ private:
 	void createIconGroupBox();
 	void createTrayIcon();
 
-	QGroupBox *iconGroupBox;
-	QCheckBox *closeToTrayCheckBox;
-	QCheckBox *enabledCheckBox;
+	QGroupBox iconGroupBox;
+	QCheckBox closeToTrayCheckBox;
+	QCheckBox enabledCheckBox;
+	QVBoxLayout mainLayout;
 
-	QAction *minimizeAction;
-	QAction *restoreAction;
-	QAction *quitAction;
+	QAction minimizeAction;
+	QAction restoreAction;
+	QAction quitAction;
 
-	QSystemTrayIcon *trayIcon;
+	QSystemTrayIcon trayIcon;
 	QIcon icon;
-	QMenu *trayIconMenu;
+	QMenu trayIconMenu;
 
 	friend class ProfileSelectorWidget;
 	friend class AppProfile;

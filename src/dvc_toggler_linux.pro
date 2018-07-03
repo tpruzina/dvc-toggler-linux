@@ -11,8 +11,8 @@ HEADERS = \
     nvidia/nvidia.hpp \
     profile_selector.hpp \
     runguard.hpp \
-    window.hpp \
-    proc_watch.hpp
+    proc_watch.hpp \
+    main_window.hpp
 
 
 SOURCES = \
@@ -24,7 +24,7 @@ SOURCES = \
     proc_watch.cpp \
     profile_selector.cpp \
     run_guard.cpp \
-    window.cpp \
+    main_window.cpp
 
 
 RESOURCES     = dvc_toggler_linux.qrc
