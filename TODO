@@ -25,6 +25,8 @@
 
 [PERF] const _everything_
 
+[STYLE] Remove "using std::X;" in favor of full length variants, if somebody ever reuses (parts) of this
+
 [FEATURE] Fail verbosely
     [ ] Throw critical exceptions, catch them in mainWindow and display via MessageBoxA (or whatever the fuck QT uses)
 
