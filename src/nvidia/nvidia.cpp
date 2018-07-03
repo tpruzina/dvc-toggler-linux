@@ -10,7 +10,7 @@ Display *dpy;
 NVIDIA::NVIDIA()
 {
 	dpy = XOpenDisplay(NULL);
-	int *data;
+	int *query_data;
 	int len;
 
 	// Query monitors (CRTCs on screen)
@@ -19,17 +19,20 @@ NVIDIA::NVIDIA()
 					 GetNvXScreen(dpy),
 					 0,
 					 NV_CTRL_BINARY_DATA_DISPLAYS_ENABLED_ON_XSCREEN,
-					 (unsigned char**) &data,
+					 (unsigned char**) &query_data,
 					 &len))
 	{
 		throw "No DVC enabeld monitors found\n";
 	}
+
+	if(query_data)
+		free(query_data);
 }
 
 int
 NVIDIA::set_vibrance(std::map<int,int> *values)
 {
-	int *data;  // buffer for XNVCTRLQuery response
+	int *query_data;  // buffer for XNVCTRLQuery response
 	int len;    // length of a respons
 
 	if(!dpy && !(dpy = XOpenDisplay(NULL)))
@@ -44,14 +47,14 @@ NVIDIA::set_vibrance(std::map<int,int> *values)
 				     screen,
 				     0,
 				     NV_CTRL_BINARY_DATA_DISPLAYS_ENABLED_ON_XSCREEN,
-				     (unsigned char **)&data,
+				     (unsigned char **)&query_data,
 				     &len);
 
 	// query each dpy
-	for (int i = 1; i <= data[0]; i++)
+	for (int i = 1; i <= query_data[0]; i++)
 	{
 		NVCTRLAttributeValidValuesRec valid_values;
-		int dpyId = data[i];        // id of queried monitor
+		int dpyId = query_data[i];        // id of queried monitor
 		int setval = 0;
 
 		// get DVC range values
@@ -98,6 +101,8 @@ NVIDIA::set_vibrance(std::map<int,int> *values)
 		// Flush display
 		XFlush(dpy);
 	}
+	if(query_data)
+		free(query_data);
 	return 0;
 }
 
@@ -169,6 +174,8 @@ NVIDIA::get_vibrance()
 					value / ((double)valid_values.u.range.max / 100) :
 					value / ((double)valid_values.u.range.min / 100);
 	}
+	if(query_data)
+		free(query_data);
 	return map;
 }
 
