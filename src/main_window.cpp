@@ -22,6 +22,8 @@ mainWindow::mainWindow() :
 	mainLayout.addWidget(profileSelector);
 	setLayout(&mainLayout);
 
+	setGeometry(0,0,300,250);
+
 	trayIcon.show();
 	this->show();
 }

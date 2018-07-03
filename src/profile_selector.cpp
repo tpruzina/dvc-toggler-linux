@@ -28,16 +28,19 @@ ProfileSelectorWidget::createProfileTabsBox()
 
 	for(const auto &app : config)
 	{
-		QIcon icon(cfg.query_icon_path(app));
-		tabs.addTab(new AppProfile(app, this), icon, app);
+		// FIXME: use icon if available, label otherwise (_not_ both)
+		// for now, just ignore icons
+		//QIcon icon(cfg.query_icon_path(app));
+		tabs.addTab(new AppProfile(app, this), app);
 	}
 	tabs.setTabsClosable(true);
+	// hide close icon for default profile
 	tabs.tabBar()->tabButton(0,QTabBar::RightSide)->hide();
 	tabs.setUsesScrollButtons(true);
-	// FIXME: use icon if available, label otherwise (_not_ both)
-	// for now, just hide default icons
-	tabs.setIconSize(QSize(0,0));
+
+	//tabs.setIconSize(QSize(0,0));
 	tabs.setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+	tabs.setStyleSheet("QTabBar::tab{width: 80px; }");
 
 	connect(&tabs, SIGNAL(tabCloseRequested(int)), this, SLOT(removeProfile(int)));
 }
