@@ -5,10 +5,7 @@ XDisplay::XDisplay()
 	setlocale(LC_ALL, "");
 	dpy = XOpenDisplay(NULL);
 	if(!dpy)
-	{
-		cerr << "Cannot open display " << XDisplayName(NULL) << endl;
-		exit(1);
-	}
+		throw "Cannot open display";
 }
 
 XDisplay::~XDisplay()
@@ -20,24 +17,24 @@ XDisplay::~XDisplay()
 Window
 XDisplay::query_focused_window()
 {
-	Window w;
+	Window focused_window;
 	int tmp;
-	XGetInputFocus(dpy, &w, &tmp);
-	return w;
+	XGetInputFocus(dpy, &focused_window, &tmp);
+	return focused_window;
 }
 
 string
 XDisplay::query_active_window_name()
 {
 	string name;
-	Window test;
+	Window active_window;
 	int tmp;
 
 	if(dpy)
 	{
-		XGetInputFocus(dpy, &test, &tmp);
+		XGetInputFocus(dpy, &active_window, &tmp);
 		XClassHint wm_class;
-		if(!XGetClassHint(dpy, test, &wm_class))
+		if(!XGetClassHint(dpy, active_window, &wm_class))
 			return name;
 
 		name.assign(wm_class.res_name);
@@ -55,7 +52,7 @@ XDisplay::query_top_window(Window start)
 {
 	Window w = start;
 	Window parent = start;
-	Window root = 0; // = None (None from Xlib)
+	Window root = 0L; // = None (None from Xlib)
 	Window *children;
 	unsigned int nchildren;
 	int s;
@@ -193,9 +190,13 @@ XDisplay::query_window_name(Window w)
 	return ret;
 }
 
+// Query main PID of currently focused window
 pid_t
 XDisplay::query_focused_window_pid()
 {
+	// FIXME: Are 3 recursive queries still necessary?
+	// [02/06/2018]	<sigh> Don't ask me what this does,
+	//		I have long since forgotten
 	return query_window_pid(
 				query_name_window(
 					query_top_window(

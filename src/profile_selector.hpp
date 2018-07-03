@@ -50,7 +50,6 @@ private:
 	//	QPushButton	delCurrentProfileButton;
 
 	QTabWidget tabs;
-	QVector<QString> profiles;
 	QString	active_profile;
 
 	mainWindow *W;

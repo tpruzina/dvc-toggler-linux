@@ -31,7 +31,6 @@ ProfileSelectorWidget::createProfileTabsBox()
 	{
 		QIcon icon(cfg.query_icon_path(app));
 		tabs.addTab(new AppProfile(app, this), icon, app);
-		profiles.push_back(app);
 		active_profile = app;
 		qDebug() << "iconpath for" << app << "is " << cfg.query_icon_path(app);
 	}
@@ -82,7 +81,6 @@ ProfileSelectorWidget::updateComboBox(int index)
 		cfg.set_dvc(name, dvc_map);
 		cfg.set_icon_path(name, ":/resources/xclient.svg");
 		tabs.addTab(new AppProfile(name, this), icon, name);
-		profiles.push_back(name);
 		active_profile = name;
 	}
 
@@ -111,6 +109,7 @@ ProfileSelectorWidget::updateComboBox(int index)
 void
 ProfileSelectorWidget::apply_dvc()
 {
+	// fixme get rid of this
 	std::map<int,int> std_map = dvc_map.toStdMap();
 	nv.set_vibrance(&std_map);
 	std_map = nv.get_vibrance();
@@ -122,7 +121,9 @@ AppProfile::AppProfile(const QString name, ProfileSelectorWidget *p) :
 	PSW(p),	// pointer to master PSW (has NV object)
 	name(name) // profile name (or "default")
 {
+	// get DVC map from Config file
 	QMap<int,int> dvc_map = PSW->cfg.query_dvc(name);
+	// If we can't find it there, create it based on current config
 	if(dvc_map.empty())
 	{
 		qDebug() << dvc_map;
@@ -131,6 +132,10 @@ AppProfile::AppProfile(const QString name, ProfileSelectorWidget *p) :
 		PSW->cfg.set_dvc(name, dvc_map);
 	}
 
+	// add new rule to procWatch
+	PSW->W->pw.update_rule(name.toStdString(), dvc_map.toStdMap());
+
+	// create one DVCentry per each CRTC (dpyId)
 	QMap<int,int>::const_iterator i = dvc_map.constBegin();
 	while(i != dvc_map.constEnd())
 	{
@@ -184,5 +189,8 @@ DVCEntry::onDVCSliderChanged(int value)
 	// update config
 	QMap<int,int> cfg_dvc_map = AP->PSW->cfg.query_dvc(AP->name);
 	cfg_dvc_map[dpyId] = value;
+	// update config
 	AP->PSW->cfg.set_dvc(AP->name, cfg_dvc_map);
+	// update procWatch rule
+	AP->PSW->W->pw.update_rule(AP->name.toStdString(), cfg_dvc_map.toStdMap());
 }

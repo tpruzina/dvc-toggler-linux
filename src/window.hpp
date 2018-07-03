@@ -53,5 +53,7 @@ private:
 	QMenu *trayIconMenu;
 
 	friend class ProfileSelectorWidget;
+	friend class AppProfile;
+	friend class DVCEntry;
 };
 #endif

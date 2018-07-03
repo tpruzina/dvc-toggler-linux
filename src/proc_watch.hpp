@@ -37,7 +37,7 @@ public:
 	vector<string>	list_running_procs();
 	bool is_proc_running(string proc_comm);	// is this necessary?
 
-	void update_rule(string &name, std::map<int,int> dvc_map);
+	void update_rule(string name, std::map<int,int> dvc_map);
 	void apply_rule(string &name);
 
 	void set_enabled(bool state = true);

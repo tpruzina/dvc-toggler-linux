@@ -8,6 +8,8 @@
 #include <X11/Xmu/WinUtil.h>
 #include <locale.h>
 
+// Ugly hack to achieve QT<>Xlib compatibility
+// and prevent symbol mangling
 #undef Bool
 #undef CursorShape
 #undef Expose
@@ -20,6 +22,7 @@
 #undef Status
 #undef Unsorted
 
+// FIXME: Remove this
 using std::string;
 using std::cout;
 using std::cerr;
@@ -46,10 +49,6 @@ public:
 
 private:
 	Display *dpy;
-
-	friend class MOUSE;
-	friend class NVIDIA;
-	friend class APP;
 
 	int32_t get_prop_card32(Window w, Atom p);
 };

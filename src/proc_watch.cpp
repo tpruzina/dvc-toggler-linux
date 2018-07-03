@@ -52,17 +52,16 @@ ProcWatch::is_proc_running(string proc_comm)
 }
 
 void
-ProcWatch::update_rule(string &name, std::map<int,int> dvc_map)
+ProcWatch::update_rule(string name, std::map<int,int> dvc_map)
 {
 	// {comm}x{{dpyId}x{dvc}}
 
-	// if rule exists force refresh
-	// FIXME: might cause _harmless?_ race with update()
-	if(rules.find(name) != rules.end())
-		dirty = true;
-
-	// update/add the rule
+	//update/add rule
 	rules[name] = dvc_map;
+
+	// set dirty flag if window is focused
+	if(name.compare(active_window_comm) == 0)
+		dirty = true;
 }
 
 void
@@ -71,9 +70,14 @@ ProcWatch::apply_rule(string &name)
 	// find rule
 	const auto &rule = rules.find(name);
 
-	// if rule for comm does'nt exist, exit silently
+	// if rule for app doesn't exist, apply "default"
 	if(rule == rules.end())
-		return;
+		nv.set_vibrance(&rules["default"]);
+	else	// else apply selected rule
+		nv.set_vibrance(&rules[name]);
+
+	// unset dirty flag
+	dirty = false;
 }
 
 // general update function, watcher thread runs this every sleep.ms
@@ -96,7 +100,11 @@ void ProcWatch::update()
 			{
 				// update comm this has changed since the last update
 				active_window_comm = pid_to_comm(focused_window_pid);
+
+				std::cerr << "PID=" << focused_window_pid << " COMM=" << active_window_comm << "\n";
+
 				dirty = true;
+				previous_active_window_pid = focused_window_pid;
 			}
 
 			if(dirty)
@@ -142,7 +150,7 @@ ProcWatch::pid_to_comm(pid_t pid)
 {
 	static char path[32] = "/proc/";
 	const off_t offset = 6;	// strlen("/proc/_");
-	sprintf(path+offset, "%d/comms%c", pid, '\0');
+	sprintf(path+offset, "%d/comm%c", pid, '\0');
 
 	return [] (const char *filename)
 	{
