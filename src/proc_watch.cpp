@@ -203,7 +203,8 @@ ProcWatch::scan_proc()
 			contents << in.rdbuf();
 			in.close();
 			string str = contents.str();
-			str.pop_back(); // remove trailing \n
+			if(!str.empty())
+				str.pop_back(); // remove trailing \n
 			return (str);
 		};
 

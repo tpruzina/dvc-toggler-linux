@@ -66,7 +66,7 @@ ProfileSelectorWidget::updateComboBox(int index)
 {
 	QStringList qlist;
 	qlist << "Add new profile";
-	for(auto &e : W->pw.list_running_procs())
+	for(auto e : W->pw.list_running_procs())
 		qlist << QString(e.c_str());
 
 	// if we selected some new profile name from list

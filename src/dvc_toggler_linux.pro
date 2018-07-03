@@ -1,5 +1,5 @@
 CONFIG += c++17
-QMAKE_CXXFLAGS += -std=c++17 -Wall -Wextra
+QMAKE_CXXFLAGS += -std=c++17 -Wall -Wextra -g -O2
 QMAKE_LFLAGS += -lX11 -lXext -ldl -lXmu
 
 TARGET = dvc-toggler
