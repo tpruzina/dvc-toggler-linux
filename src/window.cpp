@@ -2,7 +2,7 @@
 #include "profile_selector.hpp"
 
 mainWindow::mainWindow() :
-	pw(nv)
+	pw(nv, cfg.query_polling_rate())
 {
 	setWindowTitle(tr("DVC toggler"));
 
@@ -24,6 +24,7 @@ mainWindow::mainWindow() :
 	setLayout(mainLayout);
 
 	trayIcon->show();
+	this->show();
 }
 
 void mainWindow::setVisible(bool visible)

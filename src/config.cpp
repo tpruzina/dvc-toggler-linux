@@ -10,6 +10,8 @@ Config::Config() :
 {
 	if(!contains("autohide"))	set_autohide(false);
 	if(!contains("enabled"))	set_enabled(true);
+	if(!contains("start_minimized"))	set_start_minimized(false);
+	if(!contains("polling_rate"))	set_polling_rate(100);
 
 	beginGroup("default");
 	if(!contains("icon_path"))	setValue("icon", ":/resources/desktop.svg");
@@ -54,6 +56,7 @@ Config::query_dvc(const QString &profile_name)
 	endGroup();
 	return map;
 }
+
 void
 Config::set_dvc(const QString &profile_name, QMap<int,int> &map)
 {
@@ -92,6 +95,18 @@ Config::query_autohide(void)
 }
 
 void
+Config::set_start_minimized(bool val)
+{
+	setValue("start_minimized", val);
+}
+
+bool
+Config::query_start_minimized(void)
+{
+	return value("start_minimized").toBool();
+}
+
+void
 Config::set_autohide(bool val)
 {
 	setValue("autohide", val);
@@ -118,4 +133,16 @@ Config::remove_profile(const QString &key)
 	 //removes the group, and all it keys
 	remove("");
 	endGroup();
+}
+
+unsigned
+Config::query_polling_rate(void)
+{
+	return QSettings::value("polling_rate").toUInt();
+}
+
+void
+Config::set_polling_rate(unsigned ms)
+{
+	setValue("polling_rate", ms);
 }
