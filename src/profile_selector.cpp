@@ -34,6 +34,10 @@ ProfileSelectorWidget::createProfileTabsBox()
 	tabs.setTabsClosable(true);
 	tabs.tabBar()->tabButton(0,QTabBar::RightSide)->hide();
 	tabs.setUsesScrollButtons(true);
+	// FIXME: use icon if available, label otherwise (_not_ both)
+	// for now, just hide default icons
+	tabs.setIconSize(QSize(0,0));
+	tabs.setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
 	connect(&tabs, SIGNAL(tabCloseRequested(int)), this, SLOT(removeProfile(int)));
 }
