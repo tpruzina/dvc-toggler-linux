@@ -42,7 +42,7 @@ public:
 	string	query_window_class(Window w);
 	string	query_window_name(Window w);
 	pid_t	query_window_pid(Window w);
-
+        pid_t   query_focused_window_pid();
 
 private:
 	Display *dpy;

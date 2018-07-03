@@ -27,22 +27,32 @@ using std::vector;
 
 class ProcWatch : public XDisplay{
  public:
-	ProcWatch();
+	ProcWatch(bool active = true, unsigned sleep_ms=100);
 	~ProcWatch();
 
 	vector<string> list_running_procs();
 	bool is_proc_running(string proc_comm);
+
 	void debug_dump();
 
 	void set_polling_rate(unsigned ms);
+	void set_enabled(bool state = true);
 
  private:
 	void update();
-	static unordered_set < string > scan_proc();
-	std::chrono::milliseconds sleep_ms;
-	unordered_set < string > comms;
+	unordered_set <string> scan_proc();
+	string pid_to_comm(pid_t pid);
 
+
+
+	unordered_set <string> comms;
+	pid_t previous_active_window_pid;
+	string active_window_comm;
+
+	volatile bool active;
 	volatile bool terminate;
+	std::chrono::milliseconds sleep_ms;
+
 	std::shared_mutex write;
 	std::thread watcher;
 };

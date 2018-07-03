@@ -11,7 +11,7 @@
 #include <QSystemTrayIcon>
 
 #include "config.hpp"
-#include "procwatch.hpp"
+#include "proc_watch.hpp"
 
 class mainWindow : public QDialog
 {

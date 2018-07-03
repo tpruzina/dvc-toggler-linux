@@ -9,11 +9,11 @@ HEADERS = \
     nvidia/display.hpp \
     nvidia/libXNVCtrl/NVCtrl.h \
     nvidia/nvidia.hpp \
-    procwatch.hpp \
     profile_selector.hpp \
     runguard.hpp \
     window.hpp \
     xclientpicker.hpp \
+    proc_watch.hpp
 
 
 SOURCES = \

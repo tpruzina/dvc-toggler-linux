@@ -196,6 +196,16 @@ XDisplay::query_window_name(Window w)
 	return ret;
 }
 
+pid_t
+XDisplay::query_focused_window_pid()
+{
+    return query_window_pid(
+            query_name_window(
+                query_top_window(
+                    query_focused_window()))
+            );
+}
+
 #ifdef DEBUG_XDISPLAY
 int main()
 {
@@ -217,7 +227,9 @@ int main()
     name = nv->query_name_window(top);
     cout << "focused->top->name class: " << nv->query_window_class(name) << endl;
     cout << "focused->top->name PID: " << nv->query_window_pid(name) << endl;
-    
+ 
+    cout << "query_focused_window_pid(): " << nv->query_focused_window_pid() << endl;
+
     free(nv);
     return 0;
 }

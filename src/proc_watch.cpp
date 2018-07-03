@@ -1,10 +1,11 @@
-#include "procwatch.hpp"
+#include "proc_watch.hpp"
 
-ProcWatch::ProcWatch() :
-    sleep_ms(100),
-    terminate(false)
+ProcWatch::ProcWatch(bool active, unsigned sleep_ms) :
+	active(active),
+	terminate(false),
+	sleep_ms(sleep_ms)
 {
-    watcher = std::thread(&ProcWatch::update, this);
+	watcher = std::thread(&ProcWatch::update, this);
 }
 
 ProcWatch::~ProcWatch()
@@ -28,8 +29,12 @@ ProcWatch::is_proc_running(string proc_comm)
 // return sorted, unique list of comms from /proc
 vector < string > ProcWatch::list_running_procs()
 {
+	// scan /proc/PID/comms for list of viable targets
+	comms = scan_proc();
+
 	// RAII lock for reads
 	std::shared_lock < std::shared_mutex > lock(write);
+
 	// move elements of comms set into vector
 	vector < string > res(comms.begin(), comms.end());
 	// sort for user output
@@ -45,17 +50,29 @@ void ProcWatch::update()
 		if (terminate)
 			break;
 
-		// RAII lock for writer (unlocks itself after leaving scope)
+		// only update state / apply rules if we are active
+		if(active)
 		{
-		    std::lock_guard < std::shared_mutex > lock(write);
-		    // do the proc read and update set
-		    this->comms = scan_proc();
-		    // sleep for sleep_ms
+			// query currently focused window PID
+			pid_t focused_window_pid = query_focused_window_pid();
+
+			// update comm this has changed since the last update
+			if(focused_window_pid != previous_active_window_pid)
+				active_window_comm = pid_to_comm(focused_window_pid);
 		}
+
+		// sleep for sleep_ms
 		std::this_thread::sleep_for(std::chrono::
 					    milliseconds(sleep_ms));
 	}
 }
+
+void
+ProcWatch::set_enabled(bool state)
+{
+	active = state;
+}
+
 void
 ProcWatch::set_polling_rate(unsigned ms)
 {
@@ -72,17 +89,40 @@ void ProcWatch::debug_dump()
 		std::cout << p << std::endl;
 }
 
+string
+ProcWatch::pid_to_comm(pid_t pid)
+{
+	static char path[32] = "/proc/";
+	const off_t offset = 6;	// strlen("/proc/_");
+	sprintf(path+offset, "%d/comms%c", pid, '\0');
+
+	return [] (const char *filename)
+	{
+	  std::ifstream in(filename, std::ios::in | std::ios::binary);
+	  std::ostringstream contents;
+	  contents << in.rdbuf();
+	  in.close();
+	  string str = contents.str();
+	  str.pop_back(); // remove trailing \n
+	  return (str);
+	} (path);
+}
+
 // returns unique "comm" values from of /proc/$PID/comms for all $PIDS
-unordered_set < string > ProcWatch::scan_proc()
+unordered_set<string>
+ProcWatch::scan_proc()
 {
 	DIR *dir;
 	struct dirent *ent;
-	unordered_set < string > set;
+	unordered_set <string> set;
+
+	// RAII lock for writer (unlocks itself after leaving scope)
+	std::lock_guard < std::shared_mutex > lock(write);
 
 	if (!(dir = opendir("/proc")))
 		return set;
 
-	static char name_buffer[256] = "/proc/";
+	static char path[32] = "/proc/";
 	const off_t offset = 6;	// strlen("/proc/_");
 
 	// for each ent=PID in /proc/<PIDs>
@@ -91,22 +131,30 @@ unordered_set < string > ProcWatch::scan_proc()
 		if (!pid_s || pid_s[0] < '0' || pid_s[0] > '9')
 			continue;
 
-		strcpy((char *)(name_buffer + offset), pid_s);
-		strcpy((char *)(name_buffer + offset + strlen(pid_s)), "/comm");
+		strcpy((char *)(path + offset), pid_s);
 
-		set.insert( // insert contents of /proc/$pid/comm
-				  [] (const char *filename)
-				  {
-				    std::ifstream in(filename, std::ios::in | std::ios::binary);
-				    std::ostringstream contents;
-				    contents << in.rdbuf();
-				    in.close();
-				    string str = contents.str();
-				    str.pop_back(); // remove trailing \n
-				    return (str);
-				  }
-				  (name_buffer)
-		);
+		auto read_file_to_str = [] (const char *filename)
+		{
+		  std::ifstream in(filename, std::ios::in | std::ios::binary);
+		  std::ostringstream contents;
+		  contents << in.rdbuf();
+		  in.close();
+		  string str = contents.str();
+		  str.pop_back(); // remove trailing \n
+		  return (str);
+		};
+
+//		// check maps and skip adding to set if there is no libX11.so present
+//		// TODO: cache results instead of parsing the whole thing on every refresh
+		strcpy((char *)(path + offset + strlen(pid_s)), "/maps");
+		string maps = read_file_to_str(path);
+		size_t found = maps.find("libX11.so");
+		if(found == std::string::npos)
+			continue;
+
+		strcpy((char *)(path + offset + strlen(pid_s)), "/comm");
+		string comm = read_file_to_str(path);
+		set.insert(comm);
 	}
 	closedir(dir);
 	return set;

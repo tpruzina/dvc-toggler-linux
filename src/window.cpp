@@ -6,7 +6,6 @@ mainWindow::mainWindow()
 	setWindowTitle(tr("DVC toggler"));
 
 	createIconGroupBox();
-
 	createTrayIcon();
 
 	connect(enabledCheckBox, SIGNAL(clicked()), this, SLOT(toggleEnabled()));
@@ -63,11 +62,13 @@ void mainWindow::toggleEnabled()
 	{
 		icon = QIcon(":/resources/enabled.png");
 		status = "DVC enabled";
+		pw.set_enabled(true);
 	}
 	else
 	{
 		status = "DVC disabled";
 		icon = QIcon(":/resources/disabled.png");
+		pw.set_enabled(true);
 	}
 
 	trayIcon->setIcon(icon);
@@ -112,7 +113,9 @@ void mainWindow::createIconGroupBox()
 	iconGroupBox = new QGroupBox(tr("Settings"));
 
 	enabledCheckBox = new QCheckBox(tr("Enable"));
-	enabledCheckBox->setChecked(cfg.query_enabled());
+	bool enabled = cfg.query_enabled();
+	enabledCheckBox->setChecked(enabled);
+	pw.set_enabled(enabled);
 
 	closeToTrayCheckBox = new QCheckBox(tr("Close to tray"));
 	closeToTrayCheckBox->setChecked(cfg.query_autohide());
