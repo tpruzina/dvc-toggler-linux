@@ -57,7 +57,7 @@ static inline int GetNvXScreen(Display *dpy)
 
     fprintf(stderr, "Unable to find any NVIDIA X screens; aborting.\n");
 
-    exit(1);
+    return -1;
 }
 
 #endif /* __NV_CONTROL_SCREEN_H__ */

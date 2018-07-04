@@ -10,23 +10,8 @@ Display *dpy;
 NVIDIA::NVIDIA()
 {
 	dpy = XOpenDisplay(NULL);
-	int *query_data;
-	int len;
-
-	// Query monitors (CRTCs on screen)
-	if(!XNVCTRLQueryTargetBinaryData(dpy,
-					 NV_CTRL_TARGET_TYPE_X_SCREEN,
-					 GetNvXScreen(dpy),
-					 0,
-					 NV_CTRL_BINARY_DATA_DISPLAYS_ENABLED_ON_XSCREEN,
-					 (unsigned char**) &query_data,
-					 &len))
-	{
-		throw "No DVC enabeld monitors found\n";
-	}
-
-	if(query_data)
-		free(query_data);
+	if(GetNvXScreen(dpy) == -1)
+		throw "Unable to find any NVIDIA X screens";
 }
 
 int
