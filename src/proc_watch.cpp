@@ -166,7 +166,8 @@ ProcWatch::pid_to_comm(pid_t pid)
 		contents << in.rdbuf();
 		in.close();
 		string str = contents.str();
-		str.pop_back(); // remove trailing \n
+		if(!string.empty())
+                    str.pop_back(); // remove trailing \n
 		return (str);
 	} (path);
 }
