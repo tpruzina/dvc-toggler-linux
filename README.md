@@ -15,15 +15,16 @@ No binary releases at this time.
 ## Build Requirements
 1. C++17 compiler
 2. QT5
-
+3. Meson
+4. Xorg headers (x11, xext, xmu)
 
 ## Build Instructions
 ```
 git clone https://gitlab.com/pruzinat/dvc-toggler-linux.git
-mkdir -p dvc-toggler-linux/build
-cd dvc-toggler-linux/build
-qmake ../src
-make
+cd dvc-toggler-linux
+meson build
+cd build
+ninja
 ```
 
 ## Notes
