@@ -11,7 +11,6 @@ mainWindow::mainWindow() :
 
 	connect(&enabledCheckBox, SIGNAL(clicked()), this, SLOT(toggleEnabled()));
 	connect(&closeToTrayCheckBox, SIGNAL(toggled(bool)), this, SLOT(toggleAutoHide()));
-	connect(&trayIcon, SIGNAL(messageClicked()), this, SLOT(messageClicked()));
 	connect(&trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
 		this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
