@@ -6,6 +6,13 @@ mainWindow::mainWindow() :
 {
 	setWindowTitle(tr("DVC toggler"));
 
+	if(!nv.check_available_screen())
+	{
+		QMessageBox::critical(0, QObject::tr("DVC toggler"),
+			QObject::tr("Unable to find any NVIDIA X screens"));
+		exit(1);
+	}
+
 	createIconGroupBox();
 	createTrayIcon();
 
