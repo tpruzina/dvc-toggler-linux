@@ -14,16 +14,15 @@
 #include <QMessageBox>
 #include <QLabel>
 
-#include "main_window.hpp"
 #include "config.hpp"
 #include "nvidia/nvidia.hpp"
-#include "config.hpp"
+#include "proc_watch.hpp"
 
 class ProfileSelectorWidget : public QGroupBox
 {
 	Q_OBJECT
 public:
-	ProfileSelectorWidget(mainWindow *W);
+	ProfileSelectorWidget(ProcWatch &pw, Config &cfg, NVIDIA &nv);
 
 	QMap<int,int> dvc_map;
 signals:
@@ -48,7 +47,7 @@ private:
 
 	QTabWidget tabs;
 
-	mainWindow *W;
+	ProcWatch &pw;
 	Config &cfg;
 	NVIDIA &nv;
 

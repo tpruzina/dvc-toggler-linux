@@ -14,7 +14,7 @@ mainWindow::mainWindow() :
 	connect(&trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
 		this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
-	ProfileSelectorWidget *profileSelector = new ProfileSelectorWidget(this);
+	ProfileSelectorWidget *profileSelector = new ProfileSelectorWidget(pw, cfg, nv);
 	profileSelector->setTitle("Profiles");
 
 	mainLayout.addWidget(&iconGroupBox);

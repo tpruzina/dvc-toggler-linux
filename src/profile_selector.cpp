@@ -1,9 +1,9 @@
 #include "profile_selector.hpp"
 
-ProfileSelectorWidget::ProfileSelectorWidget(mainWindow *p) :
-	W(p),
-	cfg(W->cfg),
-	nv(W->nv)
+ProfileSelectorWidget::ProfileSelectorWidget(ProcWatch &pw, Config &cfg, NVIDIA &nv) :
+	pw(pw),
+	cfg(cfg),
+	nv(nv)
 {
 	dvc_map = QMap<int,int>(nv.get_vibrance());
 	// build profile tabs from Config
@@ -52,7 +52,7 @@ ProfileSelectorWidget::removeProfile(int index)
 	QString name = tabs.tabText(index);
 
 	cfg.remove(name);
-	W->pw.remove_rule(name.toStdString());
+	pw.remove_rule(name.toStdString());
 	tabs.removeTab(index);
 }
 
@@ -74,7 +74,7 @@ ProfileSelectorWidget::updateComboBox(int index)
 {
 	QStringList qlist;
 	qlist << "Add new profile";
-	for(auto e : W->pw.list_running_procs())
+	for(auto e : pw.list_running_procs())
 		qlist << QString(e.c_str());
 
 	// if we selected some new profile name from list
@@ -126,7 +126,7 @@ AppProfile::AppProfile(const QString name, ProfileSelectorWidget *p) :
 	}
 
 	// add new rule to procWatch
-	PSW->W->pw.update_rule(name.toStdString(), dvc_map.toStdMap());
+	PSW->pw.update_rule(name.toStdString(), dvc_map.toStdMap());
 
 	// create one DVCentry per each CRTC (dpyId)
 	QMap<int,int>::const_iterator i = dvc_map.constBegin();
@@ -185,5 +185,5 @@ DVCEntry::onDVCSliderChanged(int value)
 	// update config
 	AP->PSW->cfg.set_dvc(AP->name, cfg_dvc_map);
 	// update procWatch rule
-	AP->PSW->W->pw.update_rule(AP->name.toStdString(), cfg_dvc_map.toStdMap());
+	AP->PSW->pw.update_rule(AP->name.toStdString(), cfg_dvc_map.toStdMap());
 }
