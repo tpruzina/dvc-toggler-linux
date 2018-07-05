@@ -14,4 +14,5 @@ sources = [ 'config.cpp','main.cpp','main_window.cpp','proc_watch.cpp','profile_
 
 executable('dvc-toggler-linux',
   [ sources , qt_preproc ], 
-  dependencies : [qt5_dep, thread_dep, x11_dep, xext_dep, xmu_dep])
+  dependencies : [qt5_dep, thread_dep, x11_dep, xext_dep, xmu_dep],
+  install: true)
