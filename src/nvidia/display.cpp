@@ -106,11 +106,21 @@ query_window_pid(Display *dpy, Window w)
 unsigned
 XDisplay::query_focused_window_pid()
 {
-	return query_window_pid((Display*)dpy,
-				query_name_window((Display*)dpy,
-					query_top_window((Display*)dpy,
-						query_focused_window((Display*)dpy)))
-				);
+	static pid_t pid_old = 0;
+	static Window focused_old=0;
+
+	Window focused = query_focused_window((Display*)dpy);
+	if(focused == focused_old)
+	{
+		std::cout << "returning cached pid"<< pid_old << "\n";
+		return pid_old;
+	}
+
+	focused_old = focused;
+	return (pid_old = query_window_pid((Display*)dpy,
+					   query_name_window((Display*)dpy,
+							     query_top_window((Display*)dpy,
+									      focused))));
 }
 
 #ifdef DEBUG_XDISPLAY
