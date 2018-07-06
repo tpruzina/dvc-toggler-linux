@@ -111,10 +111,7 @@ XDisplay::query_focused_window_pid()
 
 	Window focused = query_focused_window((Display*)dpy);
 	if(focused == focused_old)
-	{
-		std::cout << "returning cached pid"<< pid_old << "\n";
 		return pid_old;
-	}
 
 	focused_old = focused;
 	return (pid_old = query_window_pid((Display*)dpy,
