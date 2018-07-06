@@ -102,22 +102,37 @@ query_window_pid(Display *dpy, Window w)
 	return get_prop_card32(dpy, w, am_wm_pid);
 }
 
-// Query main PID of currently focused window
+// Query main PID (_NET_WM_PID) of currently focused window
+// Focused window doesn't necessarily has this attribute,
+// we need to go from focused window -> top window -> name window(_NET_WM_PID)
 unsigned
 XDisplay::query_focused_window_pid()
 {
+	// save previous values in static variables in order to cache results
+	// as much as possible and prevent expensive X queries
 	static pid_t pid_old = 0;
-	static Window focused_old=0;
+	static Window prev_focused, prev_top, prev_name;
 
 	Window focused = query_focused_window((Display*)dpy);
-	if(focused == focused_old)
+	if(focused == prev_focused)
 		return pid_old;
+	else
+		prev_focused = focused;
 
-	focused_old = focused;
-	return (pid_old = query_window_pid((Display*)dpy,
-					   query_name_window((Display*)dpy,
-							     query_top_window((Display*)dpy,
-									      focused))));
+	Window top = query_top_window((Display*)dpy, focused);
+	if(top == prev_top)
+		return pid_old;
+	else
+		prev_top = top;
+
+	Window name = query_name_window((Display*)dpy, top);
+	if(name == prev_name)
+		return pid_old;
+	else
+		prev_name = name;
+
+	pid_old = query_window_pid((Display*)dpy, name);
+	return pid_old;
 }
 
 #ifdef DEBUG_XDISPLAY
