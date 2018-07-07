@@ -14,4 +14,4 @@ private:
 	void *dpy;
 };
 
-#endif /* COMMON_DISPLAY_HPP_ */
+#endif // COMMON_DISPLAY_HPP_

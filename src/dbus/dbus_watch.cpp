@@ -6,11 +6,6 @@
 
 #include "dbus_watch.hpp"
 
-#define DVC_DBUS_CLIENT_NAME "dvc.signal.client"
-#define DVC_DBUS_HOST_SERVER "dvc.signal.server"
-#define DVC_DBUS_IF_NAME "dvc.signal.Type"
-#define DVC_DBUS_SIGNAL_SHOW "Show"
-
 void
 DBusInterface::sendsignal(char *message)
 {
@@ -25,7 +20,7 @@ DBusInterface::sendsignal(char *message)
 
 	dbus_bus_request_name(conn, DVC_DBUS_CLIENT_NAME,
 			      DBUS_NAME_FLAG_REPLACE_EXISTING, NULL);
-	msg = dbus_message_new_signal("/dvc/signal/Object",	// object name of the signal
+	msg = dbus_message_new_signal(DVC_DBUS_SIGNAL_OBJECT, // object name of the signal
 				      DVC_DBUS_IF_NAME,	// interface name of the signal
 				      DVC_DBUS_SIGNAL_SHOW);	// name of the signal
 	dbus_message_iter_init_append(msg, &args);

@@ -20,4 +20,4 @@ public:
 	static bool check_available_screen();
 };
 
-#endif /* COMMON_NVIDIA_HPP_ */
+#endif // COMMON_NVIDIA_HPP_

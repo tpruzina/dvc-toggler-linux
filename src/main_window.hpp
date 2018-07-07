@@ -60,4 +60,4 @@ private:
 	friend class AppProfile;
 	friend class DVCEntry;
 };
-#endif
+#endif // MAIN_WINDOW_HPP

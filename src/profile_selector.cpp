@@ -30,18 +30,18 @@ ProfileSelectorWidget::createProfileTabsBox()
 	{
 		// FIXME: use icon if available, label otherwise (_not_ both)
 		// for now, just ignore icons
-		//QIcon icon(cfg.query_icon_path(app));
+//		QIcon icon(cfg.query_icon_path(app));
 		tabs.addTab(new AppProfile(app, this), app);
 	}
 	tabs.setTabsClosable(true);
 	// hide close icon for default profile
 	tabs.tabBar()->tabButton(0,QTabBar::RightSide)->hide();
 	tabs.setUsesScrollButtons(false);
-	//	tabs.setTabsClosable(false);
+//	tabs.setTabsClosable(false);
 
 	tabs.setIconSize(QSize(0,0));
 	tabs.setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-	//	tabs.setStyleSheet("QTabBar::tab{width: 80px; }");
+//	tabs.setStyleSheet("QTabBar::tab{width: 80px; }");
 
 	connect(&tabs, SIGNAL(tabCloseRequested(int)), this, SLOT(removeProfile(int)));
 }
@@ -102,7 +102,7 @@ ProfileSelectorWidget::updateComboBox(int index)
 void
 ProfileSelectorWidget::apply_dvc()
 {
-	// fixme get rid of this
+	// FIXME: get rid of this
 	std::map<int,int> std_map = dvc_map.toStdMap();
 	nv.set_vibrance(&std_map);
 	std_map = nv.get_vibrance();

@@ -25,5 +25,4 @@ private:
 
 	Q_DISABLE_COPY(RunGuard)
 };
-
-#endif // RUNGUARD_H
+#endif // RUNGUARD_HPP

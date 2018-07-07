@@ -28,6 +28,7 @@ cd dvc-toggler-linux
 meson build
 cd build
 ninja
+(optional) sudo ninja install
 ```
 
 ## Notes

@@ -79,4 +79,4 @@ private:
 	std::thread watcher;		// update thread
 };
 
-#endif // PROCWATCH_H
+#endif // PROCWATCH_HPP
