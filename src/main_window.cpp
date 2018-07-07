@@ -3,6 +3,7 @@
 
 mainWindow::mainWindow() :
 	pw(nv, cfg.query_enabled(), cfg.query_sleep_time_ms())
+
 {
 	setWindowTitle(tr("DVC toggler"));
 
@@ -12,6 +13,16 @@ mainWindow::mainWindow() :
 			QObject::tr("Unable to find any NVIDIA X screens"));
 		exit(1);
 	}
+
+	// set up dbus listener for "show()" messages
+	bus.spawn_listener(	[] (void *object)
+				{
+					mainWindow *mW = (mainWindow *) object;
+					if(!mW->isVisible())
+						mW->show();
+				}
+				,this
+	);
 
 	createIconGroupBox();
 	createTrayIcon();

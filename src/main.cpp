@@ -3,6 +3,8 @@
 #include "main_window.hpp"
 #include "runguard.hpp"
 
+#include "dbus/dbus_watch.hpp"
+
 int main(int argc, char *argv[])
 {
 	Q_INIT_RESOURCE(dvc_toggler_linux);
@@ -10,8 +12,8 @@ int main(int argc, char *argv[])
 	RunGuard guard("dvc_toggler_linux");
 	if (!guard.tryToRun())
 	{
-		// TODO: send signal to main application to ->show()
-		// instead of failing silently if toggler is already running
+		DBusInterface bus;
+		bus.sendsignal((char*)"show()");
 		return 0;
 	}
 

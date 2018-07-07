@@ -12,6 +12,7 @@
 
 #include "config.hpp"
 #include "proc_watch.hpp"
+#include "dbus/dbus_watch.hpp"
 
 
 class mainWindow : public QDialog
@@ -36,6 +37,8 @@ private:
 	Config cfg;	// Persistent configuration object
 	NVIDIA nv;	// DVC related nvidia object
 	ProcWatch pw;	// Window watcher
+	DBusInterface bus;
+
 
 	void createIconGroupBox();
 	void createTrayIcon();

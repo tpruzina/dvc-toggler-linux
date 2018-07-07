@@ -17,6 +17,7 @@ No binary releases at this time.
 2. QT5
 3. Meson
 4. Xorg headers (x11, xext, xmu)
+5. dbus-1
 
 ## Build Instructions
 ```
