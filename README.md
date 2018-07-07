@@ -16,11 +16,13 @@ No binary releases at this time.
 1. C++17 compiler
 2. QT5
 3. Meson
+4. pkg-config (pkgconf)
 4. Xorg headers (x11, xext, xmu)
 5. dbus-1
 
 ## Build Instructions
 ```
+(ubuntu) sudo apt install build-essential qt5-default libqt5svg5-dev libx11-dev libxext-dev libxmu-dev pkgconf libdbus-1-dev
 git clone https://gitlab.com/pruzinat/dvc-toggler-linux.git
 cd dvc-toggler-linux
 meson build
