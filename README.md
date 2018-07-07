@@ -22,7 +22,7 @@ No binary releases at this time.
 
 ## Build Instructions
 ```
-(ubuntu) sudo apt install build-essential qt5-default libqt5svg5-dev libx11-dev libxext-dev libxmu-dev pkgconf libdbus-1-dev
+(ubuntu) sudo apt install build-essential qt5-default libqt5svg5-dev libx11-dev libxext-dev libxmu-dev pkgconf libdbus-1-dev git mesoN
 git clone https://gitlab.com/pruzinat/dvc-toggler-linux.git
 cd dvc-toggler-linux
 meson build
