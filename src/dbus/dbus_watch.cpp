@@ -2,15 +2,14 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include <iostream>
 
 #include "dbus_watch.hpp"
 
-#define DVC_DBUS_CLIENT_NAME "test.signal.source"
-#define DVC_DBUS_HOST_SERVER "test.signal.server"
-#define DVC_DBUS_IF_NAME "test.signal.Type"
-#define DVC_DBUS_SIGNAL_SHOW "Test"
+#define DVC_DBUS_CLIENT_NAME "dvc.signal.client"
+#define DVC_DBUS_HOST_SERVER "dvc.signal.server"
+#define DVC_DBUS_IF_NAME "dvc.signal.Type"
+#define DVC_DBUS_SIGNAL_SHOW "Show"
 
 void
 DBusInterface::sendsignal(char *message)
@@ -24,9 +23,9 @@ DBusInterface::sendsignal(char *message)
 	if (!conn)
 		return;
 
-	    dbus_bus_request_name(conn, DVC_DBUS_CLIENT_NAME,
-				  DBUS_NAME_FLAG_REPLACE_EXISTING, NULL);
-	msg = dbus_message_new_signal("/test/signal/Object",	// object name of the signal
+	dbus_bus_request_name(conn, DVC_DBUS_CLIENT_NAME,
+			      DBUS_NAME_FLAG_REPLACE_EXISTING, NULL);
+	msg = dbus_message_new_signal("/dvc/signal/Object",	// object name of the signal
 				      DVC_DBUS_IF_NAME,	// interface name of the signal
 				      DVC_DBUS_SIGNAL_SHOW);	// name of the signal
 	dbus_message_iter_init_append(msg, &args);
@@ -47,7 +46,8 @@ DBusInterface::spawn_listener(void (*cb)(void*), void* foreign_object)
 	listener = std::thread(&DBusInterface::receive, this);
 }
 
-void DBusInterface::receive()
+void
+DBusInterface::receive()
 {
 	DBusMessage *msg;
 	DBusMessageIter args;
@@ -61,16 +61,16 @@ void DBusInterface::receive()
 		return;
 
 
-	    dbus_bus_request_name(conn, DVC_DBUS_HOST_SERVER,
-				  DBUS_NAME_FLAG_REPLACE_EXISTING, NULL);
+	dbus_bus_request_name(conn, DVC_DBUS_HOST_SERVER,
+			      DBUS_NAME_FLAG_REPLACE_EXISTING, NULL);
 
-	dbus_bus_add_match(conn, "type='signal',interface='test.signal.Type'", NULL);	// see signals from the given interface
+	dbus_bus_add_match(conn, "type='signal',interface='" DVC_DBUS_IF_NAME "'", NULL);	// see signals from the given interface
 	dbus_connection_flush(conn);
 
 
 	// loop listening for signals being emmitted
 	while (true)
-        {
+	{
 		// non blocking read of the next available message
 		dbus_connection_read_write(conn, 0);
 		msg = dbus_connection_pop_message(conn);
@@ -87,8 +87,8 @@ void DBusInterface::receive()
 		if (dbus_message_is_signal
 		    (msg, DVC_DBUS_IF_NAME, DVC_DBUS_SIGNAL_SHOW))
 		{
-		    std::cerr << "PARSING MESSAGE\n";	
-                    // read the parameters
+			std::cerr << "PARSING MESSAGE\n";
+			// read the parameters
 			dbus_message_iter_init(msg, &args);
 			if (DBUS_TYPE_STRING ==
 			    dbus_message_iter_get_arg_type(&args))

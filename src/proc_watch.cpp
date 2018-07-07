@@ -89,7 +89,8 @@ ProcWatch::remove_rule(string name)
 }
 
 // general update function, watcher thread runs this every sleep.ms
-void ProcWatch::update()
+void
+ProcWatch::update()
 {
 	while (true)
 	{
@@ -167,7 +168,7 @@ ProcWatch::pid_to_comm(pid_t pid)
 		in.close();
 		string str = contents.str();
 		if(!str.empty())
-                    str.pop_back(); // remove trailing \n
+			str.pop_back(); // remove trailing \n
 		return (str);
 	} (path);
 }

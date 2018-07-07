@@ -1,5 +1,3 @@
-#include "display.hpp"
-
 #include <iostream>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -7,12 +5,14 @@
 #include <X11/Xmu/WinUtil.h>
 #include <locale.h>
 
+#include "display.hpp"
+
 XDisplay::XDisplay()
 {
 	setlocale(LC_ALL, "");
 	dpy = XOpenDisplay(NULL);
 	if(!dpy)
-		throw "Cannot open display";
+		throw "Cannot open display";	// FIXME: handle in mainWindow?
 }
 
 XDisplay::~XDisplay()
@@ -138,9 +138,8 @@ XDisplay::query_focused_window_pid()
 #ifdef DEBUG_XDISPLAY
 int main()
 {
-	XDisplay *nv = new XDisplay;
-	cout << "query_focused_window_pid(): " << nv->query_focused_window_pid() << endl;
-	free(nv);
+	XDisplay nv;
+	cout << "query_focused_window_pid(): " << nv.query_focused_window_pid() << endl;
 	return 0;
 }
 #endif // DEBUG_XDISPLAY

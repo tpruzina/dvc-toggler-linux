@@ -2,23 +2,25 @@
 
 #include "main_window.hpp"
 #include "runguard.hpp"
-
 #include "dbus/dbus_watch.hpp"
 
 int main(int argc, char *argv[])
 {
 	Q_INIT_RESOURCE(dvc_toggler_linux);
+	QApplication app(argc, argv);
 
+	// check whether we are already running
 	RunGuard guard("dvc_toggler_linux");
 	if (!guard.tryToRun())
 	{
+		// signal mainWindow to show up (if hidden/minimized)
 		DBusInterface bus;
 		bus.sendsignal((char*)"show()");
 		return 0;
 	}
 
-	QApplication app(argc, argv);
-
+	// check whether we have QT system tray
+	// FIXME: This doesn't actually exist on gnome3 and alikes ???
 	if (!QSystemTrayIcon::isSystemTrayAvailable())
 	{
 		QMessageBox::critical(0, QObject::tr("DVC toggler"),
@@ -26,8 +28,10 @@ int main(int argc, char *argv[])
 						  "on this system."));
 		return 1;
 	}
+
 	QApplication::setQuitOnLastWindowClosed(false);
 
+	// init and go
 	mainWindow window;
 	return app.exec();
 }

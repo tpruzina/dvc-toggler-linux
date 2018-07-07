@@ -1,4 +1,5 @@
 #include <inttypes.h>
+
 #include "libXNVCtrl/NVCtrl.h"
 #include "libXNVCtrl/NVCtrlLib.h"
 #include "libXNVCtrl/nv-control-screen.h"

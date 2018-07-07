@@ -7,10 +7,11 @@ mainWindow::mainWindow() :
 {
 	setWindowTitle(tr("DVC toggler"));
 
+	// fail with MessageBox if nvidia enabled screen isn't available
 	if(!nv.check_available_screen())
 	{
 		QMessageBox::critical(0, QObject::tr("DVC toggler"),
-			QObject::tr("Unable to find any NVIDIA X screens"));
+				      QObject::tr("Unable to find any NVIDIA X screens"));
 		exit(1);
 	}
 
@@ -20,10 +21,11 @@ mainWindow::mainWindow() :
 					mainWindow *mW = (mainWindow *) object;
 					if(!mW->isVisible())
 						mW->show();
-				}
-				,this
+				},
+				this
 	);
 
+	// setup ID
 	createIconGroupBox();
 	createTrayIcon();
 
@@ -39,13 +41,14 @@ mainWindow::mainWindow() :
 	mainLayout.addWidget(profileSelector);
 	setLayout(&mainLayout);
 
-	setGeometry(0,0,300,250);
+	setGeometry(0,0,300,250); // fixme remember size from last run
 
 	trayIcon.show();
 	this->show();
 }
 
-void mainWindow::setVisible(bool visible)
+void
+mainWindow::setVisible(bool visible)
 {
 	minimizeAction.setEnabled(visible);
 	restoreAction.setEnabled(!visible);
@@ -53,7 +56,8 @@ void mainWindow::setVisible(bool visible)
 	qDebug() << "setVisibile(" << visible << ") called!";
 }
 
-void mainWindow::closeEvent(QCloseEvent *event)
+void
+mainWindow::closeEvent(QCloseEvent *event)
 {
 	if(cfg.query_autohide() == false)
 	{
@@ -63,18 +67,19 @@ void mainWindow::closeEvent(QCloseEvent *event)
 	if (trayIcon.isVisible())
 	{
 		trayIcon.showMessage("DVC toggler",
-				      tr("The program will keep running in the "
-					 "system tray.\nTo terminate the program, "
-					 "choose \"Quit\" in the context menu "
-					 "of the system tray entry."),
-				      icon,
-				      3000);
+				     tr("The program will keep running in the "
+					"system tray.\nTo terminate the program, "
+					"choose \"Quit\" in the context menu "
+					"of the system tray entry."),
+				     icon,
+				     3000);
 		hide();
 		event->ignore();
 	}
 }
 
-void mainWindow::toggleEnabled()
+void
+mainWindow::toggleEnabled()
 {
 	cfg.toggle_enabled();
 	QString status;
@@ -96,14 +101,17 @@ void mainWindow::toggleEnabled()
 	setWindowIcon(icon);
 }
 
-void mainWindow::toggleAutoHide()
+void
+mainWindow::toggleAutoHide()
 {
 	cfg.toggle_autohide();
 }
 
-void mainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
+void
+mainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
-	switch (reason) {
+	switch (reason)
+	{
 	case QSystemTrayIcon::Trigger:
 	case QSystemTrayIcon::DoubleClick:
 		toggleEnabled();
@@ -116,12 +124,14 @@ void mainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 	}
 }
 
-void mainWindow::showMessage(const QString &msg, unsigned timeout)
+void
+mainWindow::showMessage(const QString &msg, unsigned timeout)
 {
 	trayIcon.showMessage("DVC toggler", msg, icon, timeout);
 }
 
-void mainWindow::createIconGroupBox()
+void
+mainWindow::createIconGroupBox()
 {
 	iconGroupBox.setTitle(tr("Settings"));
 
@@ -139,7 +149,8 @@ void mainWindow::createIconGroupBox()
 	iconGroupBox.setLayout(iconLayout);
 }
 
-void mainWindow::createTrayIcon()
+void
+mainWindow::createTrayIcon()
 {
 	minimizeAction.setText(tr("Mi&nimize"));
 	connect(&minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));

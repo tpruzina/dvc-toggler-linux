@@ -1,7 +1,7 @@
-#include "config.hpp"
-
 #include <QtDebug>
 #include <QStandardPaths>
+
+#include "config.hpp"
 
 Config::Config() :
 	QSettings(

@@ -5,7 +5,7 @@
 #include <thread>
 
 class DBusInterface {
- public:
+public:
 	DBusInterface() : shutdown(false), sleep_ms(100) {}
 
 	~DBusInterface()
@@ -21,12 +21,11 @@ class DBusInterface {
 	void receive();
 	void sendsignal(char *message);
 
- private:
+private:
 	std::thread listener;
 	void (*callback_fn) (void *);
 	void *callback_object;
 	volatile bool shutdown;
 	std::chrono::milliseconds sleep_ms;
 };
-
 #endif				// DBUS_HPP
