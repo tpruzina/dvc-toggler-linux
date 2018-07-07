@@ -6,17 +6,13 @@
 
 #include "nvidia.hpp"
 
-NVIDIA::NVIDIA()
-{
-	dpy = (Display*) XOpenDisplay(NULL);
-}
-
 bool
 NVIDIA::check_available_screen()
 {
-	if(GetNvXScreen((Display*)dpy) == -1)
+	if(GetNvXScreen(XOpenDisplay(NULL)) == -1)
 		return false;
-	return true;
+	else
+		return true;
 }
 
 int
@@ -25,8 +21,7 @@ NVIDIA::set_vibrance(std::map<int,int> *values)
 	int *query_data;  // buffer for XNVCTRLQuery response
 	int len;    // length of a respons
 
-	Display*dpy = (Display*) this->dpy;
-
+	static Display *dpy = 0L;
 	if(!dpy && !(dpy = XOpenDisplay(NULL)))
 		return -1;
 
@@ -106,7 +101,9 @@ NVIDIA::get_vibrance()
 	int len;
 	std::map<int,int> map;
 
-	Display*dpy = (Display*) this->dpy;
+	static Display *dpy = 0L;
+	if(!dpy && !(dpy = XOpenDisplay(NULL)))
+		return map;
 
 	// TODO: Should we fail silently here?
 	if(!dpy && !(dpy = XOpenDisplay(NULL)))
