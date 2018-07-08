@@ -192,7 +192,7 @@ mainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 		toggleEnabled();
 		break;
 	case QSystemTrayIcon::MiddleClick:
-		showMessage(":-]");
+		show();
 		break;
 	default:
 		;
