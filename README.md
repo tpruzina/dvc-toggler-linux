@@ -10,7 +10,7 @@ See [TODO](TODO) for features that are yet to be implemented.
 No binary releases at this time.
 
 
-![Imgur](https://i.imgur.com/71BCMcm.png)
+![Imgur](https://i.imgur.com/pp84mIP.png)
 
 ## Build Requirements
 1. C++17 compiler

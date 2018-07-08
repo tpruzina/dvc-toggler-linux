@@ -40,7 +40,7 @@ ProfileSelectorWidget::createProfileTabsBox()
 	tabs.setUsesScrollButtons(false);
 //	tabs.setTabsClosable(false);
 
-//	tabs.setIconSize(QSize(0,0));
+	tabs.setIconSize(QSize(0,0));
 	tabs.setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 //	tabs.setStyleSheet("QTabBar::tab{width: 80px; }");
 
