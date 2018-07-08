@@ -30,9 +30,12 @@ protected:
 
 private slots:
 	void toggleEnabled();
+	void toggleStartHidden();
+	void toggleAutostart();
+	void toggleAutoHide();
+
 	void iconActivated(QSystemTrayIcon::ActivationReason reason);
 	void showMessage(const QString &msg, unsigned timeout = 3000);
-	void toggleAutoHide();
 	void quit();
 
 private:

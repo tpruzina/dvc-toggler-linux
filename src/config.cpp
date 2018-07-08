@@ -115,14 +115,12 @@ Config::setAutohide(bool val)
 QVariant
 Config::getValue(const QString &key, const QVariant &defaultValue) const
 {
-	qDebug() <<  "value(" << key << ") = " << QSettings::value(key, defaultValue);
 	return QSettings::value(key, defaultValue);
 }
 
 void
 Config::setValue(const QString &key, const QVariant &value)
 {
-	qDebug() << "setValue(" << key << ") = " << value;
 	return QSettings::setValue(key, value);
 }
 

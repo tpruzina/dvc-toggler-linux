@@ -137,6 +137,18 @@ mainWindow::closeEvent(QCloseEvent *event)
 }
 
 void
+mainWindow::toggleStartHidden()
+{
+//	cfg.toggle("start_hidden");
+}
+
+void
+mainWindow::toggleAutostart()
+{
+// cfg.toggle("auto_start");
+}
+
+void
 mainWindow::toggleEnabled()
 {
 	cfg.toggleEnabled();
@@ -175,7 +187,7 @@ mainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 		toggleEnabled();
 		break;
 	case QSystemTrayIcon::MiddleClick:
-		showMessage("test");
+		showMessage(":-]");
 		break;
 	default:
 		;
