@@ -20,7 +20,7 @@
 #include <sstream>
 #include <cstring>
 
-#include "nvidia/display.hpp"
+#include "nvidia/xdisplay.hpp"
 #include "nvidia/nvidia.hpp"
 #include "config.hpp"
 
