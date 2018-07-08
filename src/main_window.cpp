@@ -25,7 +25,7 @@ mainWindow::mainWindow() :
 	ProfileSelectorWidget *profileSelector = new ProfileSelectorWidget(pw, cfg, nv);
 	profileSelector->setTitle("Profiles");
 
-	mainLayout.addWidget(&iconGroupBox);
+	mainLayout.addWidget(&settingsGroupBox);
 	mainLayout.addWidget(profileSelector);
 	setLayout(&mainLayout);
 
@@ -37,7 +37,7 @@ mainWindow::mainWindow() :
 void
 mainWindow::createSettingsBox()
 {
-	iconGroupBox.setTitle(tr("Settings"));
+	settingsGroupBox.setTitle(tr("Settings"));
 
 	enabledCheckBox.setText(tr("Enable"));
 	bool enabled = cfg.queryEnabled();
@@ -48,12 +48,13 @@ mainWindow::createSettingsBox()
 		closeToTrayCheckBox.setText(tr("Close to tray"));
 	else
 		closeToTrayCheckBox.setText(tr("Hide on exit"));
+
 	closeToTrayCheckBox.setChecked(cfg.queryAutohide());
 
 	QVBoxLayout *iconLayout = new QVBoxLayout;
 	iconLayout->addWidget(&enabledCheckBox);
 	iconLayout->addWidget(&closeToTrayCheckBox);
-	iconGroupBox.setLayout(iconLayout);
+	settingsGroupBox.setLayout(iconLayout);
 
 
 	connect(&enabledCheckBox, SIGNAL(clicked()), this, SLOT(toggleEnabled()));
