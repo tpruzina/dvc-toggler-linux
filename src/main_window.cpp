@@ -106,6 +106,9 @@ mainWindow::createTrayIcon()
 	connect(&trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
 		this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
+	if(cfg.get_bool(CONFIG_START_MIN_STR))
+		minimizeAction.setEnabled(false);
+
 	trayIcon.show();
 }
 
