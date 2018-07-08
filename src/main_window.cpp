@@ -60,10 +60,8 @@ void
 mainWindow::closeEvent(QCloseEvent *event)
 {
 	if(cfg.query_autohide() == false)
-	{
-		cfg.sync();
-		exit(0);
-	}
+		this->quit();
+
 	if (trayIcon.isVisible())
 	{
 		trayIcon.showMessage("DVC toggler",
