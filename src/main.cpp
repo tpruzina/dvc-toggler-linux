@@ -10,16 +10,6 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(dvc_toggler_linux);
 	QApplication app(argc, argv);
 
-	// check whether we have QT system tray
-	// FIXME: This doesn't actually exist on gnome3 and alikes ???
-	if (!QSystemTrayIcon::isSystemTrayAvailable())
-	{
-		QMessageBox::critical(0, QObject::tr("DVC toggler"),
-				      QObject::tr("I couldn't detect any system tray "
-						  "on this system."));
-		return 1;
-	}
-
 	// check whether DVC enabled nvidia screen is available
 	if(!NVIDIA::isScreenAvailable())
 	{

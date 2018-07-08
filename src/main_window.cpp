@@ -7,14 +7,6 @@ mainWindow::mainWindow() :
 {
 	setWindowTitle(tr("DVC toggler"));
 
-	// fail with MessageBox if nvidia enabled screen isn't available
-	if(!nv.isScreenAvailable())
-	{
-		QMessageBox::critical(0, QObject::tr("DVC toggler"),
-				      QObject::tr("Unable to find any NVIDIA X screens"));
-		exit(1);
-	}
-
 	// set up dbus listener for "show()" messages
 	bus.spawnListener(	[] (void *object)
 				{
@@ -25,14 +17,10 @@ mainWindow::mainWindow() :
 				this
 	);
 
-	// setup ID
-	createIconGroupBox();
+	// setup UI
+	createSettingsBox();
 	createTrayIcon();
 
-	connect(&enabledCheckBox, SIGNAL(clicked()), this, SLOT(toggleEnabled()));
-	connect(&closeToTrayCheckBox, SIGNAL(toggled(bool)), this, SLOT(toggleAutoHide()));
-	connect(&trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-		this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
 	ProfileSelectorWidget *profileSelector = new ProfileSelectorWidget(pw, cfg, nv);
 	profileSelector->setTitle("Profiles");
@@ -43,8 +31,67 @@ mainWindow::mainWindow() :
 
 	setGeometry(0,0,300,250); // fixme remember size from last run
 
-	trayIcon.show();
 	this->show();
+}
+
+void
+mainWindow::createSettingsBox()
+{
+	iconGroupBox.setTitle(tr("Settings"));
+
+	enabledCheckBox.setText(tr("Enable"));
+	bool enabled = cfg.queryEnabled();
+	enabledCheckBox.setChecked(enabled);
+	pw.setEnabled(enabled);
+
+	if (QSystemTrayIcon::isSystemTrayAvailable())
+		closeToTrayCheckBox.setText(tr("Close to tray"));
+	else
+		closeToTrayCheckBox.setText(tr("Hide on exit"));
+	closeToTrayCheckBox.setChecked(cfg.queryAutohide());
+
+	QVBoxLayout *iconLayout = new QVBoxLayout;
+	iconLayout->addWidget(&enabledCheckBox);
+	iconLayout->addWidget(&closeToTrayCheckBox);
+	iconGroupBox.setLayout(iconLayout);
+
+
+	connect(&enabledCheckBox, SIGNAL(clicked()), this, SLOT(toggleEnabled()));
+	connect(&closeToTrayCheckBox, SIGNAL(toggled(bool)), this, SLOT(toggleAutoHide()));
+}
+
+void
+mainWindow::createTrayIcon()
+{
+	// don't setup tray icon if system doesn't support it
+	if (!QSystemTrayIcon::isSystemTrayAvailable())
+		return;
+
+	minimizeAction.setText(tr("Mi&nimize"));
+	connect(&minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));
+
+	restoreAction.setText(tr("&Restore"));
+	connect(&restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
+
+	quitAction.setText(tr("&Quit"));
+	connect(&quitAction, SIGNAL(triggered()), this, SLOT(quit()));
+
+	trayIconMenu.addAction(&minimizeAction);
+	trayIconMenu.addAction(&restoreAction);
+	trayIconMenu.addSeparator();
+	trayIconMenu.addAction(&quitAction);
+
+	icon = (cfg.queryEnabled()) ?
+				QIcon(":/resources/enabled.png") :
+				QIcon(":/resources/disabled.png");
+
+	trayIcon.setIcon(icon);
+	trayIcon.setContextMenu(&trayIconMenu);
+
+	connect(&trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+		this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+
+	trayIcon.show();
 }
 
 void
@@ -129,52 +176,8 @@ mainWindow::showMessage(const QString &msg, unsigned timeout)
 }
 
 void
-mainWindow::createIconGroupBox()
-{
-	iconGroupBox.setTitle(tr("Settings"));
-
-	enabledCheckBox.setText(tr("Enable"));
-	bool enabled = cfg.queryEnabled();
-	enabledCheckBox.setChecked(enabled);
-	pw.setEnabled(enabled);
-
-	closeToTrayCheckBox.setText(tr("Close to tray"));
-	closeToTrayCheckBox.setChecked(cfg.queryAutohide());
-
-	QVBoxLayout *iconLayout = new QVBoxLayout;
-	iconLayout->addWidget(&enabledCheckBox);
-	iconLayout->addWidget(&closeToTrayCheckBox);
-	iconGroupBox.setLayout(iconLayout);
-}
-
-void
 mainWindow::quit()
 {
 	cfg.sync();
 	exit(0);
-}
-
-void
-mainWindow::createTrayIcon()
-{
-	minimizeAction.setText(tr("Mi&nimize"));
-	connect(&minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));
-
-	restoreAction.setText(tr("&Restore"));
-	connect(&restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
-
-	quitAction.setText(tr("&Quit"));
-	connect(&quitAction, SIGNAL(triggered()), this, SLOT(quit()));
-
-	trayIconMenu.addAction(&minimizeAction);
-	trayIconMenu.addAction(&restoreAction);
-	trayIconMenu.addSeparator();
-	trayIconMenu.addAction(&quitAction);
-
-	icon = (cfg.queryEnabled()) ?
-				QIcon(":/resources/enabled.png") :
-				QIcon(":/resources/disabled.png");
-
-	trayIcon.setIcon(icon);
-	trayIcon.setContextMenu(&trayIconMenu);
 }

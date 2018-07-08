@@ -41,7 +41,7 @@ private:
 	DBusInterface bus;
 
 
-	void createIconGroupBox();
+	void createSettingsBox();
 	void createTrayIcon();
 
 	QGroupBox iconGroupBox;
