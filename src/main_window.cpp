@@ -197,7 +197,10 @@ mainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 		toggleEnabled();
 		break;
 	case QSystemTrayIcon::MiddleClick:
-		show();
+		if(isVisible())
+			hide();
+		else
+			show();
 		break;
 	default:
 		;
