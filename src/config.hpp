@@ -9,6 +9,7 @@
 #define CONFIG_ENABLED_STR	"enabled"
 #define CONFIG_AUTOHIDE_STR	"autohide"
 #define CONFIG_DEFAULT_PROFILE_STR "default"
+#define CONFIG_TRAY_INFO_SHOWN	"false"
 
 class Config : public QSettings
 {

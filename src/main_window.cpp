@@ -31,7 +31,8 @@ mainWindow::mainWindow() :
 
 	setGeometry(0,0,300,250); // fixme remember size from last run
 
-	this->show();
+	if(cfg.get_bool(CONFIG_START_MIN_STR) == false)
+		this->show();
 }
 
 void
@@ -46,8 +47,7 @@ mainWindow::createSettingsBox()
 	pw.setEnabled(enabled_state);
 
 	startHiddenCheckBox.setText(tr("Start hidden"));
-//	startHiddenCheckBox.setChecked(cfg.queryStartHidden());
-	startHiddenCheckBox.setChecked(false);
+	startHiddenCheckBox.setChecked(cfg.get_bool(CONFIG_START_MIN_STR));
 
 	autostartCheckBox.setText(tr("Autostart"));
 //	autostartCheckBox.setChecked(cfg.queryAutoStart());
@@ -124,13 +124,18 @@ mainWindow::closeEvent(QCloseEvent *event)
 
 	if (trayIcon.isVisible())
 	{
-		trayIcon.showMessage("DVC toggler",
+		// show bubble pointing user to tray icon (only once)
+		if(cfg.get_bool(CONFIG_TRAY_INFO_SHOWN) == false)
+		{
+			trayIcon.showMessage("DVC toggler",
 				     tr("The program will keep running in the "
 					"system tray.\nTo terminate the program, "
 					"choose \"Quit\" in the context menu "
 					"of the system tray entry."),
 				     icon,
-				     3000);
+				     5000);
+			cfg.set_bool(CONFIG_TRAY_INFO_SHOWN, true);
+		}
 		hide();
 		event->ignore();
 	}
