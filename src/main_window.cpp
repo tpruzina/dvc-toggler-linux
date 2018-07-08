@@ -161,9 +161,9 @@ mainWindow::toggleAutostart()
 void
 mainWindow::toggleEnabled()
 {
-	cfg.toggle_bool(CONFIG_ENABLED_STR);
+
 	QString status;
-	if(cfg.get_bool(CONFIG_ENABLED_STR))
+	if(cfg.toggle_bool(CONFIG_ENABLED_STR))
 	{
 		icon = QIcon(":/resources/enabled.png");
 		status = "DVC enabled";

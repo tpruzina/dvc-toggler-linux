@@ -26,14 +26,15 @@ public:
 		return getValue(attribute).toBool();
 	}
 
-	void set_bool(const QString &attribute, bool val)
+	bool set_bool(const QString &attribute, bool val)
 	{
 		setValue(attribute, val);
+		return val;
 	}
 
-	void toggle_bool(const QString &attribute)
+	bool toggle_bool(const QString &attribute)
 	{
-		set_bool(attribute, !get_bool(attribute));
+		return set_bool(attribute, !get_bool(attribute));
 	}
 
 	QString queryIconPath(const QString &profile_name);
