@@ -2,13 +2,13 @@
 #include "profile_selector.hpp"
 
 mainWindow::mainWindow() :
-	pw(nv, cfg.query_enabled(), cfg.query_sleep_time_ms())
+	pw(nv, cfg.queryEnabled(), cfg.querySleepTime_ms())
 
 {
 	setWindowTitle(tr("DVC toggler"));
 
 	// fail with MessageBox if nvidia enabled screen isn't available
-	if(!nv.check_available_screen())
+	if(!nv.isScreenAvailable())
 	{
 		QMessageBox::critical(0, QObject::tr("DVC toggler"),
 				      QObject::tr("Unable to find any NVIDIA X screens"));
@@ -16,7 +16,7 @@ mainWindow::mainWindow() :
 	}
 
 	// set up dbus listener for "show()" messages
-	bus.spawn_listener(	[] (void *object)
+	bus.spawnListener(	[] (void *object)
 				{
 					mainWindow *mW = (mainWindow *) object;
 					if(!mW->isVisible())
@@ -59,7 +59,7 @@ mainWindow::setVisible(bool visible)
 void
 mainWindow::closeEvent(QCloseEvent *event)
 {
-	if(cfg.query_autohide() == false)
+	if(cfg.queryAutohide() == false)
 		this->quit();
 
 	if (trayIcon.isVisible())
@@ -79,19 +79,19 @@ mainWindow::closeEvent(QCloseEvent *event)
 void
 mainWindow::toggleEnabled()
 {
-	cfg.toggle_enabled();
+	cfg.toggleEnabled();
 	QString status;
-	if(cfg.query_enabled())
+	if(cfg.queryEnabled())
 	{
 		icon = QIcon(":/resources/enabled.png");
 		status = "DVC enabled";
-		pw.set_enabled(true);
+		pw.setEnabled(true);
 	}
 	else
 	{
 		status = "DVC disabled";
 		icon = QIcon(":/resources/disabled.png");
-		pw.set_enabled(false);
+		pw.setEnabled(false);
 	}
 
 	trayIcon.setIcon(icon);
@@ -102,7 +102,7 @@ mainWindow::toggleEnabled()
 void
 mainWindow::toggleAutoHide()
 {
-	cfg.toggle_autohide();
+	cfg.toggleAutohide();
 }
 
 void
@@ -134,12 +134,12 @@ mainWindow::createIconGroupBox()
 	iconGroupBox.setTitle(tr("Settings"));
 
 	enabledCheckBox.setText(tr("Enable"));
-	bool enabled = cfg.query_enabled();
+	bool enabled = cfg.queryEnabled();
 	enabledCheckBox.setChecked(enabled);
-	pw.set_enabled(enabled);
+	pw.setEnabled(enabled);
 
 	closeToTrayCheckBox.setText(tr("Close to tray"));
-	closeToTrayCheckBox.setChecked(cfg.query_autohide());
+	closeToTrayCheckBox.setChecked(cfg.queryAutohide());
 
 	QVBoxLayout *iconLayout = new QVBoxLayout;
 	iconLayout->addWidget(&enabledCheckBox);
@@ -171,7 +171,7 @@ mainWindow::createTrayIcon()
 	trayIconMenu.addSeparator();
 	trayIconMenu.addAction(&quitAction);
 
-	icon = (cfg.query_enabled()) ?
+	icon = (cfg.queryEnabled()) ?
 				QIcon(":/resources/enabled.png") :
 				QIcon(":/resources/disabled.png");
 

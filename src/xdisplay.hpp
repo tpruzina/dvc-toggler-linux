@@ -9,7 +9,7 @@ public:
 	XDisplay();
 	~XDisplay();
 
-	unsigned   query_focused_window_pid();
+	unsigned   queryFocusedWindowPID();
 private:
 	void *dpy;
 };

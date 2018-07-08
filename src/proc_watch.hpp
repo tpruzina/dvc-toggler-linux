@@ -35,17 +35,15 @@ public:
 	ProcWatch(NVIDIA &nv, bool enabled=true, unsigned sleep_ms=100);
 	~ProcWatch();
 
-	vector<string>	list_running_procs();
-	bool is_proc_running(string proc_comm);	// is this necessary?
+	vector<string>	listRunningProcs();
+	bool isProcRunning(string proc_comm);	// is this necessary?
 
-	void update_rule(string name, std::map<int,int> dvc_map);
-	void apply_rule(string &name);
-	void remove_rule(string name);
+	void updateRule(string name, std::map<int,int> dvc_map);
+	void applyRule(string &name);
+	void removeRule(string name);
 
-	void set_enabled(bool state = true);
-	void set_polling_rate(unsigned ms);
-
-	void debug_dump();
+	void setEnabled(bool state = true);
+	void setPollingRate(unsigned ms);
 
 private:
 	// ref to nvidia object, applies dvc rules

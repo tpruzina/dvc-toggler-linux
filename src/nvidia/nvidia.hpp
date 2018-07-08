@@ -15,9 +15,9 @@
 class NVIDIA
 {
 public:
-	std::map<int, int> get_vibrance();
-	static int set_vibrance(std::map<int, int> *values);
-	static bool check_available_screen();
+	std::map<int, int> getVibrance();
+	static int setVibrance(std::map<int, int> *values);
+	static bool isScreenAvailable();
 };
 
 #endif // COMMON_NVIDIA_HPP_

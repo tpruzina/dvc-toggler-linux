@@ -1,4 +1,4 @@
-#include "runguard.hpp"
+#include "run_guard.hpp"
 #include <QCryptographicHash>
 
 QString

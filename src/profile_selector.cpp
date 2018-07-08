@@ -5,7 +5,7 @@ ProfileSelectorWidget::ProfileSelectorWidget(ProcWatch &pw, Config &cfg, NVIDIA 
 	cfg(cfg),
 	nv(nv)
 {
-	dvc_map = QMap<int,int>(nv.get_vibrance());
+	dvc_map = QMap<int,int>(nv.getVibrance());
 	// build profile tabs from Config
 	createProfileTabsBox();
 
@@ -21,7 +21,7 @@ ProfileSelectorWidget::ProfileSelectorWidget(ProcWatch &pw, Config &cfg, NVIDIA 
 void
 ProfileSelectorWidget::createProfileTabsBox()
 {
-	QStringList config = cfg.query_profiles();
+	QStringList config = cfg.queryProfiles();
 	// make sure that CONFIG_DEFAULT_PROFILE_STR is on top of the list
 	config.swap(0,config.indexOf(CONFIG_DEFAULT_PROFILE_STR));
 
@@ -52,7 +52,7 @@ ProfileSelectorWidget::removeProfile(int index)
 	QString name = tabs.tabText(index);
 
 	cfg.remove(name);
-	pw.remove_rule(name.toStdString());
+	pw.removeRule(name.toStdString());
 	tabs.removeTab(index);
 }
 
@@ -74,7 +74,7 @@ ProfileSelectorWidget::updateComboBox(int index)
 {
 	QStringList qlist;
 	qlist << "Add new profile";
-	for(auto e : pw.list_running_procs())
+	for(auto e : pw.listRunningProcs())
 		qlist << QString(e.c_str());
 
 	// if we selected some new profile name from list
@@ -83,14 +83,14 @@ ProfileSelectorWidget::updateComboBox(int index)
 		QString name(profileList.itemText(index));
 		// TODO: dynamically add icon instead of using this default
 		QIcon icon(":/resources/xclient.svg");
-		QMap<int,int> dvc_map = QMap(nv.get_vibrance());
-		cfg.set_dvc(name, dvc_map);
-		cfg.set_icon_path(name, ":/resources/xclient.svg");
+		QMap<int,int> dvc_map = QMap(nv.getVibrance());
+		cfg.setDVC(name, dvc_map);
+		cfg.setIconPath(name, ":/resources/xclient.svg");
 		tabs.addTab(new AppProfile(name, this), icon, name);
 	}
 
 	// remove items that are already in cfg from the list of potential new app profiles
-	for(auto &e : cfg.query_profiles())
+	for(auto &e : cfg.queryProfiles())
 	{
 		qlist.removeOne(QString(e));
 	}
@@ -100,12 +100,12 @@ ProfileSelectorWidget::updateComboBox(int index)
 }
 
 void
-ProfileSelectorWidget::apply_dvc()
+ProfileSelectorWidget::applyDVC()
 {
 	// FIXME: get rid of this
 	std::map<int,int> std_map = dvc_map.toStdMap();
-	nv.set_vibrance(&std_map);
-	std_map = nv.get_vibrance();
+	nv.setVibrance(&std_map);
+	std_map = nv.getVibrance();
 	for(auto &memb : std_map)
 		qDebug() << memb.first << "=" << memb.second;
 }
@@ -115,18 +115,18 @@ AppProfile::AppProfile(const QString name, ProfileSelectorWidget *p) :
 	name(name) // profile name (or CONFIG_DEFAULT_PROFILE_STR)
 {
 	// get DVC map from Config file
-	QMap<int,int> dvc_map = PSW->cfg.query_dvc(name);
+	QMap<int,int> dvc_map = PSW->cfg.queryDVC(name);
 	// If we can't find it there, create it based on current config
 	if(dvc_map.empty())
 	{
 		qDebug() << dvc_map;
-		dvc_map = QMap(PSW->nv.get_vibrance());
+		dvc_map = QMap(PSW->nv.getVibrance());
 		qDebug() << dvc_map;
-		PSW->cfg.set_dvc(name, dvc_map);
+		PSW->cfg.setDVC(name, dvc_map);
 	}
 
 	// add new rule to procWatch
-	PSW->pw.update_rule(name.toStdString(), dvc_map.toStdMap());
+	PSW->pw.updateRule(name.toStdString(), dvc_map.toStdMap());
 
 	// create one DVCentry per each CRTC (dpyId)
 	QMap<int,int>::const_iterator i = dvc_map.constBegin();
@@ -141,7 +141,7 @@ AppProfile::AppProfile(const QString name, ProfileSelectorWidget *p) :
 }
 
 DVCEntry::DVCEntry(int dpyId, int dvc_level, AppProfile *p) :
-	dpyId(dpyId),	// monitor id
+	dpy_id(dpyId),	// monitor id
 	dvc(dvc_level),	// reference to NVIDIA std::map
 	dvc_slider(Qt::Horizontal),
 	dpy_name("DPY-" + QString::number(dpyId)),
@@ -175,15 +175,15 @@ DVCEntry::onDVCSliderChanged(int value)
 	// if we have default tab, apply values immediatelly
 	if(AP->name.compare(CONFIG_DEFAULT_PROFILE_STR) == 0)
 	{
-		AP->PSW->dvc_map[dpyId] = value;
-		AP->PSW->apply_dvc();
+		AP->PSW->dvc_map[dpy_id] = value;
+		AP->PSW->applyDVC();
 	}
 
 	// update config
-	QMap<int,int> cfg_dvc_map = AP->PSW->cfg.query_dvc(AP->name);
-	cfg_dvc_map[dpyId] = value;
+	QMap<int,int> cfg_dvc_map = AP->PSW->cfg.queryDVC(AP->name);
+	cfg_dvc_map[dpy_id] = value;
 	// update config
-	AP->PSW->cfg.set_dvc(AP->name, cfg_dvc_map);
+	AP->PSW->cfg.setDVC(AP->name, cfg_dvc_map);
 	// update procWatch rule
-	AP->PSW->pw.update_rule(AP->name.toStdString(), cfg_dvc_map.toStdMap());
+	AP->PSW->pw.updateRule(AP->name.toStdString(), cfg_dvc_map.toStdMap());
 }

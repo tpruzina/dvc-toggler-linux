@@ -23,9 +23,9 @@ public:
 		}
 	}
 
-	void spawn_listener(void (*callback_fn)(void*), void* that);
+	void spawnListener(void (*callback_fn)(void*), void* that);
 	void receive();
-	void sendsignal(char *message);
+	void sendSignal(char *message);
 
 private:
 	std::thread listener;

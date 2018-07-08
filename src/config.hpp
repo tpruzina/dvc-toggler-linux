@@ -15,32 +15,32 @@ class Config : public QSettings
 public:
 	Config();
 
-	QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const;
-	void setValue(const QString &key, const QVariant &value);
+	QVariant getValue(const QString &key, const QVariant &defaultValue = QVariant()) const;
+	void setValue(const QString &key, const QVariant &getValue);
 
-	QStringList query_profiles();
+	QStringList queryProfiles();
 
-	bool query_start_minimized(void);
-	void set_start_minimized(bool val);
-	void toggle_start_minimzed() {set_start_minimized(!query_start_minimized());}
+	bool queryStartMinimized(void);
+	void setStartMinimized(bool val);
+	void toggleStartMinimzed() {setStartMinimized(!queryStartMinimized());}
 
-	bool query_autohide(void);
-	void set_autohide(bool val);
-	void toggle_autohide() {set_autohide(!query_autohide());}
+	bool queryAutohide(void);
+	void setAutohide(bool val);
+	void toggleAutohide() {setAutohide(!queryAutohide());}
 
-	bool query_enabled(void);
-	void set_enabled(bool val);
-	void toggle_enabled() {set_enabled(!query_enabled());}
+	bool queryEnabled(void);
+	void setEnabled(bool val);
+	void toggleEnabled() {setEnabled(!queryEnabled());}
 
-	QString query_icon_path(const QString &profile_name);
-	void set_icon_path(const QString &profile_name, const QString &path);
+	QString queryIconPath(const QString &profile_name);
+	void setIconPath(const QString &profile_name, const QString &path);
 
-	QMap<int,int> query_dvc(const QString &profile_name);
-	void set_dvc(const QString &profile_name, QMap<int,int> &map);
+	QMap<int,int> queryDVC(const QString &profile_name);
+	void setDVC(const QString &profile_name, QMap<int,int> &map);
 
-	unsigned query_sleep_time_ms(void);
-	void set_sleep_time_ms(unsigned ms);
+	unsigned querySleepTime_ms(void);
+	void setSleepTime_ms(unsigned ms);
 
-	void remove_profile(const QString &key);
+	void removeProfile(const QString &key);
 };
 #endif // CONFIG_HPP

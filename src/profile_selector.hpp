@@ -28,7 +28,7 @@ public:
 signals:
 
 public slots:
-	void apply_dvc();
+	void applyDVC();
 	void updateComboBox(int line);
 	void removeProfile(int index);
 
@@ -65,9 +65,6 @@ public:
 	ProfileSelectorWidget *PSW;
 	const QString name;
 
-signals:
-public slots:
-
 private:
 	QVBoxLayout vlayout;
 	friend class DVCEntry;
@@ -77,13 +74,13 @@ class DVCEntry : public QGroupBox
 {
 	Q_OBJECT
 public:
-	explicit DVCEntry(const int dpyId, int dvc_level, AppProfile *p);
+	explicit DVCEntry(const int dpy_id, int dvc_level, AppProfile *p);
 
 public slots:
 	void onDVCSliderChanged(int value);
 
 private:
-	const int dpyId;
+	const int dpy_id;
 	int dvc;
 	QHBoxLayout hlayout;
 	QSlider dvc_slider;

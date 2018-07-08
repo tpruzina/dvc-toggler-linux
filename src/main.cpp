@@ -1,7 +1,7 @@
 #include <QMessageBox>
 
 #include "main_window.hpp"
-#include "runguard.hpp"
+#include "run_guard.hpp"
 #include "dbus/dbus_watch.hpp"
 #include "nvidia/nvidia.hpp"
 
@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 	}
 
 	// check whether DVC enabled nvidia screen is available
-	if(!NVIDIA::check_available_screen())
+	if(!NVIDIA::isScreenAvailable())
 	{
 		QMessageBox::critical(0, QObject::tr("DVC toggler"),
 				      QObject::tr("I couldn't detect any DVC enabled Nvidia screen."));
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 	{
 		// signal mainWindow to show up (if hidden/minimized)
 		DBusInterface bus;
-		bus.sendsignal((char*)"show()");
+		bus.sendSignal((char*)"show()");
 		return 0;
 	}
 

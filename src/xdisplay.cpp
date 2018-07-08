@@ -106,7 +106,7 @@ query_window_pid(Display *dpy, Window w)
 // Focused window doesn't necessarily has this attribute,
 // we need to go from focused window -> top window -> name window(_NET_WM_PID)
 unsigned
-XDisplay::query_focused_window_pid()
+XDisplay::queryFocusedWindowPID()
 {
 	// save previous values in static variables in order to cache results
 	// as much as possible and prevent expensive X queries

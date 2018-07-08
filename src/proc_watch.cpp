@@ -22,7 +22,7 @@ ProcWatch::~ProcWatch()
 
 // return sorted, unique list of comms from /proc
 vector <string>
-ProcWatch::list_running_procs()
+ProcWatch::listRunningProcs()
 {
 	// scan /proc/PID/comms for list of viable targets
 	comms = scan_proc();
@@ -40,7 +40,7 @@ ProcWatch::list_running_procs()
 // query whether proc is still running
 // FIXME: is this still necessary?
 bool
-ProcWatch::is_proc_running(string proc_comm)
+ProcWatch::isProcRunning(string proc_comm)
 {
 	// RAII lock for reads
 	std::shared_lock < std::shared_mutex > lock(write);
@@ -52,7 +52,7 @@ ProcWatch::is_proc_running(string proc_comm)
 }
 
 void
-ProcWatch::update_rule(string name, std::map<int,int> dvc_map)
+ProcWatch::updateRule(string name, std::map<int,int> dvc_map)
 {
 	// {comm}x{{dpyId}x{dvc}}
 
@@ -65,23 +65,23 @@ ProcWatch::update_rule(string name, std::map<int,int> dvc_map)
 }
 
 void
-ProcWatch::apply_rule(string &name)
+ProcWatch::applyRule(string &name)
 {
 	// find rule
 	const auto &rule = rules.find(name);
 
 	// if rule for app doesn't exist, apply "default"
 	if(rule == rules.end())
-		nv.set_vibrance(&rules[CONFIG_DEFAULT_PROFILE_STR]);
+		nv.setVibrance(&rules[CONFIG_DEFAULT_PROFILE_STR]);
 	else	// else apply selected rule
-		nv.set_vibrance(&rules[name]);
+		nv.setVibrance(&rules[name]);
 
 	// unset dirty flag
 	dirty = false;
 }
 
 void
-ProcWatch::remove_rule(string name)
+ProcWatch::removeRule(string name)
 {
 	std::lock_guard<std::shared_mutex> lock(write);
 	rules.erase(name);
@@ -102,7 +102,7 @@ ProcWatch::update()
 		if(active)
 		{
 			// query currently focused window PID
-			pid_t focused_window_pid = query_focused_window_pid();
+			pid_t focused_window_pid = queryFocusedWindowPID();
 
 			// if focus has changed
 			if(focused_window_pid != previous_active_window_pid)
@@ -117,7 +117,7 @@ ProcWatch::update()
 			}
 
 			if(dirty)
-				apply_rule(active_window_comm);
+				applyRule(active_window_comm);
 		}
 		// go back to sleep for sleep_ms
 		std::this_thread::sleep_for(std::chrono::
@@ -126,14 +126,14 @@ ProcWatch::update()
 }
 
 void
-ProcWatch::set_enabled(bool state)
+ProcWatch::setEnabled(bool state)
 {
 	// tells watcher thread whether to do anything
 	active = state;
 }
 
 void
-ProcWatch::set_polling_rate(unsigned ms)
+ProcWatch::setPollingRate(unsigned ms)
 {
 	// sets polling rate for watcher process
 	// TODO: add UI element/Config setting in mainWindow to control this
@@ -141,15 +141,6 @@ ProcWatch::set_polling_rate(unsigned ms)
 	this->sleep_ms = cast_ms;
 	if(ms > 500)
 		std::cout << __FUNCTION__ << ": setting sleep time to " << ms << "ms will slow down object destructor" << std::endl;
-}
-
-// dumps contents of comms set onto stdout
-// TODO: remove this or _use_ this
-void ProcWatch::debug_dump()
-{
-	std::shared_lock<std::shared_mutex> lock(write);
-	for (auto & p:comms)
-		std::cout << p << std::endl;
 }
 
 // read /proc/$PID/comm name given $PID$

@@ -7,7 +7,7 @@
 #include "nvidia.hpp"
 
 bool
-NVIDIA::check_available_screen()
+NVIDIA::isScreenAvailable()
 {
 	if(GetNvXScreen(XOpenDisplay(NULL)) == -1)
 		return false;
@@ -16,7 +16,7 @@ NVIDIA::check_available_screen()
 }
 
 int
-NVIDIA::set_vibrance(std::map<int,int> *values)
+NVIDIA::setVibrance(std::map<int,int> *values)
 {
 	int *query_data;  // buffer for XNVCTRLQuery response
 	int len;    // length of a respons
@@ -95,7 +95,7 @@ NVIDIA::set_vibrance(std::map<int,int> *values)
 
 // returns std::map of <dpyId, dvc_level> for current Nvidia screen
 std::map<int, int>
-NVIDIA::get_vibrance()
+NVIDIA::getVibrance()
 {
 	int *query_data;
 	int len;

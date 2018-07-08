@@ -7,7 +7,7 @@
 #include "dbus_watch.hpp"
 
 void
-DBusInterface::sendsignal(char *message)
+DBusInterface::sendSignal(char *message)
 {
 	DBusMessage *msg;
 	DBusMessageIter args;
@@ -34,7 +34,7 @@ DBusInterface::sendsignal(char *message)
 }
 
 void
-DBusInterface::spawn_listener(void (*cb)(void*), void* foreign_object)
+DBusInterface::spawnListener(void (*cb)(void*), void* foreign_object)
 {
 	callback_fn = cb;
 	callback_object = foreign_object;
