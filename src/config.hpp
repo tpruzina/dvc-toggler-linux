@@ -20,17 +20,20 @@ public:
 
 	QStringList queryProfiles();
 
-	bool queryStartMinimized(void);
-	void setStartMinimized(bool val);
-	void toggleStartMinimzed() {setStartMinimized(!queryStartMinimized());}
+	bool get_bool(const QString &attribute)
+	{
+		return getValue(attribute).toBool();
+	}
 
-	bool queryAutohide(void);
-	void setAutohide(bool val);
-	void toggleAutohide() {setAutohide(!queryAutohide());}
+	void set_bool(const QString &attribute, bool val)
+	{
+		setValue(attribute, val);
+	}
 
-	bool queryEnabled(void);
-	void setEnabled(bool val);
-	void toggleEnabled() {setEnabled(!queryEnabled());}
+	void toggle_bool(const QString &attribute)
+	{
+		set_bool(attribute, !get_bool(attribute));
+	}
 
 	QString queryIconPath(const QString &profile_name);
 	void setIconPath(const QString &profile_name, const QString &path);

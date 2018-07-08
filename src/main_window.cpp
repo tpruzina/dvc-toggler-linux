@@ -2,7 +2,7 @@
 #include "profile_selector.hpp"
 
 mainWindow::mainWindow() :
-	pw(nv, cfg.queryEnabled(), cfg.querySleepTime_ms())
+	pw(nv, cfg.get_bool(CONFIG_ENABLED_STR), cfg.querySleepTime_ms())
 
 {
 	setWindowTitle(tr("DVC toggler"));
@@ -41,7 +41,7 @@ mainWindow::createSettingsBox()
 
 	// setup checkboxes
 	enabledCheckBox.setText(tr("Enable"));
-	bool enabled_state = cfg.queryEnabled();
+	bool enabled_state = cfg.get_bool(CONFIG_ENABLED_STR);
 	enabledCheckBox.setChecked(enabled_state);
 	pw.setEnabled(enabled_state);
 
@@ -58,7 +58,7 @@ mainWindow::createSettingsBox()
 	else
 		autohideCheckBox.setText(tr("Hide on exit"));
 
-	autohideCheckBox.setChecked(cfg.queryAutohide());
+	autohideCheckBox.setChecked(cfg.get_bool(CONFIG_AUTOHIDE_STR));
 
 	QGridLayout *iconLayout = new QGridLayout;
 	iconLayout->addWidget(&enabledCheckBox, 0, 0);
@@ -94,7 +94,7 @@ mainWindow::createTrayIcon()
 	trayIconMenu.addSeparator();
 	trayIconMenu.addAction(&quitAction);
 
-	icon = (cfg.queryEnabled()) ?
+	icon = (cfg.get_bool(CONFIG_ENABLED_STR)) ?
 				QIcon(":/resources/enabled.png") :
 				QIcon(":/resources/disabled.png");
 
@@ -119,7 +119,7 @@ mainWindow::setVisible(bool visible)
 void
 mainWindow::closeEvent(QCloseEvent *event)
 {
-	if(cfg.queryAutohide() == false)
+	if(cfg.get_bool(CONFIG_AUTOHIDE_STR) == false)
 		this->quit();
 
 	if (trayIcon.isVisible())
@@ -139,21 +139,21 @@ mainWindow::closeEvent(QCloseEvent *event)
 void
 mainWindow::toggleStartHidden()
 {
-//	cfg.toggle("start_hidden");
+	cfg.toggle_bool(CONFIG_START_MIN_STR);
 }
 
 void
 mainWindow::toggleAutostart()
 {
-// cfg.toggle("auto_start");
+	// todo
 }
 
 void
 mainWindow::toggleEnabled()
 {
-	cfg.toggleEnabled();
+	cfg.toggle_bool(CONFIG_ENABLED_STR);
 	QString status;
-	if(cfg.queryEnabled())
+	if(cfg.get_bool(CONFIG_ENABLED_STR))
 	{
 		icon = QIcon(":/resources/enabled.png");
 		status = "DVC enabled";
@@ -174,7 +174,7 @@ mainWindow::toggleEnabled()
 void
 mainWindow::toggleAutoHide()
 {
-	cfg.toggleAutohide();
+	cfg.toggle_bool(CONFIG_AUTOHIDE_STR);
 }
 
 void

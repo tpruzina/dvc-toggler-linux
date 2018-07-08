@@ -8,9 +8,9 @@ Config::Config() :
 		QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + "/settings.ini",
 		QSettings::IniFormat)
 {
-	if(!contains(CONFIG_AUTOHIDE_STR))	setAutohide(false);
-	if(!contains(CONFIG_ENABLED_STR))	setEnabled(true);
-	if(!contains(CONFIG_START_MIN_STR))	setStartMinimized(false);
+	if(!contains(CONFIG_AUTOHIDE_STR))	set_bool(CONFIG_AUTOHIDE_STR, false);
+	if(!contains(CONFIG_ENABLED_STR))	set_bool(CONFIG_ENABLED_STR, true);
+	if(!contains(CONFIG_START_MIN_STR))	set_bool(CONFIG_START_MIN_STR, false);
 	if(!contains(CONFIG_SLEEP_STR))	setSleepTime_ms(100);
 
 	beginGroup(CONFIG_DEFAULT_PROFILE_STR);
@@ -74,42 +74,6 @@ QStringList
 Config::queryProfiles()
 {
 	return childGroups();
-}
-
-bool
-Config::queryEnabled(void)
-{
-	return getValue(CONFIG_ENABLED_STR).toBool();
-}
-
-void
-Config::setEnabled(bool val)
-{
-	setValue(CONFIG_ENABLED_STR, val);
-}
-
-bool
-Config::queryAutohide(void)
-{
-	return getValue(CONFIG_AUTOHIDE_STR).toBool();
-}
-
-void
-Config::setStartMinimized(bool val)
-{
-	setValue(CONFIG_START_MIN_STR, val);
-}
-
-bool
-Config::queryStartMinimized(void)
-{
-	return getValue(CONFIG_START_MIN_STR).toBool();
-}
-
-void
-Config::setAutohide(bool val)
-{
-	setValue(CONFIG_AUTOHIDE_STR, val);
 }
 
 QVariant
