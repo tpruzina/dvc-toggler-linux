@@ -20,15 +20,19 @@ No binary releases at this time.
 4. Xorg headers (x11, xext, xmu)
 5. dbus-1
 
+
+```
+sudo apt install build-essential qt5-default libqt5svg5-dev libx11-dev libxext-dev libxmu-dev pkgconf libdbus-1-dev git meson
+```
+
 ## Build Instructions
 ```
-(ubuntu) sudo apt install build-essential qt5-default libqt5svg5-dev libx11-dev libxext-dev libxmu-dev pkgconf libdbus-1-dev git mesoN
 git clone https://gitlab.com/pruzinat/dvc-toggler-linux.git
 cd dvc-toggler-linux
 meson build
 cd build
 ninja
-(optional) sudo ninja install
+sudo ninja install
 ```
 
 ## Notes
