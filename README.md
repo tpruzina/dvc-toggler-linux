@@ -11,6 +11,7 @@ No binary releases at this time.
 
 
 ![Imgur](https://i.imgur.com/pp84mIP.png)
+[![Youtube demo](https://img.youtube.com/vi/Nvd_NRQcGyw/0.jpg)](https://www.youtube.com/watch?v=Nvd_NRQcGyw)
 
 ## Build Requirements
 1. C++17 compiler
@@ -20,7 +21,7 @@ No binary releases at this time.
 4. Xorg headers (x11, xext, xmu)
 5. dbus-1
 
-
+### Install build prerequisites on Ubuntu:
 ```
 sudo apt install build-essential qt5-default libqt5svg5-dev libx11-dev libxext-dev libxmu-dev pkgconf libdbus-1-dev git meson
 ```
