@@ -46,7 +46,8 @@ mainWindow::createSettingsBox()
 	enabledCheckBox.setChecked(enabled_state);
 	pw.setEnabled(enabled_state);
 
-	startHiddenCheckBox.setText(tr("Start hidden"));
+	startHiddenCheckBox.setText(tr("Start minimized"));
+
 	startHiddenCheckBox.setChecked(cfg.get_bool(CONFIG_START_MIN_STR));
 
 	autostartCheckBox.setText(tr("Autostart"));
