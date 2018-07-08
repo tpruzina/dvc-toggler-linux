@@ -45,20 +45,20 @@ mainWindow::createSettingsBox()
 	pw.setEnabled(enabled);
 
 	if (QSystemTrayIcon::isSystemTrayAvailable())
-		closeToTrayCheckBox.setText(tr("Close to tray"));
+		autohideCheckBox.setText(tr("Close to tray"));
 	else
-		closeToTrayCheckBox.setText(tr("Hide on exit"));
+		autohideCheckBox.setText(tr("Hide on exit"));
 
-	closeToTrayCheckBox.setChecked(cfg.queryAutohide());
+	autohideCheckBox.setChecked(cfg.queryAutohide());
 
 	QVBoxLayout *iconLayout = new QVBoxLayout;
 	iconLayout->addWidget(&enabledCheckBox);
-	iconLayout->addWidget(&closeToTrayCheckBox);
+	iconLayout->addWidget(&autohideCheckBox);
 	settingsGroupBox.setLayout(iconLayout);
 
 
 	connect(&enabledCheckBox, SIGNAL(clicked()), this, SLOT(toggleEnabled()));
-	connect(&closeToTrayCheckBox, SIGNAL(toggled(bool)), this, SLOT(toggleAutoHide()));
+	connect(&autohideCheckBox, SIGNAL(toggled(bool)), this, SLOT(toggleAutoHide()));
 }
 
 void
