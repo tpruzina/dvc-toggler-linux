@@ -150,6 +150,13 @@ mainWindow::createIconGroupBox()
 }
 
 void
+mainWindow::quit()
+{
+	cfg.sync();
+	exit(0);
+}
+
+void
 mainWindow::createTrayIcon()
 {
 	minimizeAction.setText(tr("Mi&nimize"));
@@ -159,7 +166,7 @@ mainWindow::createTrayIcon()
 	connect(&restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
 
 	quitAction.setText(tr("&Quit"));
-	connect(&quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+	connect(&quitAction, SIGNAL(triggered()), this, SLOT(quit()));
 
 	trayIconMenu.addAction(&minimizeAction);
 	trayIconMenu.addAction(&restoreAction);

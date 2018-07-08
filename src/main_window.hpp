@@ -32,6 +32,7 @@ private slots:
 	void iconActivated(QSystemTrayIcon::ActivationReason reason);
 	void showMessage(const QString &msg, unsigned timeout = 3000);
 	void toggleAutoHide();
+	void quit();
 
 private:
 	Config cfg;	// Persistent configuration object
