@@ -30,7 +30,8 @@ ProfileSelectorWidget::createProfileTabsBox()
 	{
 		// FIXME: use icon if available, label otherwise (_not_ both)
 		// for now, just ignore icons
-//		QIcon icon(cfg.query_icon_path(app));
+//		QIcon icon(cfg.queryIconPath(app));
+//		tabs.addTab(new AppProfile(app, this), icon, app);
 		tabs.addTab(new AppProfile(app, this), app);
 	}
 	tabs.setTabsClosable(true);
@@ -39,7 +40,7 @@ ProfileSelectorWidget::createProfileTabsBox()
 	tabs.setUsesScrollButtons(false);
 //	tabs.setTabsClosable(false);
 
-	tabs.setIconSize(QSize(0,0));
+//	tabs.setIconSize(QSize(0,0));
 	tabs.setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 //	tabs.setStyleSheet("QTabBar::tab{width: 80px; }");
 
