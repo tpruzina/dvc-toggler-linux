@@ -20,8 +20,8 @@
 #include <sstream>
 #include <cstring>
 
-#include "nvidia/xdisplay.hpp"
 #include "nvidia/nvidia.hpp"
+#include "xdisplay.hpp"
 #include "config.hpp"
 
 typedef int pid_t;

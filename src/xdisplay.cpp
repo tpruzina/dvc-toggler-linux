@@ -5,7 +5,7 @@
 #include <X11/Xmu/WinUtil.h>
 #include <locale.h>
 
-#include "display.hpp"
+#include "xdisplay.hpp"
 
 XDisplay::XDisplay()
 {

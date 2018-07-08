@@ -13,7 +13,7 @@ HEADERS = \
     proc_watch.hpp \
     main_window.hpp \
     dbus/dbus_watch.hpp \
-    nvidia/xdisplay.hpp
+    xdisplay.hpp
 
 
 SOURCES = \
@@ -26,7 +26,7 @@ SOURCES = \
     run_guard.cpp \
     main_window.cpp \
     dbus/dbus_watch.cpp \
-    nvidia/xdisplay.cpp
+    xdisplay.cpp
 
 
 RESOURCES     = dvc_toggler_linux.qrc
