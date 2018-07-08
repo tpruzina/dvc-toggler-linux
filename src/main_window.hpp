@@ -9,6 +9,7 @@
 #include <QMenu>
 #include <QSystemTrayIcon>
 #include <QVBoxLayout>
+#include <QGridLayout>
 
 #include "config.hpp"
 #include "proc_watch.hpp"
@@ -44,9 +45,13 @@ private:
 	void createSettingsBox();
 	void createTrayIcon();
 
-	QGroupBox iconGroupBox;
-	QCheckBox closeToTrayCheckBox;
+	QGroupBox settingsGroupBox;
+
+	QCheckBox autohideCheckBox;
 	QCheckBox enabledCheckBox;
+	QCheckBox startHiddenCheckBox;
+	QCheckBox autostartCheckBox;
+
 	QVBoxLayout mainLayout;
 
 	QAction minimizeAction;

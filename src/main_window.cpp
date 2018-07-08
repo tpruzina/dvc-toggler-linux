@@ -39,10 +39,19 @@ mainWindow::createSettingsBox()
 {
 	settingsGroupBox.setTitle(tr("Settings"));
 
+	// setup checkboxes
 	enabledCheckBox.setText(tr("Enable"));
-	bool enabled = cfg.queryEnabled();
-	enabledCheckBox.setChecked(enabled);
-	pw.setEnabled(enabled);
+	bool enabled_state = cfg.queryEnabled();
+	enabledCheckBox.setChecked(enabled_state);
+	pw.setEnabled(enabled_state);
+
+	startHiddenCheckBox.setText(tr("Start hidden"));
+//	startHiddenCheckBox.setChecked(cfg.queryStartHidden());
+	startHiddenCheckBox.setChecked(false);
+
+	autostartCheckBox.setText(tr("Autostart"));
+//	autostartCheckBox.setChecked(cfg.queryAutoStart());
+	autostartCheckBox.setChecked(false);
 
 	if (QSystemTrayIcon::isSystemTrayAvailable())
 		autohideCheckBox.setText(tr("Close to tray"));
@@ -51,12 +60,15 @@ mainWindow::createSettingsBox()
 
 	autohideCheckBox.setChecked(cfg.queryAutohide());
 
-	QVBoxLayout *iconLayout = new QVBoxLayout;
-	iconLayout->addWidget(&enabledCheckBox);
-	iconLayout->addWidget(&autohideCheckBox);
+	QGridLayout *iconLayout = new QGridLayout;
+	iconLayout->addWidget(&enabledCheckBox, 0, 0);
+	iconLayout->addWidget(&startHiddenCheckBox, 0, 1);
+	iconLayout->addWidget(&autostartCheckBox, 1, 0);
+	iconLayout->addWidget(&autohideCheckBox, 1, 1);
 	settingsGroupBox.setLayout(iconLayout);
 
-
+	connect(&startHiddenCheckBox, SIGNAL(clicked()), this, SLOT(toggleStartHidden()));
+	connect(&autostartCheckBox, SIGNAL(clicked()), this, SLOT(toggleAutoStart()));
 	connect(&enabledCheckBox, SIGNAL(clicked()), this, SLOT(toggleEnabled()));
 	connect(&autohideCheckBox, SIGNAL(toggled(bool)), this, SLOT(toggleAutoHide()));
 }
