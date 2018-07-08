@@ -53,6 +53,7 @@ mainWindow::createSettingsBox()
 	autostartCheckBox.setText(tr("Autostart"));
 //	autostartCheckBox.setChecked(cfg.queryAutoStart());
 	autostartCheckBox.setChecked(false);
+	autostartCheckBox.setDisabled(true);
 
 	if (QSystemTrayIcon::isSystemTrayAvailable())
 		autohideCheckBox.setText(tr("Close to tray"));
