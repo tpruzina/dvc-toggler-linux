@@ -30,7 +30,7 @@ DBusInterface::sendSignal(char *message)
 	dbus_connection_send(conn, msg, &serial);
 	dbus_connection_flush(conn);
 	dbus_message_unref(msg);
-	dbus_connection_close(conn);
+	dbus_connection_unref(conn);
 }
 
 void
