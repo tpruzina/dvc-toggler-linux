@@ -1,6 +1,7 @@
 #include "run_guard.hpp"
 #include <QCryptographicHash>
 
+static inline
 QString
 generateKeyHash(const QString& key, const QString& salt)
 {
