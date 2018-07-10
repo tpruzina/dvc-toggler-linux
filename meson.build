@@ -3,4 +3,6 @@ project('dvc-toggler-linux', ['c', 'cpp'],
   version: '0.0.5',
   license: 'Modified BSD')
 
+install_subdir('share', install_dir : '')
+
 subdir('src')
