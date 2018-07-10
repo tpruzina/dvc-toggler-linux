@@ -1,6 +1,6 @@
 #include <fstream>  //ifstream, ofstream
 #include <cstdio>
-
+#include <sys/stat.h>
 #include <QStandardPaths>
 
 // Desktop Entry Specification
@@ -10,15 +10,19 @@
 class DesktopEntry
 {
 public:
-        static bool create(const QString &path)
+        static bool create(const QString &dirpath)
         {
-                std::ofstream file(path.toStdString(),
+                // autostart directory might not exist on some systems
+                // if so create it
+                mkdir(dirpath.toStdString().c_str(), S_IRWXU);
+
+                std::ofstream file(dirpath.toStdString() + "/dvc-toggler-linux.desktop",
                                    std::ofstream::out | std::ofstream::trunc);
 
                 if(!file.is_open())
                 {
                         std::cerr << "Failure writing DesktopEntry to "
-                                  << path.toStdString() << " file" << std::endl;
+                                  << dirpath.toStdString() << " file" << std::endl;
                         return false;
                 }
                 // INI style header
@@ -61,8 +65,7 @@ public:
         static QString getApplicationsPath()
         {
                 return QStandardPaths::writableLocation(
-                                        QStandardPaths::ApplicationsLocation)
-                                + "/dvc-toggler-linux.desktop";
+                                        QStandardPaths::ApplicationsLocation);
         }
 
         // $HOME/.config/autostart
@@ -70,7 +73,7 @@ public:
         {
                 return QStandardPaths::writableLocation(
                                         QStandardPaths::ConfigLocation)
-                                + "/autostart/dvc-toggler-linux.desktop";
+                                + "/autostart";
         }
 };
 
