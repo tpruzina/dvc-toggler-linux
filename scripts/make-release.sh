@@ -17,3 +17,4 @@ ninja
 DESTDIR=$DISTDIR ninja install
 
 . $SCRIPTDIR/make-deb-package.sh
+. $SCRIPTDIR/deb-to-rpm.sh

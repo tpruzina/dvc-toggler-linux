@@ -45,4 +45,4 @@ echo 2.0 > debian-binary
 
 # 4) Finally put it all together
 ar r dvc-toggler-linux-$VERSION-$ARCH.deb debian-binary control.tar.gz data.tar.gz
-mv -v dvc-toggler-linux-$VERSION-$ARCH.deb $ROOTDIR/releases/
+cp -v dvc-toggler-linux-$VERSION-$ARCH.deb $ROOTDIR/releases/
