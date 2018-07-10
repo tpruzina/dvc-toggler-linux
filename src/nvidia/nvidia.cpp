@@ -27,6 +27,8 @@ NVIDIA::setVibrance(std::map<int,int> *values)
 
 	// get active nvidia screen
 	int screen = GetNvXScreen(dpy);
+        if(screen < 0)
+            return -1;
 
 	// query all dpys
 	XNVCTRLQueryTargetBinaryData(dpy,
