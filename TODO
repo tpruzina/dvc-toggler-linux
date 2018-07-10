@@ -1,8 +1,4 @@
 [FEATURE] Figure out how to ship user-friendly binaries that "just work"
-[FEATURE] Add autostart functionality
-    [?] find out how people autostart applications in common desktop environments nowadays
-    [ ] toggler checkbox in @mainWindow
-    [ ] setting in @Config
 [STYLE] Move non-UI related logic out of QT classes
 [FEATURE] Figure out how to do DVC toggling on non-Nvidia cards
 [FIXME] Make sure that Wine apps are selectable and work as expected (they probably don't)
@@ -20,3 +16,8 @@
     [DONE] setting in @Config
 [DONE] Send ->show() to main window if we run toggler instance on top of already running instance (atm fails silently)
 [DONE] Implement actual build system rather than current mess of Qmake/Makefiles
+[DONE Add autostart functionality
+    [DONE] find out how people autostart applications in common desktop environments nowadays
+    [DONE ] toggler checkbox in @mainWindow
+    [X] setting in @Config
+
