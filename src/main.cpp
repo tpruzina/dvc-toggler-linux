@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 	
-        // check whether DVC enabled nvidia screen is available
+	// check whether DVC enabled nvidia screen is available
 	if(!NVIDIA::isScreenAvailable())
 	{
 		QMessageBox::critical(0, QObject::tr("DVC toggler"),
