@@ -17,7 +17,7 @@ public:
 	Config();
 
 	QVariant getValue(const QString &key, const QVariant &defaultValue = QVariant()) const;
-	void setValue(const QString &key, const QVariant &getValue);
+	void setValue(const QString &key, const QVariant &value);
 
 	QStringList queryProfiles();
 

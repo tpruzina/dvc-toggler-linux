@@ -40,12 +40,11 @@ query_top_window(Display *dpy, Window start)
 	Window root = 0L; // = None (None from Xlib)
 	Window *children;
 	unsigned int nchildren;
-	int s;
 
 	while (parent != root)
 	{
 		w = parent;
-		s = XQueryTree(dpy, w, &root, &parent, &children, &nchildren);
+		auto s = XQueryTree(dpy, w, &root, &parent, &children, &nchildren);
 		if (s)
 			XFree(children);
 

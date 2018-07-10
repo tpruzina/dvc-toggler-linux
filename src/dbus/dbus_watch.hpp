@@ -12,7 +12,7 @@
 
 class DBusInterface {
 public:
-	DBusInterface() : shutdown(false), sleep_ms(100) {}
+	DBusInterface() : callback_fn(nullptr), callback_object(nullptr), shutdown(false), sleep_ms(100) {}
 
 	~DBusInterface()
 	{
@@ -23,9 +23,9 @@ public:
 		}
 	}
 
-	void spawnListener(void (*callback_fn)(void*), void* that);
+	void spawnListener(void (*callback_fn)(void*), void* object);
 	void receive();
-	void sendSignal(char *message);
+	static void sendSignal(char *message);
 
 private:
 	std::thread listener;

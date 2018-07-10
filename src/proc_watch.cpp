@@ -52,7 +52,7 @@ ProcWatch::isProcRunning(string proc_comm)
 }
 
 void
-ProcWatch::updateRule(string name, std::map<int,int> dvc_map)
+ProcWatch::updateRule(string name, std::map<int,int> &dvc_map)
 {
 	// {comm}x{{dpyId}x{dvc}}
 

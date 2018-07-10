@@ -123,25 +123,28 @@ AppProfile::AppProfile(const QString name, ProfileSelectorWidget *p) :
 	}
 
 	// add new rule to procWatch
-	PSW->pw.updateRule(name.toStdString(), dvc_map.toStdMap());
+	auto name_std = name.toStdString();
+        auto map_std = dvc_map.toStdMap();
+        
+        PSW->pw.updateRule(name_std, map_std);
 
 	// create one DVCentry per each CRTC (dpyId)
 	QMap<int,int>::const_iterator i = dvc_map.constBegin();
 	while(i != dvc_map.constEnd())
 	{
 		vlayout.addWidget(new DVCEntry(i.key(), dvc_map[i.key()], this));
-		i++;
+		++i;
 	}
 
 	this->setLayout(&vlayout);
 	this->setStyleSheet("border:none");
 }
 
-DVCEntry::DVCEntry(int dpyId, int dvc_level, AppProfile *p) :
-	dpy_id(dpyId),	// monitor id
+DVCEntry::DVCEntry(int dpy_id, int dvc_level, AppProfile *p) :
+	dpy_id(dpy_id),	// monitor id
 	dvc(dvc_level),	// reference to NVIDIA std::map
 	dvc_slider(Qt::Horizontal),
-	dpy_name("DPY-" + QString::number(dpyId)),
+	dpy_name("DPY-" + QString::number(dpy_id)),
 	AP(p)	// reference to parent AppProfile widget
 {
 	dvc_slider.setMinimum(-100);
@@ -182,5 +185,7 @@ DVCEntry::onDVCSliderChanged(int value)
 	// update config
 	AP->PSW->cfg.setDVC(AP->name, cfg_dvc_map);
 	// update procWatch rule
-	AP->PSW->pw.updateRule(AP->name.toStdString(), cfg_dvc_map.toStdMap());
+	auto name = AP->name.toStdString();
+        auto map = cfg_dvc_map.toStdMap();
+        AP->PSW->pw.updateRule(name, map);
 }

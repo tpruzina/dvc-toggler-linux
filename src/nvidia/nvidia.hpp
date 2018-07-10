@@ -15,7 +15,7 @@
 class NVIDIA
 {
 public:
-	std::map<int, int> getVibrance();
+	static std::map<int, int> getVibrance();
 	static int setVibrance(std::map<int, int> *values);
 	static bool isScreenAvailable();
 };

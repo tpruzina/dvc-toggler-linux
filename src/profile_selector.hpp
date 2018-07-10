@@ -28,7 +28,7 @@ signals:
 
 public slots:
 	void applyDVC();
-	void updateComboBox(int line);
+	void updateComboBox(int index);
 	void removeProfile(int index);
 
 private slots:

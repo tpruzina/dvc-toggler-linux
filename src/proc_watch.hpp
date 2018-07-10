@@ -38,7 +38,7 @@ public:
 	vector<string>	listRunningProcs();
 	bool isProcRunning(string proc_comm);	// is this necessary?
 
-	void updateRule(string name, std::map<int,int> dvc_map);
+	void updateRule(string name, std::map<int,int> &dvc_map);
 	void applyRule(string &name);
 	void removeRule(string name);
 
@@ -56,7 +56,7 @@ private:
 	unordered_set <string> scan_proc();
 
 	// make this lambda, we have single user
-	string pid_to_comm(pid_t pid);
+	static string pid_to_comm(pid_t pid);
 
 	// {comm}x{{dpyId}x{dvc}}
 	std::unordered_map<string,std::map<int,int>> rules;

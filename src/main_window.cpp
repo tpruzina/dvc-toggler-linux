@@ -11,7 +11,7 @@ mainWindow::mainWindow() :
 	// set up dbus listener for "show()" messages
 	bus.spawnListener(	[] (void *object)
 				{
-					mainWindow *mW = (mainWindow *) object;
+					mainWindow *mW = static_cast<mainWindow*>(object);
 					if(!mW->isVisible())
 						mW->show();
 				},

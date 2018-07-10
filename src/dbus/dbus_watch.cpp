@@ -34,24 +34,21 @@ DBusInterface::sendSignal(char *message)
 }
 
 void
-DBusInterface::spawnListener(void (*cb)(void*), void* foreign_object)
+DBusInterface::spawnListener(void (*callback_fn)(void*), void* object)
 {
-	callback_fn = cb;
-	callback_object = foreign_object;
+	this->callback_fn = callback_fn;
+	this->callback_object = object;
 	listener = std::thread(&DBusInterface::receive, this);
 }
 
 void
 DBusInterface::receive()
 {
-	DBusMessage *msg;
-	DBusMessageIter args;
-	DBusConnection *conn;
 
 	if (!callback_fn)
 		return;
 
-	conn = dbus_bus_get(DBUS_BUS_STARTER, NULL);
+	auto *conn = dbus_bus_get(DBUS_BUS_STARTER, NULL);
 	if (!conn)
 		return;
 
@@ -68,7 +65,7 @@ DBusInterface::receive()
 	{
 		// non blocking read of the next available message
 		dbus_connection_read_write(conn, 0);
-		msg = dbus_connection_pop_message(conn);
+		auto msg = dbus_connection_pop_message(conn);
 
 
 		// loop again if we haven't read a message
@@ -82,6 +79,7 @@ DBusInterface::receive()
 		if (dbus_message_is_signal
 		    (msg, DVC_DBUS_IF_NAME, DVC_DBUS_SIGNAL_SHOW))
 		{
+	                DBusMessageIter args;
 			// read the parameters
 			dbus_message_iter_init(msg, &args);
 			if (DBUS_TYPE_STRING ==

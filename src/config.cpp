@@ -63,7 +63,7 @@ Config::setDVC(const QString &profile_name, QMap<int,int> &map)
 	while(it != map.constEnd())
 	{
 		setValue("DPY-"+QString::number(it.key()), it.value());
-		it++;
+		++it;
 	}
 	endGroup();
 }
