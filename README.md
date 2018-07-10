@@ -13,6 +13,10 @@ No binary releases at this time.
 ![Imgur](https://i.imgur.com/pp84mIP.png)
 [![Youtube demo](https://img.youtube.com/vi/Nvd_NRQcGyw/0.jpg)](https://www.youtube.com/watch?v=Nvd_NRQcGyw)
 
+## Binary releases
+
+![Ubuntu 64bit (dvc-toggler-linux-0.0.5-amd64.deb)](https://gitlab.com/pruzinat/dvc-toggler-linux/raw/releases/releases/dvc-toggler-linux-0.0.5-amd64.deb)
+
 ## Build Requirements
 1. C++17 compiler
 2. QT5
