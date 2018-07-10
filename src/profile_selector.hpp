@@ -6,7 +6,6 @@
 #include <QGroupBox>
 #include <QSlider>
 #include <QLineEdit>
-#include <QDebug>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QVector>

@@ -119,7 +119,6 @@ mainWindow::setVisible(bool visible)
 	minimizeAction.setEnabled(visible);
 	restoreAction.setEnabled(!visible);
 	QDialog::setVisible(visible);
-	qDebug() << "setVisibile(" << visible << ") called!";
 }
 
 void

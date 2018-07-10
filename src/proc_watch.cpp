@@ -110,8 +110,6 @@ ProcWatch::update()
 				// update comm this has changed since the last update
 				active_window_comm = pid_to_comm(focused_window_pid);
 
-				std::cerr << "PID=" << focused_window_pid << " COMM=" << active_window_comm << "\n";
-
 				dirty = true;
 				previous_active_window_pid = focused_window_pid;
 			}

@@ -107,8 +107,6 @@ ProfileSelectorWidget::applyDVC()
 	std::map<int,int> std_map = dvc_map.toStdMap();
 	nv.setVibrance(&std_map);
 	std_map = nv.getVibrance();
-	for(auto &memb : std_map)
-		qDebug() << memb.first << "=" << memb.second;
 }
 
 AppProfile::AppProfile(const QString name, ProfileSelectorWidget *p) :
@@ -120,9 +118,7 @@ AppProfile::AppProfile(const QString name, ProfileSelectorWidget *p) :
 	// If we can't find it there, create it based on current config
 	if(dvc_map.empty())
 	{
-		qDebug() << dvc_map;
 		dvc_map = QMap(PSW->nv.getVibrance());
-		qDebug() << dvc_map;
 		PSW->cfg.setDVC(name, dvc_map);
 	}
 

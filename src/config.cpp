@@ -1,4 +1,3 @@
-#include <QtDebug>
 #include <QStandardPaths>
 
 #include "config.hpp"
@@ -17,8 +16,6 @@ Config::Config() :
 	beginGroup(CONFIG_DEFAULT_PROFILE_STR);
 	if(!contains("icon_path"))	setValue("icon", ":/resources/desktop.svg");
 	endGroup();
-
-	qDebug() << QSettings::allKeys();
 }
 
 QString

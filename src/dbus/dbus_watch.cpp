@@ -82,7 +82,6 @@ DBusInterface::receive()
 		if (dbus_message_is_signal
 		    (msg, DVC_DBUS_IF_NAME, DVC_DBUS_SIGNAL_SHOW))
 		{
-			std::cerr << "PARSING MESSAGE\n";
 			// read the parameters
 			dbus_message_iter_init(msg, &args);
 			if (DBUS_TYPE_STRING ==
@@ -95,8 +94,6 @@ DBusInterface::receive()
 					// display mainWindow
 					callback_fn(callback_object);
 				}
-
-				std::cerr << sigvalue << std::endl;
 			}
 		}
 		// free the message
