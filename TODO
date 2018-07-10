@@ -12,6 +12,7 @@
 [FEATURE] Actual desktop icon?
 [FEATURE] L11N
 [FEATURE] command line parameters for common stuff (--daemonize, --start-minimized)
+[PERF] Make sure that we don't use nvidia stuff during no-op calls to interface
 
 [DONE] Add start minimized functionality
     [DONE] toggler checkbox in @mainWindow
