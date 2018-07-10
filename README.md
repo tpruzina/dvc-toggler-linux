@@ -13,6 +13,10 @@ No binary releases at this time.
 ![Imgur](https://i.imgur.com/pp84mIP.png)
 [![Youtube demo](https://img.youtube.com/vi/Nvd_NRQcGyw/0.jpg)](https://www.youtube.com/watch?v=Nvd_NRQcGyw)
 
+## Binary releases
+
+![Releases page (Ubuntu 64bit .debs only atm)](https://gitlab.com/pruzinat/dvc-toggler-linux/tree/releases/releases)
+
 ## Build Requirements
 1. C++17 compiler
 2. QT5
