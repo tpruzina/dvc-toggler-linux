@@ -3,19 +3,17 @@
 Small QT5 app that controls digital vibrance (a.k.a saturation) on per application
 profile basis. Inspired by windows DVC togglers.
 
-## Status
-
-Very much WIP, but basic functionality should work.
-See [TODO](TODO) for features that are yet to be implemented.
-No binary releases at this time.
-
-
 ![Imgur](https://i.imgur.com/pp84mIP.png)
 [![Youtube demo](https://img.youtube.com/vi/Nvd_NRQcGyw/0.jpg)](https://www.youtube.com/watch?v=Nvd_NRQcGyw)
 
 ## Binary releases
 
 ![Experimental RPM/DEB packages are available on release page](https://gitlab.com/pruzinat/dvc-toggler-linux/tree/releases/releases)
+
+## Status
+
+Very much WIP, but basic functionality should work.
+See [TODO](TODO) for features that are yet to be implemented.
 
 ## Build Requirements
 1. C++17 compiler
@@ -40,7 +38,7 @@ ninja
 sudo ninja install
 ```
 
-## Notes
+## Configuration files
 
 By default, user configuration is stored in ```$HOME/.config/dvc-toggler/settings.ini```
 
@@ -50,9 +48,9 @@ Modified BSD, see [COPYING](COPYING).
 
 ## Bugs
 
-This is barely tested, any and all bug reports are more than wellcome.
+Any and all bug reports / feature requests are more than wellcome.
 
-## Notes II
+## Notes
 
 Originally this was a much broader project, WIP title "gamePref", but due to lack of time and ultimately intrest
 I have scrapped the original project in 2015. This is a frankenstein monster created on dead bones of gamePref,
