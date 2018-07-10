@@ -10,6 +10,8 @@
     [ ] Throw critical exceptions, catch them in mainWindow and display via MessageBoxA (or whatever the fuck QT uses)
 [FEATURE] Breakpad ??
 [FEATURE] Actual desktop icon?
+[FEATURE] L11N
+[FEATURE] command line parameters for common stuff (--daemonize, --start-minimized)
 
 [DONE] Add start minimized functionality
     [DONE] toggler checkbox in @mainWindow
