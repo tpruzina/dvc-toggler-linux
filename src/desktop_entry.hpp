@@ -1,6 +1,7 @@
 #include <fstream>  //ifstream, ofstream
 #include <cstdio>
-#include <sys/stat.h>
+#include <sys/stat.h>   // unlink
+#include <libgen.h>     // dirname
 #include <QStandardPaths>
 
 // Desktop Entry Specification
@@ -10,21 +11,22 @@
 class DesktopEntry
 {
 public:
-        static bool create(const QString &dirpath)
+        static bool create(const QString &path)
         {
                 // autostart directory might not exist on some systems
                 // if so create it
-                mkdir(dirpath.toStdString().c_str(), S_IRWXU);
+                mkdir(dirname((char *)path.toStdString().c_str()), S_IRWXU);
 
-                std::ofstream file(dirpath.toStdString() + "/dvc-toggler-linux.desktop",
+                std::ofstream file(path.toStdString(),
                                    std::ofstream::out | std::ofstream::trunc);
 
                 if(!file.is_open())
                 {
                         std::cerr << "Failure writing DesktopEntry to "
-                                  << dirpath.toStdString() << " file" << std::endl;
+                                  << path.toStdString() << " file" << std::endl;
                         return false;
                 }
+
                 // INI style header
                 file << "[Desktop Entry]" << std::endl;
 
@@ -33,8 +35,8 @@ public:
                 setValue(file, "Exec", "dvc-toggler-linux"); // fixme
                 setValue(file, "Name", "Linux DVC Toggler");
                 setValue(file, "GenericName",
-                                 "Digital Vibrance controll app"
-                                 " for Nvidia desktops.");
+                         "Digital Vibrance controll app"
+                         " for Nvidia desktops.");
                 setValue(file, "Icon", "LinuxDVCToggler");
                 setValue(file, "Terminal", "false");
 
@@ -44,8 +46,8 @@ public:
 
         static bool exists(const QString &path)
         {
-               std::ifstream f(path.toStdString());
-               return f.good();
+                std::ifstream f(path.toStdString());
+                return f.good();
         }
 
         static bool remove(const QString &path)
@@ -65,7 +67,8 @@ public:
         static QString getApplicationsPath()
         {
                 return QStandardPaths::writableLocation(
-                                        QStandardPaths::ApplicationsLocation);
+                                        QStandardPaths::ApplicationsLocation)
+                                + "/dvc-toggler-linux.desktop";
         }
 
         // $HOME/.config/autostart
@@ -73,7 +76,7 @@ public:
         {
                 return QStandardPaths::writableLocation(
                                         QStandardPaths::ConfigLocation)
-                                + "/autostart";
+                                + "/autostart" + "/dvc-toggler-linux.desktop";
         }
 };
 
