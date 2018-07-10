@@ -31,7 +31,7 @@ protected:
 private slots:
 	void toggleEnabled();
 	void toggleStartHidden();
-	void toggleAutoStart();
+	void toggleAutostart();
 	void toggleAutoHide();
 
 	void iconActivated(QSystemTrayIcon::ActivationReason reason);
