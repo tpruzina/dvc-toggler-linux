@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Exec=dvc-toggler-linux
+Name=Linux DVC Toggler
+GenericName=Digital Vibrance controll app for Nvidia desktops.
+Icon=LinuxDVCToggler
+Terminal=false
