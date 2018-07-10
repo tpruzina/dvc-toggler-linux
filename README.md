@@ -15,7 +15,7 @@ No binary releases at this time.
 
 ## Binary releases
 
-![Releases page (Ubuntu 64bit .debs only atm)](https://gitlab.com/pruzinat/dvc-toggler-linux/tree/releases/releases)
+![Experimental RPM/DEB packages are available on release page](https://gitlab.com/pruzinat/dvc-toggler-linux/tree/releases/releases)
 
 ## Build Requirements
 1. C++17 compiler
