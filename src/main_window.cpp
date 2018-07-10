@@ -1,5 +1,6 @@
 #include "main_window.hpp"
 #include "profile_selector.hpp"
+#include "desktop_entry.hpp"
 
 mainWindow::mainWindow() :
 	pw(nv, cfg.get_bool(CONFIG_ENABLED_STR), cfg.querySleepTime_ms())
@@ -51,9 +52,9 @@ mainWindow::createSettingsBox()
 	startHiddenCheckBox.setChecked(cfg.get_bool(CONFIG_START_MIN_STR));
 
 	autostartCheckBox.setText(tr("Autostart"));
-//	autostartCheckBox.setChecked(cfg.queryAutoStart());
-	autostartCheckBox.setChecked(false);
-	autostartCheckBox.setDisabled(true);
+	autostartCheckBox.setChecked(DesktopEntry::exists(
+					     DesktopEntry::getAutostartPath()));
+//	autostartCheckBox.setDisabled(true);
 
 	if (QSystemTrayIcon::isSystemTrayAvailable())
 		autohideCheckBox.setText(tr("Close to tray"));
@@ -153,9 +154,14 @@ mainWindow::toggleStartHidden()
 }
 
 void
-mainWindow::toggleAutostart()
+mainWindow::toggleAutoStart()
 {
-	// todo
+	QString as_file_path = DesktopEntry::getAutostartPath();
+
+	if(!DesktopEntry::exists(as_file_path))
+		DesktopEntry::create(as_file_path);
+	else
+		DesktopEntry::remove(as_file_path);
 }
 
 void
