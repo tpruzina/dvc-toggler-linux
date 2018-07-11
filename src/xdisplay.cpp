@@ -47,6 +47,16 @@ query_top_window(Display *dpy, Window start)
 		auto s = XQueryTree(dpy, w, &root, &parent, &children, &nchildren);
 		if (s)
 			XFree(children);
+		else
+		{
+			std::cerr << __FUNCTION__ << __LINE__
+				  << "query_top_window returned status: "
+				  << s << ", parent:" << parent << ", root:"
+				  << root << "\n";
+			std::cerr << "returning window to prevent infinite loop"
+				  << std::endl;
+			break;
+		}
 
 	}
 	return w;
