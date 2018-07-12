@@ -84,7 +84,7 @@ ProfileSelectorWidget::updateComboBox(int index)
 		QString name(profileList.itemText(index));
 		// TODO: dynamically add icon instead of using this default
 		QIcon icon(":/resources/xclient.svg");
-		QMap<int,int> dvc_map = QMap(nv.getVibrance());
+		//QMap<int,int> dvc_map = QMap(nv.getVibrance());
 		cfg.setDVC(name, dvc_map);
 		cfg.setIconPath(name, ":/resources/xclient.svg");
 		tabs.addTab(new AppProfile(name, this), icon, name);
@@ -106,7 +106,6 @@ ProfileSelectorWidget::applyDVC()
 	// FIXME: get rid of this
 	std::map<int,int> std_map = dvc_map.toStdMap();
 	nv.setVibrance(std_map);
-	std_map = nv.getVibrance();
 }
 
 AppProfile::AppProfile(const QString name, ProfileSelectorWidget *p) :

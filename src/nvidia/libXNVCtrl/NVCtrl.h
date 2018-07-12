@@ -5109,7 +5109,7 @@ typedef struct _NVCTRLAttributePermissions {
 #define NV_CTRL_WARP_DATA_TYPE_MESH_TRIANGLES_XYUVRQ       2
 
 #ifdef __cplusplus
-}; /* extern "C" */
+} /* extern "C" */
 #endif
 
 #endif /* __NVCTRL_H */
