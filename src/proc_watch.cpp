@@ -72,9 +72,9 @@ ProcWatch::applyRule(string &name)
 
 	// if rule for app doesn't exist, apply "default"
 	if(rule == rules.end())
-		nv.setVibrance(&rules[CONFIG_DEFAULT_PROFILE_STR]);
+		nv.setVibrance(rules[CONFIG_DEFAULT_PROFILE_STR]);
 	else	// else apply selected rule
-		nv.setVibrance(&rules[name]);
+		nv.setVibrance(rules[name]);
 
 	// unset dirty flag
 	dirty = false;

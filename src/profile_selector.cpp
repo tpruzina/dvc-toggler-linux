@@ -105,7 +105,7 @@ ProfileSelectorWidget::applyDVC()
 {
 	// FIXME: get rid of this
 	std::map<int,int> std_map = dvc_map.toStdMap();
-	nv.setVibrance(&std_map);
+	nv.setVibrance(std_map);
 	std_map = nv.getVibrance();
 }
 

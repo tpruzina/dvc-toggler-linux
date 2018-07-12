@@ -15,20 +15,42 @@ NVIDIA::isScreenAvailable()
 		return true;
 }
 
+template <typename Map>
+bool
+map_compare (Map const &lhs, Map const &rhs)
+{
+	return lhs.size() == rhs.size() &&
+		std::equal(lhs.begin(), lhs.end(), rhs.begin(),
+				   [] (auto a, auto b)
+			{
+				return (a.first == b.first) &&
+						(a.second == b.second);
+			}
+		);
+}
+
+NVIDIA::NVIDIA() :
+	dpy((void*)XOpenDisplay(NULL)),
+	screen(GetNvXScreen((Display*)dpy))
+
+{}
+
 int
-NVIDIA::setVibrance(std::map<int,int> *values)
+NVIDIA::setVibrance(std::map<int,int> &values)
 {
 	int *query_data;  // buffer for XNVCTRLQuery response
 	int len;    // length of a respons
 
-	static Display *dpy = 0L;
-	if(!dpy && !(dpy = XOpenDisplay(NULL)))
-		return -1;
+	// compare map being set to previous one,
+	// if they are equal (meaning result is a no-op)
+	// exit rather than do potentially expensive call to nvidia interface
 
-	// get active nvidia screen
-	int screen = GetNvXScreen(dpy);
-        if(screen < 0)
-            return -1;
+	if(map_compare(prev, values) == true)
+		return 0;
+	else
+		prev = values;
+
+	Display *dpy = (Display*)this->dpy;
 
 	// query all dpys
 	XNVCTRLQueryTargetBinaryData(dpy,
@@ -66,7 +88,7 @@ NVIDIA::setVibrance(std::map<int,int> *values)
 		}
 
 		// normalize input values to <-100,100> and map them to true range (typically <-1024,1023>)
-		int level = (*values)[dpyId];  // get desired level from input vector
+		int level = (values)[dpyId];  // get desired level from input vector
 		if(level > 0)
 		{
 			if(level > 100)
@@ -108,11 +130,8 @@ NVIDIA::getVibrance()
 		return map;
 
 	// TODO: Should we fail silently here?
-	if(!dpy && !(dpy = XOpenDisplay(NULL)))
+	if(!dpy)
 		return map;
-	
-	// Get X screen asociated with Nvidia
-	int screen = GetNvXScreen(dpy);
 
 	// Query displays (CRTCs) on screen
 	if(!XNVCTRLQueryTargetBinaryData(dpy,
