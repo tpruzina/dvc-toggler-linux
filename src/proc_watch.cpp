@@ -28,10 +28,10 @@ ProcWatch::listRunningProcs()
 	comms = scan_proc();
 
 	// RAII lock for reads
-	std::shared_lock < std::shared_mutex > lock(write);
+	std::shared_lock <std::shared_mutex> lock(write);
 
 	// move elements of comms set into vector
-	vector < string > res(comms.begin(), comms.end());
+	vector <string> res(comms.begin(), comms.end());
 	// sort for user output
 	std::sort(res.begin(), res.end());
 	return res;
@@ -43,7 +43,7 @@ bool
 ProcWatch::isProcRunning(string proc_comm)
 {
 	// RAII lock for reads
-	std::shared_lock < std::shared_mutex > lock(write);
+	std::shared_lock <std::shared_mutex> lock(write);
 	auto got = comms.find(proc_comm);
 	if(got == comms.end())
 		return false;
