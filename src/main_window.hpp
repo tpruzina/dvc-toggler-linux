@@ -1,15 +1,7 @@
 #ifndef MAIN_WINDOW_HPP
 #define MAIN_WINDOW_HPP
 
-#include <QApplication>
-#include <QCheckBox>
-#include <QCloseEvent>
-#include <QDialog>
-#include <QGroupBox>
-#include <QMenu>
-#include <QSystemTrayIcon>
-#include <QVBoxLayout>
-#include <QGridLayout>
+#include <QtWidgets>
 
 #include "config.hpp"
 #include "proc_watch.hpp"

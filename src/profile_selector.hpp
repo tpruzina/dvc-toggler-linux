@@ -1,17 +1,7 @@
 #ifndef PROFILESELECTORWIDGET_HPP
 #define PROFILESELECTORWIDGET_HPP
 
-#include <QTabWidget>
-#include <QPushButton>
-#include <QGroupBox>
-#include <QSlider>
-#include <QLineEdit>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QVector>
-#include <QComboBox>
-#include <QMessageBox>
-#include <QLabel>
+#include <QtWidgets>
 
 #include "config.hpp"
 #include "nvidia/nvidia.hpp"
