@@ -13,7 +13,6 @@ class ProfileSelectorWidget : public QGroupBox
 public:
 	ProfileSelectorWidget(ProcWatch &pw, Config &cfg, NVIDIA &nv);
 
-	QMap<int,int> dvc_map;
 signals:
 
 public slots:
@@ -40,7 +39,9 @@ private:
 	Config &cfg;
 	NVIDIA &nv;
 
-	friend class AppProfile;
+	QMap<int,int> dvc_map;
+
+        friend class AppProfile;
 	friend class DVCEntry;
 };
 

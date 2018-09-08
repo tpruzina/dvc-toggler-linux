@@ -3,9 +3,10 @@
 ProfileSelectorWidget::ProfileSelectorWidget(ProcWatch &pw, Config &cfg, NVIDIA &nv) :
 	pw(pw),
 	cfg(cfg),
-	nv(nv)
+        nv(nv),
+        dvc_map(nv.getVibrance())
 {
-	dvc_map = QMap<int,int>(nv.getVibrance());
+        // dvc_map = QMap<int,int>(nv.getVibrance());
 	// build profile tabs from Config
 	createProfileTabsBox();
 
