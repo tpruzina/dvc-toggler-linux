@@ -15,15 +15,16 @@
 class NVIDIA
 {
 public:
-	NVIDIA();
-	std::map<int, int> getVibrance();
-	int setVibrance(std::map<int, int> &values);
-	static bool isScreenAvailable();
+        NVIDIA();
+        ~NVIDIA();
+        std::map<int, int> getVibrance();
+        int setVibrance(std::map<int, int> &values);
+        static bool isScreenAvailable();
 
 private:
-	void *dpy;
-	int screen;
-	std::map<int, int> prev;
+        void *dpy;
+        int screen;
+        std::map<int, int> prev;
 };
 
 #endif // COMMON_NVIDIA_HPP_

@@ -35,6 +35,11 @@ NVIDIA::NVIDIA() :
 
 {}
 
+NVIDIA::~NVIDIA()
+{
+        XCloseDisplay((Display*)dpy);
+}
+
 int
 NVIDIA::setVibrance(std::map<int,int> &values)
 {
