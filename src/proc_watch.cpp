@@ -4,7 +4,7 @@
 // Scans /proc/$PID/{comms, maps} and queries X server for running processes
 // Applies DVC rules according to rules
 // TODO: Get rid of STL & use C primitives, performance actually matters here
-ProcWatch::ProcWatch(NVIDIA &nv, bool enabled, unsigned sleep_ms) :
+ProcWatch::ProcWatch(NVIDIA &nv, bool enabled, unsigned sleep_ms) noexcept:
         nv(nv), // Nvidia DVC setting
         dirty(false),   // signals watcher that rules need to be reapplied
         active(enabled),        // do stuff?
@@ -21,8 +21,7 @@ ProcWatch::~ProcWatch()
 }
 
 // return sorted, unique list of comms from /proc
-vector <string>
-ProcWatch::listRunningProcs()
+auto ProcWatch::listRunningProcs() noexcept -> vector<string>
 {
         // scan /proc/PID/comms for list of viable targets
         comms = scan_proc();
@@ -39,8 +38,7 @@ ProcWatch::listRunningProcs()
 
 // query whether proc is still running
 // FIXME: is this still necessary?
-bool
-ProcWatch::isProcRunning(string proc_comm)
+auto ProcWatch::isProcRunning(string proc_comm) noexcept -> bool
 {
         // RAII lock for reads
         std::shared_lock <std::shared_mutex> lock(write);
@@ -51,8 +49,7 @@ ProcWatch::isProcRunning(string proc_comm)
                 return true;
 }
 
-void
-ProcWatch::updateRule(string name, std::map<int,int> &dvc_map)
+auto ProcWatch::updateRule(string name, std::map<int,int> &dvc_map) noexcept -> void
 {
         // {comm}x{{dpyId}x{dvc}}
 
@@ -64,8 +61,7 @@ ProcWatch::updateRule(string name, std::map<int,int> &dvc_map)
                 dirty = true;
 }
 
-void
-ProcWatch::applyRule(string &name)
+auto ProcWatch::applyRule(string &name) noexcept -> void
 {
         // find rule
         const auto &rule = rules.find(name);
@@ -80,8 +76,7 @@ ProcWatch::applyRule(string &name)
         dirty = false;
 }
 
-void
-ProcWatch::removeRule(string name)
+auto ProcWatch::removeRule(string name) noexcept -> void
 {
         std::lock_guard<std::shared_mutex> lock(write);
         rules.erase(name);
@@ -89,8 +84,7 @@ ProcWatch::removeRule(string name)
 }
 
 // general update function, watcher thread runs this every sleep.ms
-void
-ProcWatch::update()
+auto ProcWatch::update() noexcept -> void
 {
         while (true)
         {
@@ -123,15 +117,13 @@ ProcWatch::update()
         }
 }
 
-void
-ProcWatch::setEnabled(bool state)
+auto ProcWatch::setEnabled(bool state) noexcept -> void
 {
         // tells watcher thread whether to do anything
         active = state;
 }
 
-void
-ProcWatch::setPollingRate(unsigned ms)
+auto ProcWatch::setPollingRate(unsigned ms) noexcept -> void
 {
         // sets polling rate for watcher process
         // TODO: add UI element/Config setting in mainWindow to control this
@@ -142,8 +134,7 @@ ProcWatch::setPollingRate(unsigned ms)
 }
 
 // read /proc/$PID/comm name given $PID$
-string
-ProcWatch::pid_to_comm(pid_t pid)
+auto ProcWatch::pid_to_comm(pid_t pid) noexcept -> string
 {
         static char path[32] = "/proc/";
         const off_t offset = 6; // strlen("/proc/_");
@@ -163,8 +154,7 @@ ProcWatch::pid_to_comm(pid_t pid)
 }
 
 // returns unique "comm" values from of /proc/$PID/comms for all $PIDS
-unordered_set<string>
-ProcWatch::scan_proc()
+auto ProcWatch::scan_proc() noexcept -> unordered_set<string>
 {
         DIR *dir;
         struct dirent *ent;
@@ -185,7 +175,7 @@ ProcWatch::scan_proc()
                 if (!pid_s || pid_s[0] < '0' || pid_s[0] > '9')
                         continue;
 
-                auto max_size = [&](auto &pid_s, auto &path) -> size_t
+                auto max_size = [&](auto &pid_s, auto &path) noexcept -> size_t
                 {
                         size_t pid_str_len = strlen(pid_s);
                         size_t buf_free_len =

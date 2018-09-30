@@ -13,22 +13,22 @@ class mainWindow : public QDialog
         Q_OBJECT
 
 public:
-        mainWindow();
+        mainWindow() noexcept;
 
-        void setVisible(bool visible);
+        void setVisible(bool visible) noexcept;
 
 protected:
-        void closeEvent(QCloseEvent *event);
+        void closeEvent(QCloseEvent *event) noexcept;
 
 private slots:
-        void toggleEnabled();
-        void toggleStartHidden();
-        void toggleAutoStart();
-        void toggleAutoHide();
+        void toggleEnabled() noexcept;
+        void toggleStartHidden() noexcept;
+        void toggleAutoStart() noexcept;
+        void toggleAutoHide() noexcept;
 
-        void iconActivated(QSystemTrayIcon::ActivationReason reason);
-        void showMessage(const QString &msg, unsigned timeout = 3000);
-        void quit();
+        void iconActivated(QSystemTrayIcon::ActivationReason reason) noexcept;
+        void showMessage(const QString &msg, unsigned timeout = 3000) noexcept;
+        void quit() noexcept;
 
 private:
         Config cfg;        // Persistent configuration object
@@ -37,8 +37,8 @@ private:
         DBusInterface bus;
 
 
-        void createSettingsBox();
-        void createTrayIcon();
+        void createSettingsBox() noexcept;
+        void createTrayIcon() noexcept;
 
         QGroupBox settingsGroupBox;
 

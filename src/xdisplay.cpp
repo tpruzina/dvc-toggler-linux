@@ -7,7 +7,7 @@
 
 #include "xdisplay.hpp"
 
-XDisplay::XDisplay()
+XDisplay::XDisplay() noexcept
 {
         setlocale(LC_ALL, "");
         dpy = XOpenDisplay(NULL);
@@ -15,15 +15,14 @@ XDisplay::XDisplay()
                 throw "Cannot open display";        // FIXME: handle in mainWindow?
 }
 
-XDisplay::~XDisplay()
+XDisplay::~XDisplay() noexcept
 {
         if(dpy)
                 XCloseDisplay((Display*)dpy);
 }
 
-static inline
-Window
-query_focused_window(Display *dpy)
+auto static inline
+query_focused_window(Display *dpy) noexcept -> Window
 {
         Window focused_window;
         int tmp;
@@ -31,9 +30,8 @@ query_focused_window(Display *dpy)
         return focused_window;
 }
 
-static inline
-Window
-query_top_window(Display *dpy, Window start)
+auto static inline
+query_top_window(Display *dpy, Window start) noexcept -> Window
 {
         Window w = start;
         Window parent = start;
@@ -63,9 +61,8 @@ query_top_window(Display *dpy, Window start)
 }
 
 //// finds a window, at or below the specified window, which has a WM_STATE property
-static inline
-Window
-query_name_window(Display *dpy, Window start)
+auto static inline
+query_name_window(Display *dpy, Window start) noexcept -> Window
 {
         Window w;
         w = XmuClientWindow(dpy, start);
@@ -74,9 +71,8 @@ query_name_window(Display *dpy, Window start)
 
 // @private:
 // get 32bit sized window property using atom ("_NET_WM_PID", ...)
-static inline
-int32_t
-get_prop_card32(Display *dpy, Window w, Atom p)
+auto static inline
+get_prop_card32(Display *dpy, Window w, Atom p) noexcept -> int32_t
 {
         Atom actual_type;
         int actual_format;
@@ -103,9 +99,7 @@ get_prop_card32(Display *dpy, Window w, Atom p)
         return value;
 }
 
-static inline
-pid_t
-query_window_pid(Display *dpy, Window w)
+auto static inline query_window_pid(Display *dpy, Window w) noexcept -> pid_t
 {
         Atom am_wm_pid = XInternAtom(dpy, "_NET_WM_PID", False);
         return get_prop_card32(dpy, w, am_wm_pid);
@@ -113,9 +107,8 @@ query_window_pid(Display *dpy, Window w)
 
 // Query main PID (_NET_WM_PID) of currently focused window
 // Focused window doesn't necessarily has this attribute,
-// we need to go from focused window -> top window -> name window(_NET_WM_PID)
-unsigned
-XDisplay::queryFocusedWindowPID()
+// we need to go from focused window noexcept -> top window -> name window(_NET_WM_PID)
+auto XDisplay::queryFocusedWindowPID() noexcept -> pid_t
 {
         // save previous values in static variables in order to cache results
         // as much as possible and prevent expensive X queries

@@ -3,13 +3,14 @@
 
 // This intentionally doesn't use any includes from Xlib,
 // because dealing with symbol mangling is pain
+
 class XDisplay
 {
 public:
-        XDisplay();
-        ~XDisplay();
+        XDisplay() noexcept;
+        ~XDisplay() noexcept;
 
-        unsigned   queryFocusedWindowPID();
+        pid_t   queryFocusedWindowPID() noexcept;
 private:
         void *dpy;
 };

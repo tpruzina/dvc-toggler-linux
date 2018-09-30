@@ -1,13 +1,13 @@
+#include "nvidia.hpp"
+
 #include <inttypes.h>
+#include <map>
 
 #include "libXNVCtrl/NVCtrl.h"
 #include "libXNVCtrl/NVCtrlLib.h"
 #include "libXNVCtrl/nv-control-screen.h"
 
-#include "nvidia.hpp"
-
-bool
-NVIDIA::isScreenAvailable()
+auto NVIDIA::isScreenAvailable() noexcept -> bool
 {
         if(GetNvXScreen(XOpenDisplay(NULL)) == -1)
                 return false;
@@ -16,8 +16,7 @@ NVIDIA::isScreenAvailable()
 }
 
 template <typename Map>
-bool
-map_compare (Map const &lhs, Map const &rhs)
+auto map_compare (Map const &lhs, Map const &rhs) noexcept -> bool
 {
         return lhs.size() == rhs.size() &&
                 std::equal(lhs.begin(), lhs.end(), rhs.begin(),
@@ -29,19 +28,18 @@ map_compare (Map const &lhs, Map const &rhs)
                 );
 }
 
-NVIDIA::NVIDIA() :
+NVIDIA::NVIDIA() noexcept:
         dpy((void*)XOpenDisplay(NULL)),
         screen(GetNvXScreen((Display*)dpy))
 
 {}
 
-NVIDIA::~NVIDIA()
+NVIDIA::~NVIDIA() noexcept
 {
         XCloseDisplay((Display*)dpy);
 }
 
-int
-NVIDIA::setVibrance(std::map<int,int> &values)
+auto NVIDIA::setVibrance(std::map<int,int> &values) noexcept -> int
 {
         int *query_data;  // buffer for XNVCTRLQuery response
         int len;    // length of a respons
@@ -123,8 +121,7 @@ NVIDIA::setVibrance(std::map<int,int> &values)
 }
 
 // returns std::map of <dpyId, dvc_level> for current Nvidia screen
-std::map<int, int>
-NVIDIA::getVibrance()
+auto NVIDIA::getVibrance() noexcept -> std::map<int, int>
 {
         int *query_data;
         int len;
@@ -198,7 +195,7 @@ NVIDIA::getVibrance()
 
 #ifdef DEBUG_NVIDIA
 // see src/nvidia/Makefile
-int main(int argc, char **argv)
+auto main(int argc, char **argv) noexcept -> int
 {
         NVIDIA nv;
 

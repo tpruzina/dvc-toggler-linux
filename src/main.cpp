@@ -5,7 +5,7 @@
 #include "dbus/dbus_watch.hpp"
 #include "nvidia/nvidia.hpp"
 
-int main(int argc, char *argv[])
+auto main(int argc, char *argv[]) noexcept -> int
 {
         Q_INIT_RESOURCE(dvc_toggler_linux);
         QApplication app(argc, argv);

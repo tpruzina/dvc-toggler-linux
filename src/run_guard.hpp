@@ -8,12 +8,12 @@ class RunGuard
 {
 
 public:
-        RunGuard(const QString &key);
-        ~RunGuard();
+        RunGuard(const QString &key) noexcept;
+        ~RunGuard() noexcept;
 
-        bool isAnotherRunning();
-        bool tryToRun();
-        void release();
+        bool isAnotherRunning() noexcept;
+        bool tryToRun() noexcept;
+        void release() noexcept;
 
 private:
         const QString key;

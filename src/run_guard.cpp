@@ -1,9 +1,7 @@
 #include "run_guard.hpp"
 #include <QCryptographicHash>
 
-static inline
-QString
-generateKeyHash(const QString& key, const QString& salt)
+static inline auto generateKeyHash(const QString& key, const QString& salt) noexcept -> QString
 {
         QByteArray data;
 
@@ -14,7 +12,7 @@ generateKeyHash(const QString& key, const QString& salt)
         return data;
 }
 
-RunGuard::RunGuard(const QString& key)
+RunGuard::RunGuard(const QString& key) noexcept
         : key(key)
         , memLockKey(generateKeyHash(key, "_memLockKey"))
         , sharedmemKey(generateKeyHash(key, "_sharedmemKey"))
@@ -29,13 +27,12 @@ RunGuard::RunGuard(const QString& key)
         memLock.release();
 }
 
-RunGuard::~RunGuard()
+RunGuard::~RunGuard() noexcept
 {
         release();
 }
 
-bool
-RunGuard::isAnotherRunning()
+auto RunGuard::isAnotherRunning() noexcept -> bool
 {
         if (sharedMem.isAttached())
                 return false;
@@ -49,8 +46,7 @@ RunGuard::isAnotherRunning()
         return isRunning;
 }
 
-bool
-RunGuard::tryToRun()
+auto RunGuard::tryToRun() noexcept -> bool
 {
         if (isAnotherRunning())   // Extra check
                 return false;
@@ -67,8 +63,7 @@ RunGuard::tryToRun()
         return true;
 }
 
-void
-RunGuard::release()
+auto RunGuard::release() noexcept -> void
 {
         memLock.acquire();
         if (sharedMem.isAttached())

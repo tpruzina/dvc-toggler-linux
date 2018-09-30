@@ -10,11 +10,15 @@
 #define DVC_DBUS_SIGNAL_OBJECT "/dvc/signal/Object"
 #define DVC_DBUS_SIGNAL_SHOW "Show"
 
+using callback_t = void (*)(void *);
+using callback_object_t = void *;
+using ms = std::chrono::milliseconds;
+
 class DBusInterface {
 public:
-        DBusInterface() : callback_fn(nullptr), callback_object(nullptr), shutdown(false), sleep_ms(100) {}
+        DBusInterface() noexcept = default;
 
-        ~DBusInterface()
+        ~DBusInterface() noexcept
         {
                 if(listener.joinable())
                 {
@@ -22,16 +26,15 @@ public:
                         listener.join();
                 }
         }
-
-        void spawnListener(void (*callback_fn)(void*), void* object);
-        void receive();
-        static void sendSignal(char *message);
+        void spawnListener(void (*callback_fn)(void*), void* object) noexcept;
+        void receive() noexcept;
+        static void sendSignal(char *message) noexcept;
 
 private:
         std::thread listener;
-        void (*callback_fn) (void *);
-        void *callback_object;
-        volatile bool shutdown;
-        std::chrono::milliseconds sleep_ms;
+        callback_t callback_fn{nullptr};
+        callback_object_t callback_object{nullptr};
+        bool shutdown{false};
+        ms sleep_ms{100};
 };
 #endif        // DBUS_HPP

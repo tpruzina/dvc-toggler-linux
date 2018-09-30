@@ -2,27 +2,25 @@
 #include "dbus.hpp"
 #include <unistd.h> // C sleep
 
-int
-main(int argc, char **argv)
+auto main(int argc, char **argv) noexcept -> int
 {
-    DBusInterface *dbus = new DBusInterface;
+        auto dbus = new DBusInterface;
 
-    if(argc == 1)
-    {
-        dbus->spawn_listener(
-            [] (void *none) 
-            {
-                std::cout << "Callback called" << std::endl;
-            },
-            NULL
-        );
-        sleep(100);
-    }
-    else
-        dbus->sendsignal((char*)"show()");
+        // TODO: fork, sleep test
+        if(argc == 1)
+        {
+                dbus->spawn_listener(
+                        [] (void *none)
+                        {
+                                std::cout << "Callback called" << std::endl;
+                        },
+                        NULL
+                );
+                sleep(100);
+        }
+        else
+                dbus->sendsignal((char*)"show()");
 
-
-
-    delete dbus;
-    return 0;
+        delete dbus;
+        return 0;
 }

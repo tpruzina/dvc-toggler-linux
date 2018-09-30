@@ -3,7 +3,6 @@
 
 #include <map>
 #include <vector>
-#include <algorithm> // std::transform
 #include <iostream>
 
 #define NVIDIA_APPLY_TO_ALL -1
@@ -15,16 +14,15 @@
 class NVIDIA
 {
 public:
-        NVIDIA();
-        ~NVIDIA();
-        std::map<int, int> getVibrance();
-        int setVibrance(std::map<int, int> &values);
-        static bool isScreenAvailable();
+        NVIDIA() noexcept;
+        ~NVIDIA() noexcept;
+        std::map<int, int> getVibrance() noexcept;
+        int setVibrance(std::map<int, int> &values) noexcept;
+        static bool isScreenAvailable() noexcept;
 
 private:
         void *dpy;
         int screen;
         std::map<int, int> prev;
 };
-
 #endif // COMMON_NVIDIA_HPP_

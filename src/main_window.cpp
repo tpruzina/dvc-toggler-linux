@@ -2,8 +2,11 @@
 #include "profile_selector.hpp"
 #include "desktop_entry.hpp"
 
-mainWindow::mainWindow() :
-        pw(nv, cfg.get_bool(CONFIG_ENABLED_STR), cfg.querySleepTime_ms())
+mainWindow::mainWindow() noexcept :
+        pw(
+		nv,
+		cfg.get_bool(CONFIG_ENABLED_STR),
+		cfg.querySleepTime_ms())
 
 {
         setWindowTitle(tr("DVC toggler"));
@@ -33,11 +36,10 @@ mainWindow::mainWindow() :
         setGeometry(0,0,300,250); // fixme remember size from last run
 
         if(cfg.get_bool(CONFIG_START_MIN_STR) == false)
-                this->show();
+                show();
 }
 
-void
-mainWindow::createSettingsBox()
+auto mainWindow::createSettingsBox() noexcept -> void
 {
         settingsGroupBox.setTitle(tr("Settings"));
 
@@ -76,8 +78,7 @@ mainWindow::createSettingsBox()
         connect(&autohideCheckBox, SIGNAL(toggled(bool)), this, SLOT(toggleAutoHide()));
 }
 
-void
-mainWindow::createTrayIcon()
+auto mainWindow::createTrayIcon() noexcept -> void
 {
         // don't setup tray icon if system doesn't support it
         if (!QSystemTrayIcon::isSystemTrayAvailable())
@@ -113,16 +114,14 @@ mainWindow::createTrayIcon()
         trayIcon.show();
 }
 
-void
-mainWindow::setVisible(bool visible)
+auto mainWindow::setVisible(bool visible) noexcept -> void
 {
         minimizeAction.setEnabled(visible);
         restoreAction.setEnabled(!visible);
         QDialog::setVisible(visible);
 }
 
-void
-mainWindow::closeEvent(QCloseEvent *event)
+auto mainWindow::closeEvent(QCloseEvent *event) noexcept -> void
 {
         if(cfg.get_bool(CONFIG_AUTOHIDE_STR) == false)
                 this->quit();
@@ -146,14 +145,12 @@ mainWindow::closeEvent(QCloseEvent *event)
         }
 }
 
-void
-mainWindow::toggleStartHidden()
+auto mainWindow::toggleStartHidden() noexcept -> void
 {
         cfg.toggle_bool(CONFIG_START_MIN_STR);
 }
 
-void
-mainWindow::toggleAutoStart()
+auto mainWindow::toggleAutoStart() noexcept -> void
 {
         QString as_file_path = DesktopEntry::getAutostartPath();
 
@@ -163,8 +160,7 @@ mainWindow::toggleAutoStart()
                 DesktopEntry::remove(as_file_path);
 }
 
-void
-mainWindow::toggleEnabled()
+auto mainWindow::toggleEnabled() noexcept -> void
 {
 
         QString status;
@@ -186,14 +182,12 @@ mainWindow::toggleEnabled()
         setWindowIcon(icon);
 }
 
-void
-mainWindow::toggleAutoHide()
+auto mainWindow::toggleAutoHide() noexcept -> void
 {
         cfg.toggle_bool(CONFIG_AUTOHIDE_STR);
 }
 
-void
-mainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
+auto mainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason) noexcept -> void
 {
         switch (reason)
         {
@@ -212,14 +206,12 @@ mainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
         }
 }
 
-void
-mainWindow::showMessage(const QString &msg, unsigned timeout)
+auto mainWindow::showMessage(const QString &msg, unsigned timeout) noexcept -> void
 {
         trayIcon.showMessage("DVC toggler", msg, icon, timeout);
 }
 
-void
-mainWindow::quit()
+auto mainWindow::quit() noexcept -> void
 {
         cfg.sync();
         exit(0);

@@ -1,6 +1,6 @@
 #include "profile_selector.hpp"
 
-ProfileSelectorWidget::ProfileSelectorWidget(ProcWatch &pw, Config &cfg, NVIDIA &nv) :
+ProfileSelectorWidget::ProfileSelectorWidget(ProcWatch &pw, Config &cfg, NVIDIA &nv) noexcept:
         pw(pw),
         cfg(cfg),
         nv(nv),
@@ -19,8 +19,7 @@ ProfileSelectorWidget::ProfileSelectorWidget(ProcWatch &pw, Config &cfg, NVIDIA 
         this->setLayout(&profileSelectorWidgetLayout);
 }
 
-void
-ProfileSelectorWidget::createProfileTabsBox()
+auto ProfileSelectorWidget::createProfileTabsBox() noexcept -> void
 {
         QStringList config = cfg.queryProfiles();
         // make sure that CONFIG_DEFAULT_PROFILE_STR is on top of the list
@@ -48,8 +47,7 @@ ProfileSelectorWidget::createProfileTabsBox()
         connect(&tabs, SIGNAL(tabCloseRequested(int)), this, SLOT(removeProfile(int)));
 }
 
-void
-ProfileSelectorWidget::removeProfile(int index)
+auto ProfileSelectorWidget::removeProfile(int index) noexcept -> void
 {
         QString name = tabs.tabText(index);
 
@@ -58,8 +56,7 @@ ProfileSelectorWidget::removeProfile(int index)
         tabs.removeTab(index);
 }
 
-void
-ProfileSelectorWidget::createProfileSelectorButtonBox()
+auto ProfileSelectorWidget::createProfileSelectorButtonBox() noexcept -> void
 {
         profileSelectorBox.setStyleSheet("border:none");
 
@@ -71,8 +68,7 @@ ProfileSelectorWidget::createProfileSelectorButtonBox()
 }
 
 // adds new profile from create profile list widget, afterwards fils it with {current processes } - {profile list}
-void
-ProfileSelectorWidget::updateComboBox(int index)
+auto ProfileSelectorWidget::updateComboBox(int index) noexcept -> void
 {
         QStringList qlist;
         qlist << "Add new profile";
@@ -101,15 +97,14 @@ ProfileSelectorWidget::updateComboBox(int index)
         profileList.addItems(qlist);
 }
 
-void
-ProfileSelectorWidget::applyDVC()
+auto ProfileSelectorWidget::applyDVC() noexcept -> void
 {
         // FIXME: get rid of this
         std::map<int,int> std_map = dvc_map.toStdMap();
         nv.setVibrance(std_map);
 }
 
-AppProfile::AppProfile(const QString name, ProfileSelectorWidget *p) :
+AppProfile::AppProfile(const QString name, ProfileSelectorWidget *p) noexcept :
         PSW(p),        // pointer to master PSW (has NV object)
         name(name) // profile name (or CONFIG_DEFAULT_PROFILE_STR)
 {
@@ -125,7 +120,6 @@ AppProfile::AppProfile(const QString name, ProfileSelectorWidget *p) :
         // add new rule to procWatch
         auto name_std = name.toStdString();
         auto map_std = dvc_map.toStdMap();
-        
         PSW->pw.updateRule(name_std, map_std);
 
         // create one DVCentry per each CRTC (dpyId)
@@ -136,11 +130,11 @@ AppProfile::AppProfile(const QString name, ProfileSelectorWidget *p) :
                 ++i;
         }
 
-        this->setLayout(&vlayout);
-        this->setStyleSheet("border:none");
+        setLayout(&vlayout);
+        setStyleSheet("border:none");
 }
 
-DVCEntry::DVCEntry(int dpy_id, int dvc_level, AppProfile *p) :
+DVCEntry::DVCEntry(int dpy_id, int dvc_level, AppProfile *p) noexcept:
         dpy_id(dpy_id),        // monitor id
         dvc(dvc_level),        // reference to NVIDIA std::map
         dvc_slider(Qt::Horizontal),
@@ -166,8 +160,7 @@ DVCEntry::DVCEntry(int dpy_id, int dvc_level, AppProfile *p) :
         this->setLayout(&hlayout);
 }
 
-void
-DVCEntry::onDVCSliderChanged(int value)
+auto DVCEntry::onDVCSliderChanged(int value) noexcept -> void
 {
         dvc_le.setText(QString::number(dvc_slider.sliderPosition()));
         dvc = value;

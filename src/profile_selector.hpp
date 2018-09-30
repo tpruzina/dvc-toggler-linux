@@ -11,21 +11,21 @@ class ProfileSelectorWidget : public QGroupBox
 {
         Q_OBJECT
 public:
-        ProfileSelectorWidget(ProcWatch &pw, Config &cfg, NVIDIA &nv);
+        ProfileSelectorWidget(ProcWatch &pw, Config &cfg, NVIDIA &nv) noexcept;
 
 signals:
 
 public slots:
-        void applyDVC();
-        void updateComboBox(int index);
-        void removeProfile(int index);
+        void applyDVC() noexcept;
+        void updateComboBox(int index) noexcept;
+        void removeProfile(int index) noexcept;
 
 private slots:
 
 
 private:
-        void        createProfileTabsBox();
-        void        createProfileSelectorButtonBox();
+        void        createProfileTabsBox() noexcept;
+        void        createProfileSelectorButtonBox() noexcept;
 
         QVBoxLayout profileSelectorWidgetLayout;
         QHBoxLayout profileSelectorLayout;
@@ -49,7 +49,7 @@ class AppProfile : public QGroupBox
 {
         Q_OBJECT
 public:
-        AppProfile(const QString name, ProfileSelectorWidget *p);
+        AppProfile(const QString name, ProfileSelectorWidget *p) noexcept;
 
 
         ProfileSelectorWidget *PSW;
@@ -64,10 +64,10 @@ class DVCEntry : public QGroupBox
 {
         Q_OBJECT
 public:
-        explicit DVCEntry(const int dpy_id, int dvc_level, AppProfile *p);
+        explicit DVCEntry(const int dpy_id, int dvc_level, AppProfile *p) noexcept;
 
 public slots:
-        void onDVCSliderChanged(int value);
+        void onDVCSliderChanged(int value) noexcept;
 
 private:
         const int dpy_id;
