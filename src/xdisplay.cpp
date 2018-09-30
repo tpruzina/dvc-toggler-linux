@@ -11,8 +11,6 @@ XDisplay::XDisplay() noexcept
 {
         setlocale(LC_ALL, "");
         dpy = XOpenDisplay(NULL);
-        if(!dpy)
-                throw "Cannot open display";        // FIXME: handle in mainWindow?
 }
 
 XDisplay::~XDisplay() noexcept
