@@ -97,7 +97,7 @@ auto DBusInterface::receive() noexcept -> void
                         if (DBUS_TYPE_STRING ==
                             dbus_message_iter_get_arg_type(&args))
                         {
-                                auto sigvalue = (char*){nullptr};
+                                auto sigvalue = (char const *)(nullptr);
                                 dbus_message_iter_get_basic(&args, &sigvalue);
 
                                 // display mainWindow
