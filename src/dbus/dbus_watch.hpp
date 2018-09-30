@@ -26,7 +26,8 @@ public:
                         listener.join();
                 }
         }
-        void spawnListener(void (*callback_fn)(void*), void* object) noexcept;
+
+        void spawnListener(callback_t cb, callback_object_t object) noexcept;
         void receive() noexcept;
         static void sendSignal(char *message) noexcept;
 

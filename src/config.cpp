@@ -13,7 +13,7 @@ Config::Config() noexcept:
         if(!contains(CONFIG_ENABLED_STR))       set_bool(CONFIG_ENABLED_STR, true);
         if(!contains(CONFIG_START_MIN_STR))     set_bool(CONFIG_START_MIN_STR, false);
         if(!contains(CONFIG_TRAY_INFO_SHOWN))   set_bool(CONFIG_TRAY_INFO_SHOWN, false);
-        if(!contains(CONFIG_SLEEP_STR))		setSleepTime_ms(100);
+        if(!contains(CONFIG_SLEEP_STR))         setSleepTime_ms(100);
 
         beginGroup(CONFIG_DEFAULT_PROFILE_STR);
         if(!contains("icon_path"))      setValue("icon", ":/resources/desktop.svg");
