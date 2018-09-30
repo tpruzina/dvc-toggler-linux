@@ -9,74 +9,74 @@
 
 class ProfileSelectorWidget : public QGroupBox
 {
-	Q_OBJECT
+        Q_OBJECT
 public:
-	ProfileSelectorWidget(ProcWatch &pw, Config &cfg, NVIDIA &nv);
+        ProfileSelectorWidget(ProcWatch &pw, Config &cfg, NVIDIA &nv);
 
 signals:
 
 public slots:
-	void applyDVC();
-	void updateComboBox(int index);
-	void removeProfile(int index);
+        void applyDVC();
+        void updateComboBox(int index);
+        void removeProfile(int index);
 
 private slots:
 
 
 private:
-	void	createProfileTabsBox();
-	void	createProfileSelectorButtonBox();
+        void        createProfileTabsBox();
+        void        createProfileSelectorButtonBox();
 
-	QVBoxLayout profileSelectorWidgetLayout;
-	QHBoxLayout profileSelectorLayout;
-	QComboBox profileList;
+        QVBoxLayout profileSelectorWidgetLayout;
+        QHBoxLayout profileSelectorLayout;
+        QComboBox profileList;
 
-	QGroupBox	profileSelectorBox;
+        QGroupBox        profileSelectorBox;
 
-	QTabWidget tabs;
+        QTabWidget tabs;
 
-	ProcWatch &pw;
-	Config &cfg;
-	NVIDIA &nv;
+        ProcWatch &pw;
+        Config &cfg;
+        NVIDIA &nv;
 
-	QMap<int,int> dvc_map;
+        QMap<int,int> dvc_map;
 
         friend class AppProfile;
-	friend class DVCEntry;
+        friend class DVCEntry;
 };
 
 class AppProfile : public QGroupBox
 {
-	Q_OBJECT
+        Q_OBJECT
 public:
-	AppProfile(const QString name, ProfileSelectorWidget *p);
+        AppProfile(const QString name, ProfileSelectorWidget *p);
 
 
-	ProfileSelectorWidget *PSW;
-	const QString name;
+        ProfileSelectorWidget *PSW;
+        const QString name;
 
 private:
-	QVBoxLayout vlayout;
-	friend class DVCEntry;
+        QVBoxLayout vlayout;
+        friend class DVCEntry;
 };
 
 class DVCEntry : public QGroupBox
 {
-	Q_OBJECT
+        Q_OBJECT
 public:
-	explicit DVCEntry(const int dpy_id, int dvc_level, AppProfile *p);
+        explicit DVCEntry(const int dpy_id, int dvc_level, AppProfile *p);
 
 public slots:
-	void onDVCSliderChanged(int value);
+        void onDVCSliderChanged(int value);
 
 private:
-	const int dpy_id;
-	int dvc;
-	QHBoxLayout hlayout;
-	QSlider dvc_slider;
-	QLineEdit dvc_le;
-	QLabel dpy_name;
-	AppProfile *AP;
+        const int dpy_id;
+        int dvc;
+        QHBoxLayout hlayout;
+        QSlider dvc_slider;
+        QLineEdit dvc_le;
+        QLabel dpy_name;
+        AppProfile *AP;
 };
 
 #endif // PROFILESELECTORWIDGET_HPP

@@ -10,55 +10,55 @@
 
 class mainWindow : public QDialog
 {
-	Q_OBJECT
+        Q_OBJECT
 
 public:
-	mainWindow();
+        mainWindow();
 
-	void setVisible(bool visible);
+        void setVisible(bool visible);
 
 protected:
-	void closeEvent(QCloseEvent *event);
+        void closeEvent(QCloseEvent *event);
 
 private slots:
-	void toggleEnabled();
-	void toggleStartHidden();
-	void toggleAutoStart();
-	void toggleAutoHide();
+        void toggleEnabled();
+        void toggleStartHidden();
+        void toggleAutoStart();
+        void toggleAutoHide();
 
-	void iconActivated(QSystemTrayIcon::ActivationReason reason);
-	void showMessage(const QString &msg, unsigned timeout = 3000);
-	void quit();
+        void iconActivated(QSystemTrayIcon::ActivationReason reason);
+        void showMessage(const QString &msg, unsigned timeout = 3000);
+        void quit();
 
 private:
-	Config cfg;	// Persistent configuration object
-	NVIDIA nv;	// DVC related nvidia object
-	ProcWatch pw;	// Window watcher
-	DBusInterface bus;
+        Config cfg;        // Persistent configuration object
+        NVIDIA nv;        // DVC related nvidia object
+        ProcWatch pw;        // Window watcher
+        DBusInterface bus;
 
 
-	void createSettingsBox();
-	void createTrayIcon();
+        void createSettingsBox();
+        void createTrayIcon();
 
-	QGroupBox settingsGroupBox;
+        QGroupBox settingsGroupBox;
 
-	QCheckBox autohideCheckBox;
-	QCheckBox enabledCheckBox;
-	QCheckBox startHiddenCheckBox;
-	QCheckBox autostartCheckBox;
+        QCheckBox autohideCheckBox;
+        QCheckBox enabledCheckBox;
+        QCheckBox startHiddenCheckBox;
+        QCheckBox autostartCheckBox;
 
-	QVBoxLayout mainLayout;
+        QVBoxLayout mainLayout;
 
-	QAction minimizeAction;
-	QAction restoreAction;
-	QAction quitAction;
+        QAction minimizeAction;
+        QAction restoreAction;
+        QAction quitAction;
 
-	QSystemTrayIcon trayIcon;
-	QIcon icon;
-	QMenu trayIconMenu;
+        QSystemTrayIcon trayIcon;
+        QIcon icon;
+        QMenu trayIconMenu;
 
-	friend class ProfileSelectorWidget;
-	friend class AppProfile;
-	friend class DVCEntry;
+        friend class ProfileSelectorWidget;
+        friend class AppProfile;
+        friend class DVCEntry;
 };
 #endif // MAIN_WINDOW_HPP

@@ -6,12 +6,12 @@
 class XDisplay
 {
 public:
-	XDisplay();
-	~XDisplay();
+        XDisplay();
+        ~XDisplay();
 
-	unsigned   queryFocusedWindowPID();
+        unsigned   queryFocusedWindowPID();
 private:
-	void *dpy;
+        void *dpy;
 };
 
 #endif // X_DISPLAY_HPP_

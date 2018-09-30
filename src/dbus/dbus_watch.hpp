@@ -12,26 +12,26 @@
 
 class DBusInterface {
 public:
-	DBusInterface() : callback_fn(nullptr), callback_object(nullptr), shutdown(false), sleep_ms(100) {}
+        DBusInterface() : callback_fn(nullptr), callback_object(nullptr), shutdown(false), sleep_ms(100) {}
 
-	~DBusInterface()
-	{
-		if(listener.joinable())
-		{
-			shutdown = true;
-			listener.join();
-		}
-	}
+        ~DBusInterface()
+        {
+                if(listener.joinable())
+                {
+                        shutdown = true;
+                        listener.join();
+                }
+        }
 
-	void spawnListener(void (*callback_fn)(void*), void* object);
-	void receive();
-	static void sendSignal(char *message);
+        void spawnListener(void (*callback_fn)(void*), void* object);
+        void receive();
+        static void sendSignal(char *message);
 
 private:
-	std::thread listener;
-	void (*callback_fn) (void *);
-	void *callback_object;
-	volatile bool shutdown;
-	std::chrono::milliseconds sleep_ms;
+        std::thread listener;
+        void (*callback_fn) (void *);
+        void *callback_object;
+        volatile bool shutdown;
+        std::chrono::milliseconds sleep_ms;
 };
-#endif	// DBUS_HPP
+#endif        // DBUS_HPP
