@@ -12,8 +12,8 @@ HEADERS = \
     proc_watch.hpp \
     main_window.hpp \
     dbus/dbus_watch.hpp \
-    xdisplay.hpp \
-    run_guard.hpp \
+    xdisplay/xdisplay.hpp \
+    run_guard/run_guard.hpp \
     desktop_entry.hpp
 
 
@@ -24,10 +24,10 @@ SOURCES = \
     nvidia/nvidia.cpp \
     proc_watch.cpp \
     profile_selector.cpp \
-    run_guard.cpp \
+    run_guard/run_guard.cpp \
     main_window.cpp \
     dbus/dbus_watch.cpp \
-    xdisplay.cpp
+    xdisplay/xdisplay.cpp
 
 
 RESOURCES     = dvc_toggler_linux.qrc

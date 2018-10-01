@@ -11,9 +11,21 @@ xext_dep = dependency('xext')
 xmu_dep = dependency('xmu')
 dbus1_dep = dependency('dbus-1')
 
-sources = [ 'config.cpp','main.cpp','main_window.cpp','proc_watch.cpp','profile_selector.cpp','run_guard.cpp','xdisplay.cpp','nvidia/nvidia.cpp', 'nvidia/libXNVCtrl/NVCtrl.c', 'dbus/dbus_watch.cpp']
+sources = [
+  'config.cpp',
+  'main.cpp',
+  'main_window.cpp',
+  'proc_watch.cpp',
+  'profile_selector.cpp',
+  'run_guard/run_guard.cpp',
+  'xdisplay/xdisplay.cpp',
+  'nvidia/nvidia.cpp',
+  'nvidia/libXNVCtrl/NVCtrl.c',
+  'dbus/dbus_watch.cpp'
+]
 
 executable('dvc-toggler-linux',
-  [ sources , qt_preproc ], 
+  [ sources , qt_preproc ],
   dependencies : [qt5_dep, thread_dep, x11_dep, xext_dep, xmu_dep, dbus1_dep],
   install: true)
+

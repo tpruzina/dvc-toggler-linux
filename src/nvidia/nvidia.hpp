@@ -18,6 +18,8 @@ public:
         int setVibrance(std::map<int, int> &values) noexcept;
         static bool isScreenAvailable() noexcept;
 
+	NVIDIA(const NVIDIA&)= delete;
+
 private:
         void *dpy;
         int screen;

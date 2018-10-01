@@ -1,7 +1,7 @@
 #include <QMessageBox>
 
 #include "main_window.hpp"
-#include "run_guard.hpp"
+#include "run_guard/run_guard.hpp"
 #include "dbus/dbus_watch.hpp"
 #include "nvidia/nvidia.hpp"
 

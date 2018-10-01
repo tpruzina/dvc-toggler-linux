@@ -6,7 +6,7 @@
 #include <shared_mutex>
 
 #include "nvidia/nvidia.hpp"
-#include "xdisplay.hpp"
+#include "xdisplay/xdisplay.hpp"
 #include "config.hpp"
 
 typedef int pid_t;

@@ -17,7 +17,6 @@ using ms = std::chrono::milliseconds;
 class DBusInterface {
 public:
         DBusInterface() noexcept = default;
-
         ~DBusInterface() noexcept
         {
                 if(listener.joinable())
