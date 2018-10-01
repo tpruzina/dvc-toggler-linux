@@ -139,7 +139,8 @@ auto XDisplay::queryFocusedWindowPID() noexcept -> pid_t
 int main()
 {
         XDisplay nv;
-        cout << "query_focused_window_pid(): " << nv.query_focused_window_pid() << endl;
+	std::cout << "query_focused_window_pid(): " <<
+		nv.queryFocusedWindowPID() << '\n';
         return 0;
 }
 #endif // DEBUG_XDISPLAY
