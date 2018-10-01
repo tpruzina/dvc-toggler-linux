@@ -13,7 +13,8 @@ HEADERS = \
     main_window.hpp \
     dbus/dbus_watch.hpp \
     xdisplay.hpp \
-    run_guard.hpp
+    run_guard.hpp \
+    desktop_entry.hpp
 
 
 SOURCES = \

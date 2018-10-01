@@ -1,6 +1,9 @@
 #include "proc_watch.hpp"
 
-#include <algorithm>
+#include <dirent.h>
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
 using std::this_thread::sleep_for;
 using ms = std::chrono::milliseconds;

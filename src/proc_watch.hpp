@@ -1,24 +1,9 @@
 #ifndef PROCWATCH_HPP
 #define PROCWATCH_HPP
 
-#include <string>
-#include <iostream>
-#include <vector>
-#include <time.h>
-#include <unordered_set>
-#include <unordered_map>
-#include <map>
-#include <algorithm>
-
 #include <thread>
+#include <unordered_set>
 #include <shared_mutex>
-#include <mutex>
-#include <chrono>
-
-#include <dirent.h>
-#include <fstream>
-#include <sstream>
-#include <cstring>
 
 #include "nvidia/nvidia.hpp"
 #include "xdisplay.hpp"

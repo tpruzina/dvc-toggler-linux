@@ -1,5 +1,7 @@
+#pragma once
+
+#include <iostream>
 #include <fstream>  //ifstream, ofstream
-#include <cstdio>
 #include <sys/stat.h>   // unlink
 #include <libgen.h>     // dirname
 #include <QStandardPaths>
@@ -79,4 +81,3 @@ public:
                                 + "/autostart" + "/dvc-toggler-linux.desktop";
         }
 };
-

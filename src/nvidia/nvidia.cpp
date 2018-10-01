@@ -2,6 +2,7 @@
 
 #include <inttypes.h>
 #include <map>
+#include <iostream>
 
 #include "libXNVCtrl/NVCtrl.h"
 #include "libXNVCtrl/NVCtrlLib.h"

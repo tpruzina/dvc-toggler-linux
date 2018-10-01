@@ -2,8 +2,6 @@
 #define COMMON_NVIDIA_HPP_
 
 #include <map>
-#include <vector>
-#include <iostream>
 
 #define NVIDIA_APPLY_TO_ALL -1
 
