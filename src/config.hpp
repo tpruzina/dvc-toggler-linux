@@ -4,12 +4,14 @@
 #include <QSettings>
 #include <QMap>
 
-#define CONFIG_SLEEP_STR	"watcher_sleep_ms"
-#define CONFIG_START_MIN_STR	"start_minimized"
-#define CONFIG_ENABLED_STR	"enabled"
-#define CONFIG_AUTOHIDE_STR	"autohide"
-#define CONFIG_TRAY_INFO_SHOWN	"tray_icon_warning_shown"
-#define CONFIG_DEFAULT_PROFILE_STR	"default"
+#define CONFIG_SLEEP_STR        "watcher_sleep_ms"
+#define CONFIG_START_MIN_STR        "start_minimized"
+#define CONFIG_ENABLED_STR        "enabled"
+#define CONFIG_AUTOHIDE_STR        "autohide"
+#define CONFIG_TRAY_INFO_SHOWN        "tray_icon_warning_shown"
+#define CONFIG_DEFAULT_PROFILE_STR        "default"
+
+using DVC_map = QMap<int,int>;
 
 class Config : public QSettings
 {
@@ -40,8 +42,8 @@ public:
         QString queryIconPath(const QString &profile_name) noexcept;
         void setIconPath(const QString &profile_name, const QString &path) noexcept;
 
-        QMap<int,int> queryDVC(const QString &profile_name) noexcept;
-        void setDVC(const QString &profile_name, QMap<int,int> &map) noexcept;
+        DVC_map queryDVC(const QString &profile_name) noexcept;
+        void setDVC(const QString &profile_name, DVC_map &map) noexcept;
 
         unsigned querySleepTime_ms(void) noexcept;
         void setSleepTime_ms(unsigned ms) noexcept;

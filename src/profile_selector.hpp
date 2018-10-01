@@ -39,7 +39,7 @@ private:
         Config &cfg;
         NVIDIA &nv;
 
-        QMap<int,int> dvc_map;
+        DVC_map dvc_map;
 
         friend class AppProfile;
         friend class DVCEntry;

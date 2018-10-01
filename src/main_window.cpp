@@ -4,9 +4,9 @@
 
 mainWindow::mainWindow() noexcept :
         pw(
-		nv,
-		cfg.get_bool(CONFIG_ENABLED_STR),
-		cfg.querySleepTime_ms())
+                nv,
+                cfg.get_bool(CONFIG_ENABLED_STR),
+                cfg.querySleepTime_ms())
 
 {
         setWindowTitle(tr("DVC toggler"));

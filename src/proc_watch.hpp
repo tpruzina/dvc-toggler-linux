@@ -69,10 +69,10 @@ private:
         pid_t previous_active_window_pid;
         string active_window_comm;
 
-        bool dirty;        // rules need to be reapplied
-        bool active;        // active/paused
-        bool terminate; // signal watcher process to shutdown
-        ms sleep_ms;        // how long does watcher process sleep in between updates
+        bool dirty{false};        // rules need to be reapplied
+        bool active{true};        // active/paused
+        bool terminate;                // signal watcher process to shutdown
+        ms sleep_ms; // how long does watcher process sleep in between updates
 
         std::shared_mutex write;        // readers/writers lock
         std::thread watcher;                // update thread

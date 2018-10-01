@@ -1,5 +1,10 @@
 #include "proc_watch.hpp"
 
+#include <algorithm>
+
+using std::this_thread::sleep_for;
+using ms = std::chrono::milliseconds;
+
 // Process watcher
 // Scans /proc/$PID/{comms, maps} and queries X server for running processes
 // Applies DVC rules according to rules
@@ -42,8 +47,8 @@ auto ProcWatch::isProcRunning(string proc_comm) noexcept -> bool
 {
         // RAII lock for reads
         std::shared_lock <std::shared_mutex> lock(write);
-        auto got = comms.find(proc_comm);
-        if(got == comms.end())
+        auto found = comms.find(proc_comm);
+        if(found == comms.end())
                 return false;
         else
                 return true;
@@ -86,12 +91,8 @@ auto ProcWatch::removeRule(string name) noexcept -> void
 // general update function, watcher thread runs this every sleep.ms
 auto ProcWatch::update() noexcept -> void
 {
-        while (true)
+        while (!terminate)
         {
-                // return worker if terminate flag is set
-                if (terminate)
-                        break;
-
                 // only update state / apply rules if we are active
                 if(active)
                 {
@@ -112,8 +113,7 @@ auto ProcWatch::update() noexcept -> void
                                 applyRule(active_window_comm);
                 }
                 // go back to sleep for sleep_ms
-                std::this_thread::sleep_for(std::chrono::
-                                            milliseconds(sleep_ms));
+                sleep_for(ms(sleep_ms));
         }
 }
 
@@ -166,28 +166,28 @@ auto ProcWatch::scan_proc() noexcept -> unordered_set<string>
         if (!(dir = opendir("/proc")))
                 return set;
 
-        static char path[64] = "/proc/\0";
-        const off_t offset = strlen(path);      // strlen("/proc/_");
+        auto const buf_size = 64lu;
+        static char path[buf_size] = "/proc/\0";
+        off_t const offset = 6; // strlen("/proc/_");
 
         // for each ent=PID in /proc/<PIDs>
         while ((ent = readdir(dir))) {
-                const char *pid_s = ent->d_name;
+                auto pid_s = ent->d_name;
                 if (!pid_s || pid_s[0] < '0' || pid_s[0] > '9')
                         continue;
 
-                auto max_size = [&](auto &pid_s, auto &path) noexcept -> size_t
+                auto max_size = [](auto &pid_s) noexcept -> size_t
                 {
-                        size_t pid_str_len = strlen(pid_s);
-                        size_t buf_free_len =
-                                sizeof(path)-offset;
-                        return pid_str_len < buf_free_len ?
-                                pid_str_len : buf_free_len;
+                        auto pid_str_len = strlen(pid_s);
+                        auto buf_free_len =
+                                buf_size-offset;
+                        return std::min(pid_str_len, buf_free_len);
                 };
 
                 strncpy(
-                                (char *)(path + offset),
+                                path+offset,
                                 pid_s,
-                                max_size(pid_s, path)
+                                max_size(pid_s)
                 );
 
                 auto read_file_to_str = [] (const char *filename)

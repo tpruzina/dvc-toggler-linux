@@ -14,11 +14,10 @@ class mainWindow : public QDialog
 
 public:
         mainWindow() noexcept;
-
-        void setVisible(bool visible) noexcept;
+        auto setVisible(bool visible) noexcept -> void;
 
 protected:
-        void closeEvent(QCloseEvent *event) noexcept;
+        auto closeEvent(QCloseEvent *event) noexcept -> void;
 
 private slots:
         void toggleEnabled() noexcept;

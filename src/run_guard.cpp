@@ -12,12 +12,12 @@ static inline auto generateKeyHash(const QString& key, const QString& salt) noex
         return data;
 }
 
-RunGuard::RunGuard(const QString& key) noexcept
-        : key(key)
-        , memLockKey(generateKeyHash(key, "_memLockKey"))
-        , sharedmemKey(generateKeyHash(key, "_sharedmemKey"))
-        , sharedMem(sharedmemKey)
-        , memLock(memLockKey, 1)
+RunGuard::RunGuard(const QString& key) noexcept :
+        key(key),
+        memLockKey(generateKeyHash(key, "_memLockKey")),
+        sharedmemKey(generateKeyHash(key, "_sharedmemKey")),
+        sharedMem(sharedmemKey),
+        memLock(memLockKey, 1)
 {
         memLock.acquire();
         {

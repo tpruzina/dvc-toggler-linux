@@ -35,12 +35,12 @@ auto Config::setIconPath(const QString &profile_name, const QString &path) noexc
         endGroup();
 }
 
-auto Config::queryDVC(const QString &profile_name) noexcept -> QMap<int,int>
+auto Config::queryDVC(const QString &profile_name) noexcept -> DVC_map
 {
-        QMap<int,int> map;
+        DVC_map map;
         beginGroup(profile_name);
         QStringList keys = childKeys();
-        foreach(QString key, keys)
+        for(auto &key: keys)
         {
                 if(key.startsWith("DPY-"))
                 {
@@ -54,10 +54,10 @@ auto Config::queryDVC(const QString &profile_name) noexcept -> QMap<int,int>
         return map;
 }
 
-auto Config::setDVC(const QString &profile_name, QMap<int,int> &map) noexcept -> void
+auto Config::setDVC(const QString &profile_name, DVC_map &map) noexcept -> void
 {
         beginGroup(profile_name);
-        QMap<int,int>::const_iterator it = map.constBegin();
+        DVC_map::const_iterator it = map.constBegin();
         while(it != map.constEnd())
         {
                 setValue("DPY-"+QString::number(it.key()), it.value());
@@ -84,7 +84,7 @@ auto Config::setValue(const QString &key, const QVariant &value) noexcept -> voi
 auto Config::removeProfile(const QString &key) noexcept -> void
 {
         beginGroup(key);
-        remove("");	//removes the group, and all it keys
+        remove("");        //removes the group, and all it keys
         endGroup();
 }
 
