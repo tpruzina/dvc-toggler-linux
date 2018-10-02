@@ -211,7 +211,6 @@ auto mainWindow::showMessage(const QString &msg, unsigned timeout) noexcept -> v
         trayIcon.showMessage("DVC toggler", msg, icon, timeout);
 }
 
-[[noreturn]]
 auto mainWindow::quit() noexcept -> void
 {
         cfg.sync();
