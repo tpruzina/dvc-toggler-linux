@@ -25,6 +25,8 @@ public:
                         listener.join();
                 }
         }
+        DBusInterface(const DBusInterface& src) = delete;
+        DBusInterface& operator=(const DBusInterface& src) = delete;
 
         void spawnListener(callback_t cb, callback_object_t object) noexcept;
         void receive() noexcept;
