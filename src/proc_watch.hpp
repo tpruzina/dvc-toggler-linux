@@ -18,7 +18,7 @@ using ms = std::chrono::milliseconds;
 class ProcWatch : public XDisplay
 {
 public:
-        ProcWatch(NVIDIA &nv, bool enabled=true, unsigned sleep_ms=100) noexcept;
+        explicit ProcWatch(NVIDIA &nv, bool enabled=true, unsigned sleep_ms=100) noexcept;
         ~ProcWatch() noexcept;
 
         vector<string>        listRunningProcs() noexcept;
