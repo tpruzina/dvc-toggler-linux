@@ -25,7 +25,6 @@ mainWindow::mainWindow() noexcept :
         createSettingsBox();
         createTrayIcon();
 
-
         ProfileSelectorWidget *profileSelector = new ProfileSelectorWidget(pw, cfg, nv);
         profileSelector->setTitle("Profiles");
 

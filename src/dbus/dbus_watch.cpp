@@ -71,8 +71,12 @@ auto DBusInterface::receive() noexcept -> void
         dbus_connection_flush(conn);
 
         // loop listening for signals being emmitted
-        while (true)
+        while(true)
         {
+                // if shutdown has been signaled, close down connection
+                if(shutdown)
+                        break;
+                
                 // non blocking read of the next available message
                 dbus_connection_read_write(conn, 0);
                 auto msg = dbus_connection_pop_message(conn);
