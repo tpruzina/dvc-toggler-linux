@@ -1,25 +1,8 @@
-[STYLE] Move non-UI related logic out of QT classes
 [FEATURE] Figure out how to do DVC toggling on non-Nvidia cards
-[FIXME] Make sure that Wine apps are selectable and work as expected (they probably don't)
 [FEATURE] Figure out how this works with bumblebee (probably needs DVC functionality on _displaying_ XServer)
 [PERF] Replace STL maps/sets in performanec critical code @ProcWatch
-[PERF] const _everything_
-[STYLE] Remove "using std::X;" in favor of full length variants, if somebody ever reuses (parts) of this
 [FEATURE] Breakpad ??
 [FEATURE] L11N
 [FEATURE] command line parameters for common stuff (--daemonize, --start-minimized)
 [PERF] Make sure that we don't use nvidia stuff during no-op calls to interface
-
-
-[DONE] Actual desktop icon?
-[CLOSE ENOUGH] Figure out how to ship user-friendly binaries that "just work"
-[DONE] Add start minimized functionality
-    [DONE] toggler checkbox in @mainWindow
-    [DONE] setting in @Config
-[DONE] Send ->show() to main window if we run toggler instance on top of already running instance (atm fails silently)
-[DONE] Implement actual build system rather than current mess of Qmake/Makefiles
-[DONE Add autostart functionality
-    [DONE] find out how people autostart applications in common desktop environments nowadays
-    [DONE ] toggler checkbox in @mainWindow
-    [X] setting in @Config
 
