@@ -4,8 +4,8 @@
 
 int main()
 {
-        XDisplay nv;
-	std::cout << "query_focused_window_pid(): " <<
-		nv.queryFocusedWindowPID() << '\n';
+        auto pid = XDisplay::queryFocusedWindowPID();
+        std::cout << "query_focused_window_pid(): " <<
+                pid << '\n';
         return 0;
 }

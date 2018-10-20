@@ -15,7 +15,7 @@ using std::string;
 using std::vector;
 using ms = std::chrono::milliseconds;
 
-class ProcWatch : public XDisplay
+class ProcWatch
 {
 public:
         explicit ProcWatch(NVIDIA &nv, bool enabled=true, unsigned sleep_ms=100) noexcept;

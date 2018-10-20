@@ -5,8 +5,9 @@
 
 class XDisplay
 {
-public:   
-        auto queryFocusedWindowPID() noexcept -> pid_t;
+public:  
+        XDisplay() = delete;
+        auto static queryFocusedWindowPID() noexcept -> pid_t;
 };
 
 #endif // X_DISPLAY_HPP_
