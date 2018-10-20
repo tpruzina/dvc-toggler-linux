@@ -4,11 +4,11 @@
 #include <chrono>
 #include <thread>
 
-#define DVC_DBUS_CLIENT_NAME "dvc.signal.client"
-#define DVC_DBUS_HOST_SERVER "dvc.signal.server"
-#define DVC_DBUS_IF_NAME "dvc.signal.Type"
-#define DVC_DBUS_SIGNAL_OBJECT "/dvc/signal/Object"
-#define DVC_DBUS_SIGNAL_SHOW "Show"
+#define DBUS_CLIENT_NAME "dvc.signal.client"
+#define DBUS_HOST_SERVER "dvc.signal.server"
+#define DBUS_IF_NAME "dvc.signal.Type"
+#define DBUS_SIGNAL_OBJECT "/dvc/signal/Object"
+#define DBUS_SIGNAL_SHOW "Show"
 
 using callback_t = void (*)(void *);
 using callback_object_t = void *;
@@ -16,7 +16,7 @@ using ms = std::chrono::milliseconds;
 
 class DBusInterface {
 public:
-        DBusInterface() noexcept = default;
+        DBusInterface() {}
         ~DBusInterface() noexcept
         {
                 if(listener.joinable())

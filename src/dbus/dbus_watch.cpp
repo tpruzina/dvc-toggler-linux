@@ -1,10 +1,10 @@
+#include "dbus_watch.hpp"
+
 #include <dbus/dbus.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 #include <iostream>
-
-#include "dbus_watch.hpp"
 
 // TODO: make signal into object and use RAII instead of clumsy cleanup code
 
@@ -19,14 +19,14 @@ auto DBusInterface::sendSignal(char *message) noexcept -> void
 
         dbus_bus_request_name(
                 conn,
-                DVC_DBUS_CLIENT_NAME,
+                DBUS_CLIENT_NAME,
                 DBUS_NAME_FLAG_REPLACE_EXISTING,
                 nullptr);
 
         auto msg = dbus_message_new_signal(
-                DVC_DBUS_SIGNAL_OBJECT,        // object name of the signal
-                DVC_DBUS_IF_NAME,        // interface name of the signal
-                DVC_DBUS_SIGNAL_SHOW        // name of the signal
+                DBUS_SIGNAL_OBJECT,        // object name of the signal
+                DBUS_IF_NAME,        // interface name of the signal
+                DBUS_SIGNAL_SHOW        // name of the signal
         );
 
         dbus_message_iter_init_append(msg, &args);
@@ -36,7 +36,9 @@ auto DBusInterface::sendSignal(char *message) noexcept -> void
         dbus_connection_send(conn, msg, &serial);
         dbus_connection_flush(conn);
         dbus_message_unref(msg);
+        dbus_bus_release_name(conn, DBUS_CLIENT_NAME, nullptr);
         dbus_connection_unref(conn);
+        return;
 }
 
 auto DBusInterface::spawnListener(void (*cb)(void*), void* object) noexcept -> void
@@ -44,39 +46,38 @@ auto DBusInterface::spawnListener(void (*cb)(void*), void* object) noexcept -> v
         this->callback_fn = cb;
         this->callback_object = object;
         listener = std::thread(&DBusInterface::receive, this);
+        return;
 }
 
 auto DBusInterface::receive() noexcept -> void
 {
-
         if (!callback_fn)
                 return;
 
-        auto conn = dbus_bus_get(DBUS_BUS_STARTER, NULL);
+        auto conn = dbus_bus_get(DBUS_BUS_STARTER, nullptr);
         if (!conn)
                 return;
 
         dbus_bus_request_name(
                         conn,
-                        DVC_DBUS_HOST_SERVER,
+                        DBUS_HOST_SERVER,
                         DBUS_NAME_FLAG_REPLACE_EXISTING,
                         NULL
         );
 
         dbus_bus_add_match(
                         conn,
-                        "type='signal',interface='" DVC_DBUS_IF_NAME "'",
-                        NULL);
+                        "type='signal',interface='" DBUS_IF_NAME "'",
+                        nullptr);
 
         dbus_connection_flush(conn);
 
         // loop listening for signals being emmitted
-        while(true)
+        while (true)
         {
-                // if shutdown has been signaled, close down connection
                 if(shutdown)
                         break;
-                
+
                 // non blocking read of the next available message
                 dbus_connection_read_write(conn, 0);
                 auto msg = dbus_connection_pop_message(conn);
@@ -92,8 +93,8 @@ auto DBusInterface::receive() noexcept -> void
                 // check if the message is a signal from the correct interface and with the correct name
                 if (dbus_message_is_signal(
                                         msg,
-                                        DVC_DBUS_IF_NAME,
-                                        DVC_DBUS_SIGNAL_SHOW))
+                                        DBUS_IF_NAME,
+                                        DBUS_SIGNAL_SHOW))
                 {
                         auto args = DBusMessageIter{};
                         // read the parameters
@@ -113,5 +114,12 @@ auto DBusInterface::receive() noexcept -> void
                 dbus_message_unref(msg);
         }
         // close the connection
-        dbus_connection_close(conn);
+        dbus_bus_remove_match(
+                        conn, 
+                        "type='signal',interface='" DBUS_IF_NAME "'",
+                        nullptr);
+        dbus_bus_release_name(conn, DBUS_HOST_SERVER, nullptr);
+        dbus_connection_unref(conn);
+        return;
 }
+
