@@ -29,3 +29,8 @@ executable('dvc-toggler-linux',
   dependencies : [qt5_dep, thread_dep, x11_dep, xext_dep, xmu_dep, dbus1_dep],
   install: true)
 
+# tests
+subdir('dbus')
+subdir('run_guard')
+subdir('xdisplay')
+subdir('nvidia')
