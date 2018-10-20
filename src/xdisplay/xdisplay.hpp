@@ -1,18 +1,12 @@
 #ifndef X_DISPLAY_HPP_
 #define X_DISPLAY_HPP_
 
-// This intentionally doesn't use any includes from Xlib,
-// because dealing with symbol mangling is pain
+#include <sys/types.h>
 
 class XDisplay
 {
-public:
-        XDisplay() noexcept;
-        ~XDisplay() noexcept;
-
-        pid_t   queryFocusedWindowPID() noexcept;
-private:
-        void *dpy;
+public:   
+        auto queryFocusedWindowPID() noexcept -> pid_t;
 };
 
 #endif // X_DISPLAY_HPP_

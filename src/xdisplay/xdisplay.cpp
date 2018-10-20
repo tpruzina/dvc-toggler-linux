@@ -7,18 +7,6 @@
 
 #include "xdisplay.hpp"
 
-XDisplay::XDisplay() noexcept
-{
-        setlocale(LC_ALL, "");
-        dpy = XOpenDisplay(NULL);
-}
-
-XDisplay::~XDisplay() noexcept
-{
-        if(dpy)
-                XCloseDisplay((Display*)dpy);
-}
-
 auto static inline
 query_focused_window(Display *dpy) noexcept -> Window
 {
@@ -108,6 +96,7 @@ auto static inline query_window_pid(Display *dpy, Window w) noexcept -> pid_t
 // we need to go from focused window noexcept -> top window -> name window(_NET_WM_PID)
 auto XDisplay::queryFocusedWindowPID() noexcept -> pid_t
 {
+        auto dpy = XOpenDisplay(NULL);
         // save previous values in static variables in order to cache results
         // as much as possible and prevent expensive X queries
         static pid_t pid_old = 0;
@@ -134,13 +123,3 @@ auto XDisplay::queryFocusedWindowPID() noexcept -> pid_t
         pid_old = query_window_pid((Display*)dpy, name);
         return pid_old;
 }
-
-#ifdef DEBUG_XDISPLAY
-int main()
-{
-        XDisplay nv;
-	std::cout << "query_focused_window_pid(): " <<
-		nv.queryFocusedWindowPID() << '\n';
-        return 0;
-}
-#endif // DEBUG_XDISPLAY
