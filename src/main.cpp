@@ -11,7 +11,7 @@ auto main(int argc, char *argv[]) noexcept -> int
         QApplication app(argc, argv);
 
         // check whether DVC enabled nvidia screen is available
-        if(!NVIDIA::isScreenAvailable())
+        if(!NVIDIA::isAvailable())
         {
                 QMessageBox::critical(0, QObject::tr("DVC toggler"),
                                       QObject::tr("I couldn't detect any DVC enabled Nvidia screen."));

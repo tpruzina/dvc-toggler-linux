@@ -1,60 +1,45 @@
 #include "nvidia.hpp"
 
 #include <inttypes.h>
-#include <map>
 #include <iostream>
 
 #include "libXNVCtrl/NVCtrl.h"
 #include "libXNVCtrl/NVCtrlLib.h"
 #include "libXNVCtrl/nv-control-screen.h"
 
-auto NVIDIA::isScreenAvailable() noexcept -> bool
+auto NVIDIA::isAvailable() noexcept -> bool
 {
-        if(GetNvXScreen(XOpenDisplay(NULL)) == -1)
+        auto dpy = XOpenDisplay(NULL);
+        if(!dpy)
                 return false;
         else
+        {
+                XCloseDisplay(dpy);
                 return true;
+        }
 }
 
-template <typename Map>
-auto map_compare (Map const &lhs, Map const &rhs) noexcept -> bool
+auto static inline _GetNvXScreen(Display *dpy) -> int
 {
-        return lhs.size() == rhs.size() &&
-                std::equal(lhs.begin(), lhs.end(), rhs.begin(),
-                                   [] (auto a, auto b)
-                        {
-                                return (a.first == b.first) &&
-                                                (a.second == b.second);
-                        }
-                );
+        auto defscr = DefaultScreen(dpy);
+
+        if(XNVCTRLIsNvScreen(dpy, defscr))
+                return defscr;
+
+        for(auto screen = 0; screen < ScreenCount(dpy); screen++)
+                if (XNVCTRLIsNvScreen(dpy, screen))
+                        return screen;
+        
+        return -1;
 }
 
-NVIDIA::NVIDIA() noexcept:
-        dpy((void*)XOpenDisplay(NULL)),
-        screen(GetNvXScreen((Display*)dpy))
-
-{}
-
-NVIDIA::~NVIDIA() noexcept
-{
-        XCloseDisplay((Display*)dpy);
-}
-
-auto NVIDIA::setVibrance(std::map<int,int> &values) noexcept -> int
+auto NVIDIA::setVibrance(std::map<int,int> &values) noexcept -> void
 {
         int *query_data;  // buffer for XNVCTRLQuery response
         int len;    // length of a respons
 
-        // compare map being set to previous one,
-        // if they are equal (meaning result is a no-op)
-        // exit rather than do potentially expensive call to nvidia interface
-
-        if(map_compare(prev, values) == true)
-                return 0;
-        else
-                prev = values;
-
-        Display *dpy = (Display*)this->dpy;
+        auto dpy = XOpenDisplay(NULL);
+        auto screen = _GetNvXScreen(dpy);
 
         // query all dpys
         XNVCTRLQueryTargetBinaryData(dpy,
@@ -118,7 +103,8 @@ auto NVIDIA::setVibrance(std::map<int,int> &values) noexcept -> int
         }
         if(query_data)
                 free(query_data);
-        return 0;
+        if(dpy)
+                XCloseDisplay(dpy);
 }
 
 // returns std::map of <dpyId, dvc_level> for current Nvidia screen
@@ -131,10 +117,8 @@ auto NVIDIA::getVibrance() noexcept -> std::map<int, int>
         static Display *dpy = 0L;
         if(!dpy && !(dpy = XOpenDisplay(NULL)))
                 return map;
-
-        // TODO: Should we fail silently here?
-        if(!dpy)
-                return map;
+        
+        auto screen = _GetNvXScreen(dpy);
 
         // Query displays (CRTCs) on screen
         if(!XNVCTRLQueryTargetBinaryData(dpy,
@@ -147,7 +131,6 @@ auto NVIDIA::getVibrance() noexcept -> std::map<int, int>
         {
                 std::cerr <<  "Unable to determine enabled display devices for" << std::endl;
                 std::cerr << "screen " << screen << "of " << XDisplayName(NULL) << std::endl;
-                // TODO: Should we fail silently here?
                 return map;
         }
 
@@ -191,21 +174,9 @@ auto NVIDIA::getVibrance() noexcept -> std::map<int, int>
         }
         if(query_data)
                 free(query_data);
+        if(dpy)
+                XCloseDisplay(dpy);
+
         return map;
 }
 
-#ifdef DEBUG_NVIDIA
-// see src/nvidia/Makefile
-auto main(int argc, char **argv) noexcept -> int
-{
-        NVIDIA nv;
-
-        std::map<int,int> res = nv.get_vibrance();
-
-        for (const auto &val : res)
-                res[val.first] = 100;
-
-        nv.set_vibrance(&res);
-        return 0;
-}
-#endif
