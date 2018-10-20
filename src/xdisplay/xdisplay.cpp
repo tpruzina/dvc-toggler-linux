@@ -96,7 +96,10 @@ auto static inline query_window_pid(Display *dpy, Window w) noexcept -> pid_t
 // we need to go from focused window noexcept -> top window -> name window(_NET_WM_PID)
 auto XDisplay::queryFocusedWindowPID() noexcept -> pid_t
 {
-        auto dpy = XOpenDisplay(NULL);
+        static auto dpy = XOpenDisplay(NULL);
+        if(!dpy)
+                return -1;
+
         // save previous values in static variables in order to cache results
         // as much as possible and prevent expensive X queries
         static pid_t pid_old = 0;

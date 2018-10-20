@@ -101,6 +101,8 @@ auto ProcWatch::update() noexcept -> void
                 {
                         // query currently focused window PID
                         pid_t focused_window_pid = XDisplay::queryFocusedWindowPID();
+                        if(focused_window_pid <= 0)
+                                continue;
 
                         // if focus has changed
                         if(focused_window_pid != previous_active_window_pid)

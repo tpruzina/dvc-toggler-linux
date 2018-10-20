@@ -5,7 +5,7 @@
 int main()
 {
         auto pid = XDisplay::queryFocusedWindowPID();
-        if(pid < 0)
+        if(pid <= 0)
         {
                 std::cerr << "query_focused_window_pid() returned "
                         << pid 
