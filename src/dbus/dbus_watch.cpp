@@ -1,12 +1,10 @@
 #include "dbus_watch.hpp"
 
+#include <cstdlib>
+#include <cstring>
 #include <dbus/dbus.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
 #include <iostream>
-
-// TODO: make signal into object and use RAII instead of clumsy cleanup code
+#include <unistd.h>
 
 auto DBusInterface::sendSignal(char *message) noexcept -> void
 {
