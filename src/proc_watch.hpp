@@ -22,9 +22,9 @@ public:
         ~ProcWatch() noexcept;
 
         vector<string>        listRunningProcs() noexcept;
-        bool isProcRunning(string proc_comm) noexcept;
+        bool isProcRunning(string const &proc_comm) noexcept;
 
-        void updateRule(string name, std::map<int,int> &dvc_map) noexcept;
+        void updateRule(string const &name, const std::map<int,int> & dvc_map) noexcept;
         void applyRule(string &name) noexcept;
         void removeRule(string name) noexcept;
 
@@ -48,10 +48,9 @@ private:
         std::unordered_map<string,std::map<int,int>> rules;
 
         // set of running process comms (process name string)
-        unordered_set <string> comms;
-
-        // keep track of (previously) focused window pid/name
-        pid_t previous_active_window_pid;
+        unordered_set<string> comms;
+        
+        // keeps track of (previously) focused window name
         string active_window_comm;
 
         bool dirty{false};        // rules need to be reapplied

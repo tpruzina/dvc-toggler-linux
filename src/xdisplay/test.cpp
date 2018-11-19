@@ -11,7 +11,7 @@ int main()
                         << pid 
                         << " (this should only happen if "
                         << "there is no focused window or X isn't running)\n";
-                return -1;
+                return pid & 0xFF;
         }
         else
         {

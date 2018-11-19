@@ -46,7 +46,7 @@ auto ProcWatch::listRunningProcs() noexcept -> vector<string>
 
 // query whether proc is still running
 // FIXME: is this still necessary?
-auto ProcWatch::isProcRunning(string proc_comm) noexcept -> bool
+auto ProcWatch::isProcRunning(string const &proc_comm) noexcept -> bool
 {
         // RAII lock for reads
         std::shared_lock <std::shared_mutex> lock(write);
@@ -57,7 +57,7 @@ auto ProcWatch::isProcRunning(string proc_comm) noexcept -> bool
                 return true;
 }
 
-auto ProcWatch::updateRule(string name, std::map<int,int> &dvc_map) noexcept -> void
+auto ProcWatch::updateRule(const string &name, const std::map<int,int> &dvc_map) noexcept -> void
 {
         // {comm}x{{dpyId}x{dvc}}
 
@@ -94,28 +94,31 @@ auto ProcWatch::removeRule(string name) noexcept -> void
 // general update function, watcher thread runs this every sleep.ms
 auto ProcWatch::update() noexcept -> void
 {
+        // keep track of (previously) focused window pid/name
+        auto static previous_active_window_pid = pid_t{0};
+
         while (!terminate)
         {
                 // only update state / apply rules if we are active
                 if(active)
                 {
                         // query currently focused window PID
-                        pid_t focused_window_pid = XDisplay::queryFocusedWindowPID();
-                        if(focused_window_pid <= 0)
-                                continue;
-
-                        // if focus has changed
-                        if(focused_window_pid != previous_active_window_pid)
+                        auto focused_window_pid = XDisplay::queryFocusedWindowPID();
+                        if(focused_window_pid)
                         {
-                                // update comm this has changed since the last update
-                                active_window_comm = pid_to_comm(focused_window_pid);
+                                // if focus has changed
+                                if(focused_window_pid != previous_active_window_pid)
+                                {
+                                        // update comm this has changed since the last update
+                                        active_window_comm = pid_to_comm(focused_window_pid);
 
-                                dirty = true;
-                                previous_active_window_pid = focused_window_pid;
+                                        dirty = true;
+                                        previous_active_window_pid = focused_window_pid;
+                                }
+
+                                if(dirty)
+                                        applyRule(active_window_comm);
                         }
-
-                        if(dirty)
-                                applyRule(active_window_comm);
                 }
                 // go back to sleep for sleep_ms
                 sleep_for(ms(sleep_ms));
@@ -171,7 +174,7 @@ auto ProcWatch::scan_proc() noexcept -> unordered_set<string>
         if (!(dir = opendir("/proc")))
                 return set;
 
-        auto const buf_size = 64lu;
+        constexpr auto buf_size = 64lu;
         static char path[buf_size] = "/proc/\0";
         off_t const offset = 6; // strlen("/proc/_");
 
