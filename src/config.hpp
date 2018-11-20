@@ -5,11 +5,11 @@
 #include <QMap>
 
 #define CONFIG_SLEEP_STR        "watcher_sleep_ms"
-#define CONFIG_START_MIN_STR        "start_minimized"
-#define CONFIG_ENABLED_STR        "enabled"
-#define CONFIG_AUTOHIDE_STR        "autohide"
-#define CONFIG_TRAY_INFO_SHOWN        "tray_icon_warning_shown"
-#define CONFIG_DEFAULT_PROFILE_STR        "default"
+#define CONFIG_START_MIN_STR    "start_minimized"
+#define CONFIG_ENABLED_STR      "enabled"
+#define CONFIG_AUTOHIDE_STR     "autohide"
+#define CONFIG_TRAY_INFO_SHOWN  "tray_icon_warning_shown"
+#define CONFIG_DEFAULT_PROFILE_STR      "default"
 
 using DVC_map = QMap<int,int>;
 
