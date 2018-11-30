@@ -8,7 +8,7 @@ profile basis. Inspired by windows DVC togglers.
 
 ## Binary releases
 
-![Experimental RPM/DEB packages are available on release page](https://gitlab.com/pruzinat/dvc-toggler-linux/tree/releases/releases)
+![Experimental RPM/DEB packages are available on release page](https://github.com/tpruzina/dvc-toggler-linux/tree/binrel/releases)
 
 ## Status
 
